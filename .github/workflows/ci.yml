@@ -1,0 +1,134 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-FileCopyrightText: 2026 Flexomatic81
+
+# test:    ESLint, Prettier, the Node unit tests with their coverage floor and
+#          the other Node checks (group "fast" of tools/check.mjs).
+# lint:    shellcheck over the shell scripts and actionlint over the
+#          workflows, in the versions pinned in tools/requirements-dev.txt.
+# qml:     qmllint over every QML file, in an Arch Linux container because
+#          that is where the Plasma QML modules are packaged in current versions.
+# package: only for tags v*; checks the release gates
+#          (scripts/release-check.sh), builds the .plasmoid and attaches it to
+#          the GitHub release with the GitHub CLI (no third-party action runs
+#          in the job that has write access). The upload to the KDE Store
+#          stays manual.
+# The QML smoke scenes and the load check are not part of CI: they need
+# ksystemstats and a desktop session.
+name: CI
+
+on:
+  push:
+    branches: [main, dev]   # other branches are checked through their pull request
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:      # start the checks by hand, e.g. for the commit to be tagged
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  # A newer push to a pull request cancels the run that is still going (a pending run can be replaced too); on main, dev and tags every commit keeps its own result.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        # 22.13 is the oldest supported version (see "engines" in package.json).
+        node-version: ["22.13", 24]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ matrix.node-version }}
+          # pnpm is installed in the next step; nothing to cache before that.
+          package-manager-cache: false
+      - name: Install pnpm
+        # Not through Corepack: the one in Node 22.13 does not know the current
+        # npm signing keys and aborts. The version is the one in package.json.
+        run: npm install -g pnpm@12.14.0
+      - run: pnpm install --frozen-lockfile
+      - run: node tools/check.mjs fast
+
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.x"
+      - run: python -m pip install -r tools/requirements-dev.txt
+      - run: node tools/check.mjs shellcheck
+      - run: node tools/check.mjs actionlint
+
+  qml:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    container: archlinux:latest
+    steps:
+      - name: Install the Qt and Plasma QML modules
+        run: >
+          pacman -Syu --noconfirm --needed
+          git nodejs qt6-declarative libplasma kirigami kcmutils libksysguard
+          kquickcharts plasma5support
+      - uses: actions/checkout@v7
+      # The job runs as root, the workspace belongs to the runner user: without
+      # this git refuses "git ls-files" (dubious ownership).
+      - run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+      - run: node tools/check.mjs qmllint
+
+  package:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [test, lint, qml]
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    container: archlinux:latest
+    permissions:
+      # Attaching the file to the release needs write access.
+      contents: write
+    steps:
+      - name: Install the build tools
+        run: pacman -Syu --noconfirm gettext libarchive
+      - uses: actions/checkout@v7
+        with:
+          # The token is only needed for the release step, which gets it
+          # through its own environment; git must not store it in .git/config.
+          persist-credentials: false
+      - name: Check the release gates
+        # Refuses the tag while the changelog, the screenshots or the release
+        # record in docs/testing.md are not final.
+        run: scripts/release-check.sh "${GITHUB_REF_NAME#v}"
+      - name: Build the .plasmoid
+        # Refuses a tag whose version differs from package/metadata.json.
+        run: scripts/build-plasmoid.sh "${GITHUB_REF_NAME#v}"
+      - name: Install the GitHub CLI
+        # After the checkout on purpose: github-cli pulls in git, and with git
+        # present the checkout would clone instead of downloading an archive.
+        run: pacman -S --noconfirm github-cli
+      - name: Attach the .plasmoid to the release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # A missing file must fail the step, not upload nothing.
+          shopt -s failglob
+          files=(dist/loadrings-*.plasmoid)
+          version="${GITHUB_REF_NAME#v}"
+          if gh release view "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+            # A re-run of the job: the release exists, replace its asset.
+            gh release upload "$GITHUB_REF_NAME" "${files[@]}" --clobber \
+              --repo "$GITHUB_REPOSITORY"
+          else
+            flags=(--verify-tag)
+            # Versions below 1.0 are pre-releases.
+            if [[ "$version" == 0.* ]]; then
+              flags+=(--prerelease)
+            fi
+            gh release create "$GITHUB_REF_NAME" "${files[@]}" "${flags[@]}" \
+              --repo "$GITHUB_REPOSITORY"
+          fi

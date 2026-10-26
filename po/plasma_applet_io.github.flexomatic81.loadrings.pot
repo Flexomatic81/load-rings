@@ -1,0 +1,23 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-FileCopyrightText: 2026 Flexomatic81
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: loadrings\n"
+"Report-Msgid-Bugs-To: https://github.com/Flexomatic81/load-rings/issues\n"
+"POT-Creation-Date: 2026-10-26 21:23+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: package/contents/config/config.qml:29
+msgid "General"
+msgstr ""
+
+#: package/contents/ui/main.qml:37
+msgid "Load Rings"
+msgstr ""

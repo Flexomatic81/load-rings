@@ -1,0 +1,38 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+// SPDX-FileCopyrightText: 2026 Flexomatic81
+
+// Smoke scene that loads every code module in the QML engine and calls one
+// cheap function of each. Node accepts syntax that the QML JavaScript engine
+// rejects, so the Node tests alone cannot prove a module is usable in QML.
+// Every file in package/contents/code must be imported here (a Node test
+// checks that).
+
+import QtQuick
+import "../../package/contents/code/command.mjs" as Command
+import "../../package/contents/code/text.mjs" as Text
+
+Item {
+    id: scene
+
+    function check() {
+        const results = [
+            Command.shellQuote("a") === "'a'",
+            Text.substitute("%1", ["x"]) === "x"
+        ];
+        const bad = results.indexOf(false);
+        if (bad >= 0) {
+            console.log("failed check " + bad);
+        }
+        return bad < 0;
+    }
+
+    Component.onCompleted: {
+        if (scene.check()) {
+            console.log("SMOKE OK modules");
+            Qt.exit(0);
+        } else {
+            console.log("SMOKE FAIL modules");
+            Qt.exit(1);
+        }
+    }
+}

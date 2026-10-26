@@ -1,0 +1,55 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-FileCopyrightText: 2026 Flexomatic81
+
+name: Bug report
+description: Something does not work as described.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting! Please check the [open issues](https://github.com/Flexomatic81/load-rings/issues) first, someone may have reported it already.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What did you see, and what did you expect instead?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Add Load Rings to a vertical panel
+        2. Open the settings
+        3. …
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Load Rings version
+      description: Shown in the widget's settings under "About".
+      placeholder: "0.1.0"
+    validations:
+      required: true
+  - type: textarea
+    id: system
+    attributes:
+      label: System
+      description: The output of `kinfo` (or Plasma, KDE Frameworks and Qt version and the distribution).
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Log output
+      description: Messages of the widget since the last login, from `journalctl --user -b | grep loadrings`.
+      render: text
+  - type: textarea
+    id: more
+    attributes:
+      label: Anything else?
+      description: Screenshots, your hardware (CPU, GPU, virtual machine or container).

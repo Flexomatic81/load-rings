@@ -1,0 +1,17 @@
+{
+    "KPlugin": {
+        "Authors": [{ "Name": "Flexomatic81" }],
+        "Category": "System Information",
+        "Description": "Shows CPU, memory and GPU load as rings in the panel",
+        "Description[de]": "Zeigt die Auslastung von CPU, Arbeitsspeicher und Grafikkarte als Ringe im Panel",
+        "Icon": "utilities-system-monitor",
+        "Id": "io.github.flexomatic81.loadrings",
+        "License": "GPL-2.0-or-later",
+        "Name": "Load Rings",
+        "Name[de]": "Load Rings",
+        "Version": "0.1.0",
+        "Website": "https://github.com/Flexomatic81/load-rings"
+    },
+    "KPackageStructure": "Plasma/Applet",
+    "X-Plasma-API-Minimum-Version": "6.0"
+}
