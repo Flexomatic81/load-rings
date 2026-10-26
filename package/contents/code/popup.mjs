@@ -86,9 +86,9 @@ export function coreTooltip(index, core, t, decimalPoint) {
   return parts.join(SEPARATOR);
 }
 
-// The note after the name of a consumer: "Service", "12 processes", or nothing for a single process.
+// The note after the name of a consumer, the background services row included: "12 processes", or nothing for a
+// single process.
 export function consumerExtra(item, t) {
-  if (item.kind === "service") return t.tr("Service");
   return item.processCount > 1 ? t.trp("%1 process", "%1 processes", item.processCount) : "";
 }
 

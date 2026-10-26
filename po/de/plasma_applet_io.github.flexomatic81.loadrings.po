@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: loadrings\n"
 "Report-Msgid-Bugs-To: https://github.com/Flexomatic81/load-rings/issues\n"
-"POT-Creation-Date: 2026-10-26 23:21+0100\n"
+"POT-Creation-Date: 2026-10-27 00:15+0100\n"
 "PO-Revision-Date: 2026-10-26 12:00+0100\n"
 "Last-Translator: Flexomatic81\n"
 "Language-Team: German\n"
@@ -58,10 +58,6 @@ msgstr "Wartezeit auf CPU %1 %"
 #: package/contents/code/popup.mjs:82
 msgid "Core %1"
 msgstr "Kern %1"
-
-#: package/contents/code/popup.mjs:91
-msgid "Service"
-msgstr "Dienst"
 
 #: package/contents/code/popup.mjs:92
 msgid "%1 process"
@@ -223,11 +219,11 @@ msgstr "Kerne"
 msgid "What uses the CPU"
 msgstr "Wer belastet die CPU"
 
-#: package/contents/ui/full/FullRepresentation.qml:205
+#: package/contents/ui/full/FullRepresentation.qml:211
 msgid "Open System Monitor"
 msgstr "Systemmonitor öffnen"
 
-#: package/contents/ui/full/FullRepresentation.qml:213
+#: package/contents/ui/full/FullRepresentation.qml:219
 msgid "Source: system sensors"
 msgstr "Quelle: Systemsensoren"
 

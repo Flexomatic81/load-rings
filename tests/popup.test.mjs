@@ -126,7 +126,8 @@ test("core tooltip leaves out the missing parts", () => {
 test("consumer extra", () => {
   assert.equal(consumerExtra({ kind: "app", processCount: 12 }, t), "12 processes");
   assert.equal(consumerExtra({ kind: "app", processCount: 1 }, t), "");
-  assert.equal(consumerExtra({ kind: "service", processCount: 30 }, t), "Service");
+  assert.equal(consumerExtra({ kind: "service", processCount: 30 }, t), "30 processes");
+  assert.equal(consumerExtra({ kind: "service", processCount: 1 }, t), "");
 });
 
 test("consumer value", () => {

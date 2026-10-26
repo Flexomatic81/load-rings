@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // SPDX-FileCopyrightText: 2026 Flexomatic81
 
-// The programs that use the most of something: icon, name, a note (process count or "Service"), a bar of the
+// The programs that use the most of something: icon, name, a note (the process count), a bar of the
 // share and the value.
 
 pragma ComponentBehavior: Bound
