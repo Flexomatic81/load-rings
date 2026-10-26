@@ -8,6 +8,7 @@
 // checks that).
 
 import QtQuick
+import "../../package/contents/code/apps.mjs" as Apps
 import "../../package/contents/code/color.mjs" as Color
 import "../../package/contents/code/command.mjs" as Command
 import "../../package/contents/code/format.mjs" as Format
@@ -24,6 +25,7 @@ Item {
 
     function check() {
         const results = [
+            Apps.cpuShare(100, 16, false) === 6.25,
             Color.ringColor(50) === "#fdbc4b",
             Command.shellQuote("a") === "'a'",
             Format.formatCount(41234, ",") === "41 k",

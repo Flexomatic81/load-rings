@@ -70,6 +70,15 @@ PlasmoidItem {
         interval: Plasmoid.configuration.updateInterval * 1000 // qmllint disable missing-property
     }
 
+    // The programs with their CPU and memory use; the processes are only read while the popup is open.
+    AppsSource {
+        id: apps
+
+        active: root.expanded
+        coreCount: sensors.current.coreCount
+        servicesName: root.tr("Background services")
+    }
+
     // The load history for the graphs (in memory only) and the time window the popup shows. Switching the window
     // in the popup is not stored.
     property var history: HistoryCode.createHistory()

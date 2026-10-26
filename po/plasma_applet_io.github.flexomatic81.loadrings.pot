@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: loadrings\n"
 "Report-Msgid-Bugs-To: https://github.com/Flexomatic81/load-rings/issues\n"
-"POT-Creation-Date: 2026-10-26 22:03+0100\n"
+"POT-Creation-Date: 2026-10-26 22:17+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -38,6 +38,10 @@ msgstr ""
 msgid "1 h"
 msgstr ""
 
-#: package/contents/ui/main.qml:84
+#: package/contents/ui/main.qml:79
+msgid "Background services"
+msgstr ""
+
+#: package/contents/ui/main.qml:102
 msgid "Load Rings"
 msgstr ""

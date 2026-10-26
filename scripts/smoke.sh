@@ -17,9 +17,9 @@ set -uo pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")/.." || exit 1
 
-# Scenes that read real system data (ksystemstats). Each one says so in its header comment
+# Scenes that read real system data (ksystemstats, the session's cgroups). Each one says so in its header comment
 # ("// Live scene: needs ..."); tests/smoke-live.test.mjs keeps both in step.
-live_scenes=(SensorSmoke.qml)
+live_scenes=(AppsSmoke.qml SensorSmoke.qml)
 
 is_live() {
   local name scene
