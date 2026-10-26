@@ -2,7 +2,7 @@
 // SPDX-FileCopyrightText: 2026 Flexomatic81
 
 // Smoke scene for the freshness check of SystemSensors: fixed sensor values and a heartbeat the scene drives
-// (ScriptedHeartbeatSource.qml), with three rings wired like the applet wires them, in four steps:
+// (ScriptedHeartbeatSource.qml), with the rings the applet builds from `current`, in four steps:
 //   1  no heartbeat yet: not fresh, every ring shows the dash, `current` is NaN throughout (the lists keep
 //      their length, the GPU name stays), no tick
 //   2  the heartbeat starts: fresh, the rings show the numbers, `current` has the values, ticks arrive
@@ -60,10 +60,15 @@ Item {
         sensors.beat();
     }
 
+    // Untyped on purpose: the repeater hands out plain items.
+    function ringAt(index): var {
+        return view.ringRepeater.itemAt(index);
+    }
+
     function texts(): string {
         let list = [];
         for (let i = 0; i < view.ringRepeater.count; i++) {
-            list.push(view.ringRepeater.itemAt(i).text);
+            list.push(scene.ringAt(i).text);
         }
         return list.join(",");
     }
@@ -216,20 +221,8 @@ Item {
 
         width: 300
         height: 44
-        rings: [
-            {
-                key: "cpu",
-                percent: sensors.current.cpuUsage
-            },
-            {
-                key: "ram",
-                percent: sensors.current.memUsedPercent
-            },
-            {
-                key: "gpu",
-                percent: sensors.current.gpu.usage
-            }
-        ]
+        // The same function the applet uses.
+        rings: SensorCode.ringValues(sensors.current, sensors.gpuId !== "")
     }
 
     Timer {

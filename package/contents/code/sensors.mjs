@@ -153,3 +153,14 @@ export function tickSample(timestamp, intervalMs, current, gpuId) {
     gpuTemp: hasGpu ? cleanValue(current.gpu.temperature) : null,
   };
 }
+
+// The rings of the panel, [{ key, percent }], from the (freshness-gated) snapshot. The GPU ring only exists
+// when a GPU is shown; NaN percents stay NaN and show as the dash.
+export function ringValues(current, gpuShown) {
+  const rings = [
+    { key: "cpu", percent: current.cpuUsage },
+    { key: "ram", percent: current.memUsedPercent },
+  ];
+  if (gpuShown) rings.push({ key: "gpu", percent: current.gpu.usage });
+  return rings;
+}

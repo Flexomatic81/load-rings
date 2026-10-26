@@ -19,6 +19,11 @@ Item {
     property bool vertical: false
     property bool onDesktop: false
 
+    // The keys in order. A string, so that it only notifies when the set of rings changes; a changed percent must
+    // not rebuild the ring items.
+    readonly property string keyList: root.rings.map(ring => ring.key).join(",")
+    readonly property var keys: root.keyList === "" ? [] : root.keyList.split(",")
+
     // The ring items, for tests.
     readonly property alias ringRepeater: repeater
 
@@ -31,7 +36,7 @@ Item {
     readonly property var geometry: LayoutLogic.ringLayout({
         vertical: root.vertical && !root.onDesktop,
         thickness: Number.isFinite(root.thickness) ? root.thickness : 0,
-        count: root.rings.length
+        count: root.keys.length
     })
 
     implicitWidth: root.geometry.width
@@ -49,12 +54,13 @@ Item {
         Repeater {
             id: repeater
 
-            model: root.rings
+            model: root.keys
 
             Ring {
-                required property var modelData
+                required property int index
 
-                percent: modelData.percent
+                // The keys decide which rings exist, the percents change in place.
+                percent: root.rings[index]?.percent ?? NaN
                 diameter: root.geometry.diameter
                 stroke: root.geometry.stroke
                 fontPx: root.geometry.fontPx

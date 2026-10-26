@@ -1,9 +1,11 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // SPDX-FileCopyrightText: 2026 Flexomatic81
 
-// Smoke scene for SystemSensors with the real ksystemstats: the CPU and memory values arrive, there is one
-// entry in `cores` per logical CPU, and `current` follows once the heartbeat shows the sensors alive. With a GPU
-// in the system the GPU values arrive too.
+// Smoke scene for SystemSensors with the real ksystemstats, in three phases:
+//   1  not detailed: the CPU and memory values arrive, `current` follows once the heartbeat shows the sensors
+//      alive, `cores` is empty (also in `current`); with a GPU in the system the GPU values arrive too
+//   2  detailed: there is one entry in `cores` per logical CPU, and `current.cores` has them
+//   3  not detailed again: `cores` is empty again
 //
 // Live scene: needs ksystemstats (the values come from the real sensors).
 
@@ -15,6 +17,7 @@ Item {
 
     property bool done: false
     property bool sawTick: false
+    property int phase: 1
 
     function finish(ok, message) {
         if (scene.done) {
@@ -41,10 +44,26 @@ Item {
     }
 
     function check() {
-        const raw = Number.isFinite(sensors.cpuUsage) && Number.isFinite(sensors.memUsedPercent) && scene.coresComplete() && scene.gpuComplete();
+        if (scene.phase === 1) {
+            scene.checkBasics();
+        } else if (scene.phase === 2) {
+            if (scene.coresComplete() && sensors.current.cores.length === sensors.coreCount) {
+                scene.phase = 3;
+            }
+        } else if (sensors.cores.length === 0 && sensors.current.cores.length === 0) {
+            scene.finish(true, "SMOKE OK sensors");
+        }
+    }
+
+    function checkBasics() {
+        const raw = Number.isFinite(sensors.cpuUsage) && Number.isFinite(sensors.memUsedPercent) && scene.gpuComplete();
         const gated = sensors.fresh && Number.isFinite(sensors.current.cpuUsage) && Number.isFinite(sensors.current.memUsedPercent) && scene.sawTick;
         if (raw && gated) {
-            scene.finish(true, "SMOKE OK sensors");
+            if (sensors.cores.length !== 0 || sensors.current.cores.length !== 0) {
+                scene.finish(false, "SMOKE FAIL sensors: cores are not empty while not detailed: " + scene.describe());
+                return;
+            }
+            scene.phase = 2;
         }
     }
 
@@ -53,6 +72,7 @@ Item {
 
         interval: 500
         gpuEnabled: true
+        detailed: scene.phase === 2
         onTick: sample => {
             scene.sawTick = Number.isFinite(sample.cpu) && Number.isFinite(sample.ram);
         }

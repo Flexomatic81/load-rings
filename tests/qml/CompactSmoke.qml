@@ -141,6 +141,21 @@ Item {
             scene.expect("rounded", scene.ringAt(vertical3, 2).text, "100");
             scene.expect("no arc without a value", scene.ringAt(vertical3, 1).hasArc, false);
             scene.expect("arc with a value", scene.ringAt(vertical3, 0).hasArc, true);
+            // A changed percent updates the ring in place; the ring items are not rebuilt.
+            const before = scene.ringAt(horizontal2, 0);
+            horizontal2.rings = [
+                {
+                    key: "cpu",
+                    percent: 80
+                },
+                {
+                    key: "ram",
+                    percent: NaN
+                }
+            ];
+            scene.expect("same ring item after a percent change", scene.ringAt(horizontal2, 0) === before, true);
+            scene.expect("percent changed in place", before.text, "80");
+            scene.expect("percent lost in place", scene.ringAt(horizontal2, 1).text, "–");
             horizontal2.pressed();
             horizontal2.clicked();
             scene.expect("press before click", scene.order.join(","), "pressed,clicked");

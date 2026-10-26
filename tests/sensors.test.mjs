@@ -18,6 +18,7 @@ import {
   maxFinite,
   blankNumbers,
   tickSample,
+  ringValues,
 } from "../package/contents/code/sensors.mjs";
 
 test("heartbeat sensor", () => {
@@ -200,4 +201,16 @@ test("tickSample", () => {
   assert.equal(off.gpu, null);
   assert.equal(off.gpuTemp, null);
   assert.equal(off.gpuId, null);
+});
+
+test("ringValues", () => {
+  const current = { cpuUsage: 34, memUsedPercent: NaN, gpu: { usage: 7 } };
+  assert.deepEqual(ringValues(current, false), [
+    { key: "cpu", percent: 34 },
+    { key: "ram", percent: NaN },
+  ]);
+  assert.deepEqual(
+    ringValues(current, true).map((r) => r.key + ":" + r.percent),
+    ["cpu:34", "ram:NaN", "gpu:7"],
+  );
 });

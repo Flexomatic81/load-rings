@@ -11,6 +11,7 @@ import org.kde.plasma.plasmoid
 import "compact"
 import "data"
 import "full"
+import "../code/sensors.mjs" as SensorCode
 import "../code/text.mjs" as TextTools
 
 PlasmoidItem {
@@ -55,32 +56,11 @@ PlasmoidItem {
         interval: Plasmoid.configuration.updateInterval * 1000 // qmllint disable missing-property
         gpuEnabled: Plasmoid.configuration.showGpu // qmllint disable missing-property
         gpuWanted: Plasmoid.configuration.gpuId // qmllint disable missing-property
+        // Per-core values are only needed while the popup is open.
+        detailed: root.expanded
     }
 
-    readonly property bool gpuShown: sensors.gpuId !== ""
-    readonly property var rings: root.gpuShown ? [
-        {
-            key: "cpu",
-            percent: sensors.current.cpuUsage
-        },
-        {
-            key: "ram",
-            percent: sensors.current.memUsedPercent
-        },
-        {
-            key: "gpu",
-            percent: sensors.current.gpu.usage
-        }
-    ] : [
-        {
-            key: "cpu",
-            percent: sensors.current.cpuUsage
-        },
-        {
-            key: "ram",
-            percent: sensors.current.memUsedPercent
-        }
-    ]
+    readonly property var rings: SensorCode.ringValues(sensors.current, sensors.gpuId !== "")
 
     toolTipMainText: root.tr("Load Rings")
 

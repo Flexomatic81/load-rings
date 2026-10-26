@@ -16,6 +16,8 @@ Item {
 
     // Sampling interval in milliseconds.
     property int interval: 2000
+    // Whether the per-core values are read (only needed while the popup is open). While not, `cores` is empty.
+    property bool detailed: false
     property bool gpuEnabled: false
     // The wanted GPU ("gpu0"); the first one is used when it is empty or missing.
     property string gpuWanted: ""
@@ -33,7 +35,7 @@ Item {
     readonly property real cpuUsage: root.num(cpuUsageSensor.value)
     readonly property real cpuFrequency: root.num(cpuFrequencySensor.value)
     readonly property real cpuMaxFrequency: root.num(cpuMaxFrequencySensor.value)
-    readonly property real cpuTemperature: Number.isNaN(root.num(cpuTemperatureSensor.value)) ? SensorCode.maxFinite(root.cores.map(core => core.temperature)) : root.num(cpuTemperatureSensor.value)
+    readonly property real cpuTemperature: root.detailed && Number.isNaN(root.num(cpuTemperatureSensor.value)) ? SensorCode.maxFinite(root.cores.map(core => core.temperature)) : root.num(cpuTemperatureSensor.value)
     readonly property real coreCount: root.num(coreCountSensor.value)
     // [{ usage, frequency, temperature }], one per logical CPU.
     property var cores: []
@@ -159,11 +161,11 @@ Item {
         }
     }
 
-    // The CPU threads' count decides how many core sensors exist.
+    // The core sensors exist only while `detailed`; the count of CPU threads decides how many.
     Instantiator {
         id: coreInstances
 
-        model: Number.isFinite(root.coreCount) ? root.coreCount : 0
+        model: root.detailed && Number.isFinite(root.coreCount) ? root.coreCount : 0
         onObjectAdded: coreTimer.restart()
         onObjectRemoved: coreTimer.restart()
 
