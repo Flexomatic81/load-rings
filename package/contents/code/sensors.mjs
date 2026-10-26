@@ -5,7 +5,7 @@
 // Plasma dependencies, so the module runs inside QML as well as under Node.
 
 // Changes about once a second. libksysguard does not re-emit unchanged values,
-// so network values alone cannot tell "idle" from "stopped"; the system
+// so sensor values alone cannot tell "idle" from "stopped"; the system
 // uptime can.
 export const HEARTBEAT_SENSOR = "os/system/uptime";
 
