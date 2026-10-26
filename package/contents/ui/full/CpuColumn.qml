@@ -99,7 +99,7 @@ ColumnLayout {
         QQC2.Label {
             id: topologyText
 
-            visible: text !== ""
+            visible: topologyText.text !== ""
             text: Popup.cpuTopology(root.hardwareInfo?.physicalCores, root.current.coreCount, root.translator)
             font: Kirigami.Theme.smallFont
             color: Kirigami.Theme.disabledTextColor
@@ -192,7 +192,7 @@ ColumnLayout {
         id: details
 
         Layout.fillWidth: true
-        visible: text !== ""
+        visible: details.text !== ""
         text: Popup.cpuDetails(root.stats, root.ctxtPerSecond, root.translator, root.decimalPoint)
         font: Kirigami.Theme.smallFont
         color: Kirigami.Theme.disabledTextColor

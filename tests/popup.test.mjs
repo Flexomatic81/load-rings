@@ -69,6 +69,7 @@ test("cpu topology", () => {
 test("load averages", () => {
   assert.equal(loadText([2.13, 1.8, 1.42], ","), "2,1 · 1,8 · 1,4");
   assert.equal(loadText(null, "."), "–");
+  assert.equal(loadText([2.13, null, NaN], ","), "2,1 · – · –");
   assert.equal(loadText(undefined, "."), "–");
 });
 
@@ -95,9 +96,12 @@ test("cpu details: the parts there are, joined", () => {
 });
 
 test("core tooltip leaves out the missing parts", () => {
-  assert.equal(coreTooltip(0, { usage: 5, frequency: 4120, temperature: 63.4 }, t, ","), "Core 1 · 63 °C · 4,12 GHz");
-  assert.equal(coreTooltip(3, { usage: 5, frequency: NaN, temperature: NaN }, t, "."), "Core 4");
-  assert.equal(coreTooltip(1, { usage: 5, frequency: 3000, temperature: NaN }, t, "."), "Core 2 · 3.00 GHz");
+  assert.equal(
+    coreTooltip(0, { usage: 34, frequency: 4120, temperature: 63.4 }, t, ","),
+    "Core 1 · 34 % · 63 °C · 4,12 GHz",
+  );
+  assert.equal(coreTooltip(3, { usage: NaN, frequency: NaN, temperature: NaN }, t, "."), "Core 4");
+  assert.equal(coreTooltip(1, { usage: 5, frequency: 3000, temperature: NaN }, t, "."), "Core 2 · 5 % · 3.00 GHz");
   assert.equal(coreTooltip(2, undefined, t, "."), "Core 3");
 });
 

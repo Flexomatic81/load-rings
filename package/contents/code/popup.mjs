@@ -4,7 +4,7 @@
 // Texts and small decisions of the popup columns. t is the translator object of the calling QML file:
 // t.tr(text, ...args), t.trp(singular, plural, n, ...args). A missing value gives the dash or leaves its part out.
 
-import { formatBytes, formatCount, formatGHz, formatTemp } from "./format.mjs";
+import { formatBytes, formatCount, formatGHz, formatPercent, formatTemp } from "./format.mjs";
 
 const DASH = "–";
 const SEPARATOR = " · ";
@@ -50,7 +50,7 @@ export function cpuTopology(physicalCores, threads, t) {
 // "2.1 · 1.8 · 1.4"
 export function loadText(loadavg, decimalPoint) {
   if (!loadavg) return DASH;
-  return loadavg.map((value) => value.toFixed(1).replace(".", decimalPoint)).join(SEPARATOR);
+  return loadavg.map((value) => (hasValue(value) ? value.toFixed(1).replace(".", decimalPoint) : DASH)).join(SEPARATOR);
 }
 
 // The line below the clock: "GHz · max 4.55".
@@ -74,10 +74,11 @@ export function cpuDetails(stats, ctxtPerSecond, t, decimalPoint) {
   return parts.join(SEPARATOR);
 }
 
-// "Core 3 · 63 °C · 4.12 GHz" for the core at `index` (counted from 0).
+// "Core 3 · 34 % · 63 °C · 4.12 GHz" for the core at `index` (counted from 0).
 export function coreTooltip(index, core, t, decimalPoint) {
   const c = core || {};
   const parts = [t.tr("Core %1", index + 1)];
+  if (hasValue(c.usage)) parts.push(`${formatPercent(c.usage, decimalPoint)} %`);
   if (hasValue(c.temperature)) parts.push(formatTemp(c.temperature));
   if (hasValue(c.frequency)) parts.push(`${formatGHz(c.frequency, decimalPoint)} GHz`);
   return parts.join(SEPARATOR);

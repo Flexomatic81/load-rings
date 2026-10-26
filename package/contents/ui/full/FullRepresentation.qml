@@ -53,6 +53,15 @@ Item {
     // The button for the system monitor was pressed.
     signal openSystemMonitor
 
+    // What the columns show: the live values while the popup is open, otherwise the last ones it showed, so that
+    // the sensor ticks do not re-evaluate the tiles and the core grid while it is closed.
+    readonly property var shownCurrent: root.active ? root.current : internals.frozen.current
+    readonly property bool shownFresh: root.active ? root.fresh : internals.frozen.fresh
+    readonly property var shownStats: root.active ? root.stats : internals.frozen.stats
+    readonly property real shownCtxt: root.active ? root.ctxtPerSecond : internals.frozen.ctxtPerSecond
+    readonly property var shownRows: root.active ? root.appRows : internals.frozen.appRows
+    readonly property var shownPeak: root.active ? root.history.peakCpuTemp : internals.frozen.peakCpuTemp
+
     // The right end of the graphs: never before the newest sample, so it is always drawn.
     readonly property real graphNow: Popup.graphEnd(root.history.times, internals.clock)
     // The points the graphs show; empty while the popup is closed.
@@ -67,12 +76,33 @@ Item {
     Layout.minimumWidth: root.Layout.preferredWidth
     Layout.minimumHeight: root.Layout.preferredHeight
 
-    onActiveChanged: internals.clock = Date.now()
+    onActiveChanged: {
+        internals.clock = Date.now();
+        if (!root.active) {
+            internals.frozen = {
+                current: root.current,
+                fresh: root.fresh,
+                stats: root.stats,
+                ctxtPerSecond: root.ctxtPerSecond,
+                appRows: root.appRows,
+                peakCpuTemp: root.history.peakCpuTemp
+            };
+        }
+    }
 
     QtObject {
         id: internals
 
         property real clock: Date.now()
+        // The values of the moment the popup closed.
+        property var frozen: ({
+                current: {},
+                fresh: false,
+                stats: null,
+                ctxtPerSecond: NaN,
+                appRows: [],
+                peakCpuTemp: null
+            })
         readonly property var emptyWindow: ({
                 times: [],
                 cpu: [],
@@ -107,16 +137,16 @@ Item {
 
                 Layout.preferredWidth: LayoutLogic.popupColumnWidth(Kirigami.Units.gridUnit)
                 Layout.alignment: Qt.AlignTop
-                current: root.current
-                fresh: root.fresh
+                current: root.shownCurrent
+                fresh: root.shownFresh
                 graphWindow: root.graphWindow
                 graphMinutes: root.graphMinutes
                 graphNow: root.graphNow
-                peakTemperature: root.history.peakCpuTemp
-                stats: root.stats
-                ctxtPerSecond: root.ctxtPerSecond
+                peakTemperature: root.shownPeak
+                stats: root.shownStats
+                ctxtPerSecond: root.shownCtxt
                 hardwareInfo: root.hardwareInfo
-                appRows: root.appRows
+                appRows: root.shownRows
                 onGraphMinutesPicked: minutes => root.graphMinutesPicked(minutes)
             }
         }

@@ -41,6 +41,15 @@ ColumnLayout {
             trc: root.trc,
             trp: root.trp
         })
+    // Shown by a row whose entry is gone for a moment while the list is rebuilt.
+    readonly property var emptyItem: ({
+            name: "",
+            icon: "",
+            kind: "app",
+            processCount: 0,
+            value: NaN,
+            share: null
+        })
     // The rows, for tests.
     readonly property alias rowRepeater: repeater
 
@@ -49,12 +58,14 @@ ColumnLayout {
     Repeater {
         id: repeater
 
-        model: root.items
+        // The count, not the list: new values must not rebuild the rows and reload their icons.
+        model: root.items.length
 
         RowLayout {
             id: row
 
-            required property var modelData
+            required property int index
+            readonly property var item: root.items[row.index] ?? root.emptyItem
 
             Layout.fillWidth: true
             spacing: Kirigami.Units.smallSpacing
@@ -63,20 +74,22 @@ ColumnLayout {
                 Layout.preferredWidth: Kirigami.Units.iconSizes.small
                 Layout.preferredHeight: Kirigami.Units.iconSizes.small
                 // Keeps the names aligned when a row has no icon.
-                opacity: row.modelData.icon !== "" ? 1 : 0
-                source: row.modelData.icon
+                opacity: row.item.icon !== "" ? 1 : 0
+                source: row.item.icon
             }
 
             QQC2.Label {
                 Layout.fillWidth: true
                 Layout.minimumWidth: 0
-                text: row.modelData.name
+                text: row.item.name
                 elide: Text.ElideRight
             }
 
             QQC2.Label {
-                visible: text !== ""
-                text: Popup.consumerExtra(row.modelData, root.translator)
+                id: extra
+
+                visible: extra.text !== ""
+                text: Popup.consumerExtra(row.item, root.translator)
                 font: Kirigami.Theme.smallFont
                 color: Kirigami.Theme.disabledTextColor
             }
@@ -90,7 +103,7 @@ ColumnLayout {
                 color: Qt.alpha(Kirigami.Theme.textColor, 0.12)
 
                 Rectangle {
-                    width: track.width * Popup.barFraction(row.modelData.share)
+                    width: track.width * Popup.barFraction(row.item.share)
                     height: track.height
                     radius: track.radius
                     color: Kirigami.Theme.highlightColor
@@ -100,7 +113,7 @@ ColumnLayout {
             QQC2.Label {
                 Layout.preferredWidth: Kirigami.Units.gridUnit * 3.5
                 horizontalAlignment: Text.AlignRight
-                text: Popup.consumerValue(row.modelData, root.unit, Qt.locale().decimalPoint)
+                text: Popup.consumerValue(row.item, root.unit, Qt.locale().decimalPoint)
                 font.features: { "tnum": 1 }
             }
         }

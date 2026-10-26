@@ -2,7 +2,7 @@
 // SPDX-FileCopyrightText: 2026 Flexomatic81
 
 // The logical CPUs as a grid of small upright bars in the load colour. With few columns each bar has its number
-// above and its load below; with many only the bar fits. Hovering a bar shows its core, temperature and clock.
+// above and its load below; with many only the bar fits. Hovering a bar shows its core, load, temperature and clock.
 
 pragma ComponentBehavior: Bound
 
@@ -101,7 +101,7 @@ Item {
                     color: Qt.alpha(Kirigami.Theme.textColor, 0.12)
 
                     Rectangle {
-                        anchors.bottom: parent.bottom
+                        anchors.bottom: track.bottom
                         width: track.width
                         height: track.height * Popup.barFraction(cell.usage / 100)
                         radius: track.radius
