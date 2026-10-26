@@ -15,6 +15,8 @@ Item {
     id: root
 
     property var ids: []
+    // False until the sensor tree has been read once (or the wait for it is over): until then `ids` says nothing.
+    property bool scanned: false
     // Card ID to the name its sensor reported.
     property var names: ({})
     readonly property var options: SensorCode.gpuOptions(root.ids, root.names)
@@ -46,10 +48,15 @@ Item {
     function rescan(): void {
         const found = [];
         // An invalid index stands for the root of the tree.
-        root.collectSensorIds(tree.index(-1, -1), 3, found);
+        const top = tree.index(-1, -1);
+        root.collectSensorIds(top, 3, found);
         const cards = SensorCode.gpuIdsFromSensorIds(found);
         if (cards.join("\n") !== root.ids.join("\n")) {
             root.ids = cards;
+        }
+        // An empty tree means ksystemstats has not answered yet, not that there is no card.
+        if (tree.rowCount(top) > 0) {
+            root.scanned = true;
         }
     }
 
@@ -79,6 +86,13 @@ Item {
 
         interval: 500
         onTriggered: root.rescan()
+    }
+
+    // Without ksystemstats the tree stays empty; after this long its emptiness counts as the answer.
+    Timer {
+        interval: 10000
+        running: !root.scanned
+        onTriggered: root.scanned = true
     }
 
     Instantiator {

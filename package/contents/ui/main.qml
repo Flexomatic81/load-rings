@@ -139,7 +139,8 @@ PlasmoidItem {
         }
     }
 
-    readonly property var rings: SensorCode.ringValues(sensors.current, sensors.gpuId !== "")
+    // While the cards are still looked for the GPU ring holds its place, so the panel does not widen after the start.
+    readonly property var rings: SensorCode.ringValues(sensors.current, sensors.gpuId !== "", sensors.gpuPending)
 
     // The tooltip reads the same snapshot as the rings, so stale sensors show up as one line there too.
     readonly property var translator: ({

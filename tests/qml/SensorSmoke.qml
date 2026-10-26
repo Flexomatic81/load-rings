@@ -6,6 +6,7 @@
 //      alive, `cores` is empty (also in `current`); with a GPU in the system the GPU values arrive too
 //   2  detailed: there is one entry in `cores` per logical CPU, and `current.cores` has them
 //   3  not detailed again: `cores` is empty again
+// The GPU is switched on: gpuPending is true at first, while the cards are looked for, and false at the end.
 //
 // Live scene: needs ksystemstats (the values come from the real sensors).
 
@@ -17,6 +18,9 @@ Item {
 
     property bool done: false
     property bool sawTick: false
+    // Whether the first check saw the cards still being looked for.
+    property bool pendingAtStart: false
+    property bool firstCheck: true
     property int phase: 1
 
     function finish(ok, message) {
@@ -44,6 +48,10 @@ Item {
     }
 
     function check() {
+        if (scene.firstCheck) {
+            scene.firstCheck = false;
+            scene.pendingAtStart = sensors.gpuPending;
+        }
         if (scene.phase === 1) {
             scene.checkBasics();
         } else if (scene.phase === 2) {
@@ -51,7 +59,11 @@ Item {
                 scene.phase = 3;
             }
         } else if (sensors.cores.length === 0 && sensors.current.cores.length === 0) {
-            scene.finish(true, "SMOKE OK sensors");
+            if (scene.pendingAtStart && !sensors.gpuPending) {
+                scene.finish(true, "SMOKE OK sensors");
+            } else {
+                scene.finish(false, "SMOKE FAIL sensors: gpuPending at start " + scene.pendingAtStart + ", at the end " + sensors.gpuPending);
+            }
         }
     }
 

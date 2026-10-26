@@ -168,13 +168,16 @@ export function tickSample(timestamp, intervalMs, current, gpuId) {
   };
 }
 
-// The rings of the panel, [{ key, percent }], from the (freshness-gated) snapshot. The GPU ring only exists
-// when a GPU is shown; NaN percents stay NaN and show as the dash.
-export function ringValues(current, gpuShown) {
+// The rings of the panel, [{ key, percent }], from the (freshness-gated) snapshot. The GPU ring exists when a GPU
+// is shown, and also while the GPU is switched on but the cards are still looked for (gpuPending): then it holds
+// its place with the dash, so the panel does not widen a moment after the start. NaN percents stay NaN and show
+// as the dash.
+export function ringValues(current, gpuShown, gpuPending = false) {
   const rings = [
     { key: "cpu", percent: current.cpuUsage },
     { key: "ram", percent: current.memUsedPercent },
   ];
   if (gpuShown) rings.push({ key: "gpu", percent: current.gpu.usage });
+  else if (gpuPending) rings.push({ key: "gpu", percent: NaN });
   return rings;
 }

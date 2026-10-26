@@ -49,6 +49,8 @@ Item {
     property var gpuIds: cards.ids
     // Writable only as a test seam.
     property string gpuId: SensorCode.chosenGpu(root.gpuEnabled, root.gpuIds, root.gpuWanted)
+    // True while the GPU is switched on but the cards are still looked for: gpuId says nothing yet.
+    readonly property bool gpuPending: root.gpuEnabled && !cards.scanned
     readonly property var gpu: ({
             "name": typeof gpuNameSensor.value === "string" ? gpuNameSensor.value : "",
             "usage": root.num(gpuUsageSensor.value),

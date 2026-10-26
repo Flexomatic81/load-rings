@@ -239,3 +239,16 @@ test("ringValues", () => {
     ["cpu:34", "ram:NaN", "gpu:7"],
   );
 });
+
+test("ringValues: while the cards are still looked for, the GPU ring holds its place with the dash", () => {
+  const current = { cpuUsage: 34, memUsedPercent: 58, gpu: { usage: 7 } };
+  assert.deepEqual(
+    ringValues(current, false, true).map((r) => r.key + ":" + r.percent),
+    ["cpu:34", "ram:58", "gpu:NaN"],
+  );
+  assert.deepEqual(
+    ringValues(current, true, true).map((r) => r.key + ":" + r.percent),
+    ["cpu:34", "ram:58", "gpu:7"],
+  );
+  assert.equal(ringValues(current, false, false).length, 2);
+});
