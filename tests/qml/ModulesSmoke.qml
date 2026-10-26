@@ -12,6 +12,7 @@ import "../../package/contents/code/color.mjs" as Color
 import "../../package/contents/code/command.mjs" as Command
 import "../../package/contents/code/format.mjs" as Format
 import "../../package/contents/code/layout.mjs" as Layout
+import "../../package/contents/code/sensors.mjs" as Sensors
 import "../../package/contents/code/text.mjs" as Text
 
 Item {
@@ -23,6 +24,7 @@ Item {
             Command.shellQuote("a") === "'a'",
             Format.formatCount(41234, ",") === "41 k",
             Layout.ringLayout({ vertical: false, thickness: 44, count: 2 }).width === 92,
+            Sensors.pickGpu(["gpu0"], "") === "gpu0",
             Text.substitute("%1", ["x"]) === "x"
         ];
         const bad = results.indexOf(false);
