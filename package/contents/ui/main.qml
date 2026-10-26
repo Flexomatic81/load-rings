@@ -117,8 +117,13 @@ PlasmoidItem {
     // The load history for the graphs (in memory only) and the time window the popup shows. Switching the window
     // in the popup is not stored.
     property var history: HistoryCode.createHistory()
+    // The default window from the settings.
     // Plasmoid.configuration is generated from main.xml at runtime, which qmllint cannot see
-    property int graphMinutes: HistoryCode.validMinutes(Plasmoid.configuration.historyMinutes) // qmllint disable missing-property
+    readonly property int defaultMinutes: HistoryCode.validMinutes(Plasmoid.configuration.historyMinutes) // qmllint disable missing-property
+    property int graphMinutes: root.defaultMinutes
+
+    // Picking a window in the popup ends the binding above; a new default from the settings still applies.
+    onDefaultMinutesChanged: root.graphMinutes = root.defaultMinutes
 
     Connections {
         target: sensors
