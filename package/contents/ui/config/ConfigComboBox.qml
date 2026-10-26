@@ -5,9 +5,9 @@
 // bound setting, and only a choice of the user writes back.
 //
 //   ConfigComboBox {
-//       options: [{ text: "Download first", value: false }, { text: "Upload first", value: true }]
-//       configValue: root.cfg_uploadFirst
-//       onPicked: value => root.cfg_uploadFirst = value
+//       options: [{ text: "Option A", value: false }, { text: "Option B", value: true }]
+//       configValue: root.cfg_flag
+//       onPicked: value => root.cfg_flag = value
 //   }
 //
 // The values keep their JS type (boolean, number, string), as the settings are

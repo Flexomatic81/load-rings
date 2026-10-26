@@ -41,8 +41,8 @@ test("launchCommandLine rejects empty commands and unknown kinds", () => {
 });
 
 test("launchCommandLine passes the first word for the pre-check", () => {
-  const line = launchCommandLine({ kind: "command", command: "konsole -e nethogs" });
-  assert.ok(line.endsWith(" loadrings 'konsole -e nethogs' 'konsole'"));
+  const line = launchCommandLine({ kind: "command", command: "konsole -e htop" });
+  assert.ok(line.endsWith(" loadrings 'konsole -e htop' 'konsole'"));
 });
 
 test("launchCommandLine skips the pre-check for assignments and quoted words", () => {

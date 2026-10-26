@@ -18,7 +18,7 @@ Item {
     id: scene
 
     // Stand-ins for the cfg_ properties Plasma puts on a settings page.
-    property bool cfg_uploadFirst: false
+    property bool cfg_flag: false
     property int cfg_decimals: -1
     property string cfg_layout: "columns"
 
@@ -56,7 +56,7 @@ Item {
             scene.expect("number at start (default -1)", numberBox.currentIndex, 0);
             // Setting is a later entry.
             scene.expect("text at start", textBox.currentIndex, 2);
-            scene.cfg_uploadFirst = true;
+            scene.cfg_flag = true;
             scene.cfg_decimals = 2;
             scene.cfg_layout = "rows";
             break;
@@ -65,7 +65,7 @@ Item {
             scene.expect("number after change", numberBox.currentIndex, 3);
             scene.expect("text after change", textBox.currentIndex, 1);
             // Back to the defaults; 0 must not be mistaken for "no value".
-            scene.cfg_uploadFirst = false;
+            scene.cfg_flag = false;
             scene.cfg_decimals = 0;
             scene.cfg_layout = "bogus";
             break;
@@ -93,7 +93,7 @@ Item {
             scene.expect("picked text type", typeof scene.pickedText[0], "string");
             // Choosing writes nothing by itself: the cfg_ properties stay
             // until the page assigns them.
-            scene.expect("cfg_uploadFirst untouched", scene.cfg_uploadFirst, false);
+            scene.expect("cfg_flag untouched", scene.cfg_flag, false);
             scene.expect("cfg_decimals untouched", scene.cfg_decimals, 0);
             if (scene.failures.length === 0) {
                 scene.finish(true, "SMOKE OK combobox");
@@ -109,8 +109,8 @@ Item {
     ConfigComboBox {
         id: boolBox
 
-        options: [{ text: "Download first", value: false }, { text: "Upload first", value: true }]
-        configValue: scene.cfg_uploadFirst
+        options: [{ text: "Option A", value: false }, { text: "Option B", value: true }]
+        configValue: scene.cfg_flag
         onPicked: value => scene.pickedBool = scene.pickedBool.concat([value])
     }
 

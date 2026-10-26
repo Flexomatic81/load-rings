@@ -19,7 +19,7 @@ test("%9 is replaced when nine arguments are given", () => {
 });
 
 test("an empty argument list leaves the text unchanged", () => {
-  assert.equal(substitute("Download: %1", []), "Download: %1");
+  assert.equal(substitute("Load: %1", []), "Load: %1");
   assert.equal(substitute("plain", []), "plain");
 });
 
