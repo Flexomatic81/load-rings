@@ -229,6 +229,11 @@ export function vramFraction(used, total) {
   return positive(total) && hasValue(used) ? used / total : 0;
 }
 
+// The used part of the video memory in percent (for the bar color); NaN when it is unknown.
+export function vramPercent(used, total) {
+  return positive(total) && hasValue(used) ? (used / total) * 100 : NaN;
+}
+
 // A whole number with the thousands separator that goes with the decimal point ("1,240" or "1.240").
 function grouped(n, decimalPoint) {
   const separator = decimalPoint === "," ? "." : ",";

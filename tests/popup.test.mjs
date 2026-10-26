@@ -27,6 +27,7 @@ import {
   tileShown,
   usedLine,
   vramFraction,
+  vramPercent,
   vramShown,
   vramText,
   withUnit,
@@ -250,6 +251,10 @@ test("video memory: row, text and bar", () => {
   assert.equal(vramFraction(4 * GiB, 16 * GiB), 0.25);
   assert.equal(vramFraction(NaN, 16 * GiB), 0);
   assert.equal(vramFraction(4 * GiB, 0), 0);
+  assert.equal(vramPercent(4 * GiB, 16 * GiB), 25);
+  assert.ok(Number.isNaN(vramPercent(NaN, 16 * GiB)));
+  assert.ok(Number.isNaN(vramPercent(4 * GiB, 0)));
+  assert.ok(Number.isNaN(vramPercent(4 * GiB, NaN)));
 });
 
 test("gpu details: the parts there are, joined", () => {

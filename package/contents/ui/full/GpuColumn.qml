@@ -163,7 +163,7 @@ ColumnLayout {
         label: root.tr("Video memory")
         labelWidth: Kirigami.Units.gridUnit * 6
         fraction: Popup.vramFraction(root.gpu.usedVram, root.gpu.totalVram)
-        barColor: Color.ringColor(root.gpu.usedVram / root.gpu.totalVram * 100) ?? Kirigami.Theme.highlightColor
+        barColor: Color.ringColor(Popup.vramPercent(root.gpu.usedVram, root.gpu.totalVram)) ?? Kirigami.Theme.highlightColor
         text: Popup.vramText(root.gpu.usedVram, root.gpu.totalVram, root.translator, root.decimalPoint)
     }
 
