@@ -37,9 +37,14 @@ PlasmoidItem {
         rings: root.rings
         vertical: Plasmoid.formFactor === PlasmaCore.Types.Vertical
         onDesktop: Plasmoid.formFactor === PlasmaCore.Types.Planar
-        onClicked: root.expanded = !root.expanded
+        onPressed: root.wasExpanded = root.expanded
+        // Plasma collapses an open popup on the press, so toggle from the state noted then
+        onClicked: root.expanded = !root.wasExpanded
     }
     preferredRepresentation: Plasmoid.formFactor === PlasmaCore.Types.Planar ? compactRepresentation : null
+
+    // The state of the popup at the last press (see CompactRepresentation).
+    property bool wasExpanded: false
 
     // Fixed values until the sensors are wired up.
     readonly property var rings: [

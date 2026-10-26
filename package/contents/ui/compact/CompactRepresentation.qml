@@ -22,6 +22,8 @@ Item {
     // The ring items, for tests.
     readonly property alias ringRepeater: repeater
 
+    // pressed() comes before clicked(): the applet notes the popup state at the press.
+    signal pressed
     signal clicked
 
     // The panel thickness; on the desktop the smaller side.
@@ -64,6 +66,7 @@ Item {
         id: area
 
         anchors.fill: parent
+        onPressed: root.pressed()
         onClicked: root.clicked()
     }
 }
