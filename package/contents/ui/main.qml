@@ -6,6 +6,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.plasmoid
 import "compact"
 import "full"
@@ -32,7 +33,25 @@ PlasmoidItem {
     // Plasma 6 only instantiates compactRepresentation when a
     // fullRepresentation exists.
     fullRepresentation: FullRepresentation {}
-    compactRepresentation: CompactRepresentation {}
+    compactRepresentation: CompactRepresentation {
+        rings: root.rings
+        vertical: Plasmoid.formFactor === PlasmaCore.Types.Vertical
+        onDesktop: Plasmoid.formFactor === PlasmaCore.Types.Planar
+        onClicked: root.expanded = !root.expanded
+    }
+    preferredRepresentation: Plasmoid.formFactor === PlasmaCore.Types.Planar ? compactRepresentation : null
+
+    // Fixed values until the sensors are wired up.
+    readonly property var rings: [
+        {
+            key: "cpu",
+            percent: 34
+        },
+        {
+            key: "ram",
+            percent: 58
+        }
+    ]
 
     toolTipMainText: root.tr("Load Rings")
 
