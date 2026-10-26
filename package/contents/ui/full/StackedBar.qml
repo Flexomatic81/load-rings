@@ -7,7 +7,6 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Controls as QQC2
-import QtQuick.Effects
 import QtQuick.Layouts
 import org.kde.kirigami as Kirigami
 import "../../code/popup.mjs" as Popup
@@ -46,6 +45,7 @@ ColumnLayout {
     // For the smoke scene: the segments and the width of the bar.
     readonly property alias segmentRepeater: segmentItems
     readonly property real barWidth: track.width
+    readonly property var edges: Popup.edgeParts(root.segments)
 
     spacing: Kirigami.Units.smallSpacing / 2
 
@@ -57,46 +57,28 @@ ColumnLayout {
         radius: 2
         color: Qt.alpha(Kirigami.Theme.textColor, 0.12)
 
-        // The parts are cut to the rounded ends of the track.
-        Item {
-            anchors.fill: parent
-            layer.enabled: true
-            layer.effect: MultiEffect {
-                maskEnabled: true
-                maskSource: mask
-            }
+        // The first and last part carry the rounded ends of the track.
+        Row {
+            Repeater {
+                id: segmentItems
 
-            Row {
-                Repeater {
-                    id: segmentItems
+                // The count, not the list: new values must not rebuild the segments.
+                model: root.segments.length
 
-                    // The count, not the list: new values must not rebuild the segments.
-                    model: root.segments.length
+                Rectangle {
+                    id: part
 
-                    Rectangle {
-                        id: part
+                    required property int index
+                    readonly property var segment: root.segments[part.index] ?? null
 
-                        required property int index
-                        readonly property var segment: root.segments[part.index] ?? null
-
-                        width: part.segment !== null && root.total > 0 ? track.width * part.segment.bytes / root.total : 0
-                        height: track.height
-                        color: part.segment !== null ? (root.colors[part.segment.key] ?? "transparent") : "transparent"
-                    }
+                    width: part.segment !== null && root.total > 0 ? track.width * part.segment.bytes / root.total : 0
+                    height: track.height
+                    topLeftRadius: part.index === root.edges.first ? track.radius : 0
+                    bottomLeftRadius: part.index === root.edges.first ? track.radius : 0
+                    topRightRadius: part.index === root.edges.last ? track.radius : 0
+                    bottomRightRadius: part.index === root.edges.last ? track.radius : 0
+                    color: part.segment !== null ? (root.colors[part.segment.key] ?? "transparent") : "transparent"
                 }
-            }
-        }
-
-        Item {
-            id: mask
-
-            anchors.fill: parent
-            visible: false
-            layer.enabled: true
-
-            Rectangle {
-                anchors.fill: parent
-                radius: track.radius
             }
         }
     }

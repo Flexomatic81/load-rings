@@ -196,3 +196,11 @@ export function zramFraction(device, memTotal) {
 export function pressureText(psi, t, decimalPoint) {
   return hasValue(psi) ? t.tr("Waited %1 % of the time", fineNumber(psi, decimalPoint)) : "";
 }
+
+// The first and last part of a bar that has a size ({ first, last }, -1 when none): only these two get rounded
+// outer corners.
+export function edgeParts(segments) {
+  const list = segments || [];
+  const sized = list.map((segment, i) => (positive(segment.bytes) ? i : -1)).filter((i) => i >= 0);
+  return sized.length > 0 ? { first: sized[0], last: sized[sized.length - 1] } : { first: -1, last: -1 };
+}

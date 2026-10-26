@@ -11,6 +11,7 @@ import {
   coreTooltip,
   cpuDetails,
   cpuTopology,
+  edgeParts,
   fineNumber,
   graphEnd,
   legendText,
@@ -206,4 +207,13 @@ test("pressure text", () => {
   assert.equal(pressureText(12, t, "."), "Waited 12 % of the time");
   assert.equal(pressureText(null, t, "."), "");
   assert.equal(pressureText(NaN, t, "."), "");
+});
+
+test("edge parts: the first and last part that has a size", () => {
+  const parts = [{ bytes: 0 }, { bytes: 5 }, { bytes: 3 }, { bytes: 0 }];
+  assert.deepEqual(edgeParts(parts), { first: 1, last: 2 });
+  assert.deepEqual(edgeParts([{ bytes: 4 }]), { first: 0, last: 0 });
+  assert.deepEqual(edgeParts([{ bytes: 0 }, { bytes: NaN }]), { first: -1, last: -1 });
+  assert.deepEqual(edgeParts([]), { first: -1, last: -1 });
+  assert.deepEqual(edgeParts(null), { first: -1, last: -1 });
 });
