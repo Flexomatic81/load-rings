@@ -156,6 +156,13 @@ test("selectGpu treats undefined as no gpu", () => {
   assert.equal(selectGpu(h, undefined), h);
 });
 
+test("selectGpu treats an empty id as no gpu", () => {
+  const h = createHistory();
+  assert.equal(selectGpu(h, ""), h);
+  const other = selectGpu(h, "gpu0");
+  assert.equal(selectGpu(other, "").gpuId, null);
+});
+
 test("valid minutes", () => {
   assert.equal(validMinutes(15), 15);
   assert.equal(validMinutes(7), 5);

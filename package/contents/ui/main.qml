@@ -119,12 +119,13 @@ PlasmoidItem {
     // Plasmoid.configuration is generated from main.xml at runtime, which qmllint cannot see
     property int graphMinutes: HistoryCode.validMinutes(Plasmoid.configuration.historyMinutes) // qmllint disable missing-property
 
-    // The card whose values the history holds: none while the GPU is off or missing.
-    readonly property string effectiveGpuId: Plasmoid.configuration.showGpu ? sensors.gpuId : "" // qmllint disable missing-property
-    onEffectiveGpuIdChanged: root.history = HistoryCode.selectGpu(root.history, root.effectiveGpuId === "" ? null : root.effectiveGpuId)
-
     Connections {
         target: sensors
+
+        // The history holds the values of the card shown now: none while the GPU is off or missing.
+        function onGpuIdChanged(): void {
+            root.history = HistoryCode.selectGpu(root.history, sensors.gpuId);
+        }
 
         function onTick(sample: var): void {
             root.history = HistoryCode.pushSample(root.history, sample);

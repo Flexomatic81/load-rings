@@ -30,9 +30,9 @@ export function createHistory() {
   };
 }
 
-// Another card (or none) must not inherit the values of the previous one.
+// Another card (or none; an empty id means none) must not inherit the values of the previous one.
 export function selectGpu(history, gpuId) {
-  const id = gpuId ?? null;
+  const id = gpuId || null;
   if (history.gpuId === id) {
     return history;
   }

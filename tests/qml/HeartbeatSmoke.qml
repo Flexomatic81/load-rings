@@ -320,7 +320,7 @@ Item {
         target: sensors
 
         function onGpuIdChanged(): void {
-            scene.history = HistoryCode.selectGpu(scene.history, sensors.gpuId === "" ? null : sensors.gpuId);
+            scene.history = HistoryCode.selectGpu(scene.history, sensors.gpuId);
         }
 
         function onTick(sample: var): void {
