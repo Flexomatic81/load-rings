@@ -7,11 +7,14 @@
 // are hidden and the header shows only "CPU". In the memory column the first shows the figures, the bar whose
 // segments add up to its width, swap, ZRAM, pressure and the program list; in the second the swap, ZRAM and
 // pressure rows, the figures and the program list are hidden and the header shows only the total. The footer button reports
-// through its signal.
+// through its signal. The graphics card column exists only for a GPU that is switched on and found (two columns
+// otherwise); with all values it shows the figures, the graph, the video memory and the details, with none the
+// optional parts are hidden, and the history of another card gives an empty graph and no peak.
 
 import QtQuick
 import QtQuick.Layouts
 import "../../package/contents/ui/full"
+import "../../package/contents/code/sensors.mjs" as SensorCode
 
 Item {
     id: scene
@@ -70,6 +73,62 @@ Item {
             "peakCpuTemp": 78,
             "peakGpuTemp": null
         })
+
+    readonly property var gpuCurrent: ({
+            "cpuUsage": 34,
+            "memTotal": 32e9,
+            "cores": [],
+            "gpu": {
+                "name": "Test GPU",
+                "usage": 7,
+                "temperature": 61,
+                "hotspot": 71,
+                "memTemperature": 66,
+                "coreFrequency": 1800,
+                "memoryFrequency": 1000,
+                "usedVram": 6.2 * 1073741824,
+                "totalVram": 16 * 1073741824,
+                "power": 186,
+                "fan": 1240
+            }
+        })
+
+    readonly property var noGpuCurrent: ({
+            "cpuUsage": 34,
+            "memTotal": 32e9,
+            "cores": [],
+            "gpu": {
+                "name": "Test GPU",
+                "usage": NaN,
+                "temperature": NaN,
+                "hotspot": NaN,
+                "memTemperature": NaN,
+                "coreFrequency": NaN,
+                "memoryFrequency": NaN,
+                "usedVram": NaN,
+                "totalVram": NaN,
+                "power": NaN,
+                "fan": NaN
+            }
+        })
+
+    function gpuHistory(id: string): var {
+        return {
+            "times": [scene.now - 4000, scene.now - 2000, scene.now],
+            "intervals": [2000, 2000, 2000],
+            "cpu": [20, 30, 34],
+            "ram": [50, 55, 58],
+            "gpu": [5, 6, 7],
+            "gpuId": id,
+            "peakCpuTemp": 78,
+            "peakGpuTemp": 74
+        };
+    }
+
+    // The card the applet shows for the three states of the settings.
+    readonly property string idOff: SensorCode.chosenGpu(false, ["gpu0"], "")
+    readonly property string idOn: SensorCode.chosenGpu(true, ["gpu0"], "")
+    readonly property string idNone: SensorCode.chosenGpu(true, [], "")
 
     readonly property var fullStats: ({
             "loadavg": [2.13, 1.8, 1.42],
@@ -148,6 +207,55 @@ Item {
         appRows: []
     }
 
+    FullRepresentation {
+        id: gpuOff
+
+        y: 1400
+        current: scene.gpuCurrent
+        fresh: true
+        history: scene.gpuHistory("gpu0")
+        gpuId: scene.idOff
+    }
+
+    FullRepresentation {
+        id: gpuNone
+
+        y: 1400
+        current: scene.gpuCurrent
+        fresh: true
+        history: scene.gpuHistory("gpu0")
+        gpuId: scene.idNone
+    }
+
+    FullRepresentation {
+        id: gpuOn
+
+        y: 2100
+        current: scene.gpuCurrent
+        fresh: true
+        history: scene.gpuHistory("gpu0")
+        gpuId: scene.idOn
+    }
+
+    FullRepresentation {
+        id: gpuBlank
+
+        y: 2800
+        current: scene.noGpuCurrent
+        fresh: true
+        gpuId: scene.idOn
+    }
+
+    FullRepresentation {
+        id: gpuOther
+
+        y: 3500
+        current: scene.gpuCurrent
+        fresh: true
+        history: scene.gpuHistory("gpu1")
+        gpuId: scene.idOn
+    }
+
     // The text with the decimal point of the locale the scene runs in.
     function local(text: string): string {
         return text.replace(/\./g, Qt.locale().decimalPoint);
@@ -200,6 +308,52 @@ Item {
         });
     }
 
+    // The columns of a popup that are shown.
+    function columnCount(view: var): int {
+        return view.cpuColumn.parent.visibleChildren.length;
+    }
+
+    function gpuProblem(): string {
+        const gpu = gpuOn.gpuColumn;
+        const thousands = Qt.locale().decimalPoint === "," ? "." : ",";
+        return scene.failedNames({
+            "off: two columns": scene.idOff === "" && !gpuOff.gpuColumn.visible && scene.columnCount(gpuOff) === 2,
+            "no card: two columns": scene.idNone === "" && !gpuNone.gpuColumn.visible && scene.columnCount(gpuNone) === 2,
+            "default: two columns": !full.gpuColumn.visible && scene.columnCount(full) === 2,
+            "on: three columns": scene.idOn === "gpu0" && gpu.visible && scene.columnCount(gpuOn) === 3,
+            "name": gpu.nameLabel.text === "Test GPU",
+            "usage": gpu.usageTile.value === "7 %",
+            "clock": gpu.clockTile.visible && gpu.clockTile.value === scene.local("1.80") && gpu.clockTile.detail === "GHz",
+            "temperature": gpu.temperatureTile.visible && gpu.temperatureTile.value === "61 °C" && gpu.temperatureTile.detail === "Peak 74 °C",
+            "power": gpu.powerTile.visible && gpu.powerTile.value === "186 W",
+            "video memory": gpu.memoryRow.visible && gpu.memoryRow.text === scene.local("6.2 of 16.0 GiB") && Math.abs(gpu.memoryRow.fraction - 6.2 / 16) < 0.001,
+            "details": gpu.detailsLabel.text === scene.local("Memory clock 1.00 GHz · Hotspot 71 °C · Memory 66 °C · Fan 1") + thousands + "240 RPM",
+            "graph": gpu.graphWindow.times.length === 3 && gpu.graphWindow.gpu.join(",") === "5,6,7"
+        });
+    }
+
+    function gpuBlankProblem(): string {
+        const gpu = gpuBlank.gpuColumn;
+        return scene.failedNames({
+            "visible": gpu.visible && scene.columnCount(gpuBlank) === 3,
+            "usage": gpu.usageTile.value === "–",
+            "clock": !gpu.clockTile.visible,
+            "temperature": !gpu.temperatureTile.visible,
+            "power": !gpu.powerTile.visible,
+            "video memory": !gpu.memoryRow.visible,
+            "details": !gpu.detailsLabel.visible
+        });
+    }
+
+    function gpuOtherProblem(): string {
+        const gpu = gpuOther.gpuColumn;
+        return scene.failedNames({
+            "visible": gpu.visible,
+            "empty graph": gpu.graphWindow.times.length === 0 && gpu.graphWindow.gpu.length === 0,
+            "no peak": gpu.temperatureTile.detail === "" && gpu.temperatureTile.value === "61 °C"
+        });
+    }
+
     function fullProblem(): string {
         const cpu = full.cpuColumn;
         const rows = cpu.consumerList.rowRepeater;
@@ -242,13 +396,16 @@ Item {
             const emptyWrong = scene.emptyProblem();
             const ramWrong = scene.fullRamProblem();
             const emptyRamWrong = scene.emptyRamProblem();
+            const gpuWrong = scene.gpuProblem();
+            const gpuBlankWrong = scene.gpuBlankProblem();
+            const gpuOtherWrong = scene.gpuOtherProblem();
             full.footer.children[0].clicked();
             const picked = scene.monitorOpened === 1;
-            if (fullWrong === "" && emptyWrong === "" && ramWrong === "" && emptyRamWrong === "" && picked) {
+            if (fullWrong === "" && emptyWrong === "" && ramWrong === "" && emptyRamWrong === "" && gpuWrong === "" && gpuBlankWrong === "" && gpuOtherWrong === "" && picked) {
                 console.log("SMOKE OK popup");
                 Qt.exit(0);
             } else {
-                console.log("SMOKE FAIL popup: full wrong: " + fullWrong + "; empty wrong: " + emptyWrong + "; ram wrong: " + ramWrong + "; empty ram wrong: " + emptyRamWrong + "; monitor " + scene.monitorOpened);
+                console.log("SMOKE FAIL popup: full wrong: " + fullWrong + "; empty wrong: " + emptyWrong + "; ram wrong: " + ramWrong + "; empty ram wrong: " + emptyRamWrong + "; gpu wrong: " + gpuWrong + "; gpu blank wrong: " + gpuBlankWrong + "; gpu other wrong: " + gpuOtherWrong + "; monitor " + scene.monitorOpened);
                 Qt.exit(1);
             }
         }

@@ -13,16 +13,22 @@ import {
   cpuTopology,
   edgeParts,
   fineNumber,
+  gpuDetails,
+  gpuHistoryMatches,
   graphEnd,
   legendText,
   loadText,
   memoryHeader,
   peakDetail,
+  powerText,
   pressureText,
   swapShown,
   swapText,
   tileShown,
   usedLine,
+  vramFraction,
+  vramShown,
+  vramText,
   withUnit,
   zramDevices,
   zramFraction,
@@ -216,4 +222,42 @@ test("edge parts: the first and last part that has a size", () => {
   assert.deepEqual(edgeParts([{ bytes: 0 }, { bytes: NaN }]), { first: -1, last: -1 });
   assert.deepEqual(edgeParts([]), { first: -1, last: -1 });
   assert.deepEqual(edgeParts(null), { first: -1, last: -1 });
+});
+
+test("gpu history matches only the card that is shown", () => {
+  assert.equal(gpuHistoryMatches({ gpuId: "gpu0" }, "gpu0"), true);
+  assert.equal(gpuHistoryMatches({ gpuId: "gpu0" }, "gpu1"), false);
+  assert.equal(gpuHistoryMatches({ gpuId: null }, "gpu0"), false);
+  assert.equal(gpuHistoryMatches({ gpuId: null }, ""), false);
+  assert.equal(gpuHistoryMatches({ gpuId: "gpu0" }, ""), false);
+  assert.equal(gpuHistoryMatches(null, "gpu0"), false);
+});
+
+test("power text: whole watts, the dash without a value", () => {
+  assert.equal(powerText(185.6), "186 W");
+  assert.equal(powerText(0), "0 W");
+  assert.equal(powerText(NaN), "–");
+  assert.equal(powerText(undefined), "–");
+});
+
+test("video memory: row, text and bar", () => {
+  assert.equal(vramShown(NaN, false), true);
+  assert.equal(vramShown(NaN, true), false);
+  assert.equal(vramShown(0, true), false);
+  assert.equal(vramShown(8 * GiB, true), true);
+  assert.equal(vramText(6.2 * GiB, 16 * GiB, t, ","), "6,2 of 16,0 GiB");
+  assert.equal(vramText(NaN, 16 * GiB, t, ","), "–");
+  assert.equal(vramFraction(4 * GiB, 16 * GiB), 0.25);
+  assert.equal(vramFraction(NaN, 16 * GiB), 0);
+  assert.equal(vramFraction(4 * GiB, 0), 0);
+});
+
+test("gpu details: the parts there are, joined", () => {
+  const gpu = { memoryFrequency: 1000, hotspot: 71, memTemperature: 66, fan: 1240 };
+  assert.equal(gpuDetails(gpu, t, ","), "Memory clock 1,00 GHz · Hotspot 71 °C · Memory 66 °C · Fan 1.240 RPM");
+  assert.equal(gpuDetails(gpu, t, "."), "Memory clock 1.00 GHz · Hotspot 71 °C · Memory 66 °C · Fan 1,240 RPM");
+  assert.equal(gpuDetails({ fan: 0 }, t, "."), "Fan 0 RPM");
+  assert.equal(gpuDetails({ fan: 850 }, t, "."), "Fan 850 RPM");
+  assert.equal(gpuDetails({ memoryFrequency: NaN, hotspot: NaN, memTemperature: NaN, fan: NaN }, t, "."), "");
+  assert.equal(gpuDetails(null, t, "."), "");
 });

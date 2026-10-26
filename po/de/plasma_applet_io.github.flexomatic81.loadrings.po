@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: loadrings\n"
 "Report-Msgid-Bugs-To: https://github.com/Flexomatic81/load-rings/issues\n"
-"POT-Creation-Date: 2026-10-26 22:49+0100\n"
+"POT-Creation-Date: 2026-10-26 22:58+0100\n"
 "PO-Revision-Date: 2026-10-26 12:00+0100\n"
 "Last-Translator: Flexomatic81\n"
 "Language-Team: German\n"
@@ -110,6 +110,23 @@ msgstr "ZRAM"
 msgid "Waited %1 % of the time"
 msgstr "%1 % der Zeit gewartet"
 
+#: package/contents/code/popup.mjs:238
+msgid "Memory clock %1 GHz"
+msgstr "Speichertakt %1 GHz"
+
+#: package/contents/code/popup.mjs:239
+msgid "Hotspot %1"
+msgstr "Hotspot %1"
+
+#: package/contents/code/popup.mjs:241
+msgctxt "@label temperature of the graphics memory"
+msgid "Memory %1"
+msgstr "Speicher %1"
+
+#: package/contents/code/popup.mjs:242
+msgid "Fan %1 RPM"
+msgstr "Lüfter %1 U/min"
+
 #: package/contents/config/config.qml:29
 msgid "General"
 msgstr "Allgemein"
@@ -119,14 +136,17 @@ msgid "CPU"
 msgstr "CPU"
 
 #: package/contents/ui/full/CpuColumn.qml:119
+#: package/contents/ui/full/GpuColumn.qml:100
 msgid "Usage"
 msgstr "Auslastung"
 
 #: package/contents/ui/full/CpuColumn.qml:131
+#: package/contents/ui/full/GpuColumn.qml:112
 msgid "Clock"
 msgstr "Takt"
 
 #: package/contents/ui/full/CpuColumn.qml:143
+#: package/contents/ui/full/GpuColumn.qml:124
 msgid "Temperature"
 msgstr "Temperatur"
 
@@ -142,13 +162,25 @@ msgstr "Kerne"
 msgid "What uses the CPU"
 msgstr "Wer belastet die CPU"
 
-#: package/contents/ui/full/FullRepresentation.qml:178
+#: package/contents/ui/full/FullRepresentation.qml:205
 msgid "Open System Monitor"
 msgstr "Systemmonitor öffnen"
 
-#: package/contents/ui/full/FullRepresentation.qml:186
+#: package/contents/ui/full/FullRepresentation.qml:213
 msgid "Source: system sensors"
 msgstr "Quelle: Systemsensoren"
+
+#: package/contents/ui/full/GpuColumn.qml:75
+msgid "GPU"
+msgstr "GPU"
+
+#: package/contents/ui/full/GpuColumn.qml:136
+msgid "Power"
+msgstr "Leistung"
+
+#: package/contents/ui/full/GpuColumn.qml:163
+msgid "Video memory"
+msgstr "Grafikspeicher"
 
 #: package/contents/ui/full/RamColumn.qml:114
 msgid "Memory"
@@ -182,10 +214,10 @@ msgstr "15 Min."
 msgid "1 h"
 msgstr "1 Std."
 
-#: package/contents/ui/main.qml:92
+#: package/contents/ui/main.qml:93
 msgid "Background services"
 msgstr "Hintergrunddienste"
 
-#: package/contents/ui/main.qml:135
+#: package/contents/ui/main.qml:136
 msgid "Load Rings"
 msgstr "Load Rings"

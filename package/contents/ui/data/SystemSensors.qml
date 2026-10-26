@@ -48,7 +48,7 @@ Item {
     // The GPUs ksystemstats offers ("gpu0", ...) and the chosen one ("" when none or not shown).
     property var gpuIds: []
     // Writable only as a test seam.
-    property string gpuId: root.gpuEnabled ? (SensorCode.pickGpu(root.gpuIds, root.gpuWanted) ?? "") : ""
+    property string gpuId: SensorCode.chosenGpu(root.gpuEnabled, root.gpuIds, root.gpuWanted)
     readonly property var gpu: ({
             "name": typeof gpuNameSensor.value === "string" ? gpuNameSensor.value : "",
             "usage": root.num(gpuUsageSensor.value),

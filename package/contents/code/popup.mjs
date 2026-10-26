@@ -204,3 +204,46 @@ export function edgeParts(segments) {
   const sized = list.map((segment, i) => (positive(segment.bytes) ? i : -1)).filter((i) => i >= 0);
   return sized.length > 0 ? { first: sized[0], last: sized[sized.length - 1] } : { first: -1, last: -1 };
 }
+
+// Whether the history holds the card that is shown now; otherwise its graph and peak belong to another card.
+export function gpuHistoryMatches(history, gpuId) {
+  return gpuId !== "" && (history || {}).gpuId === gpuId;
+}
+
+// "186 W"; the dash without a value.
+export function powerText(watts) {
+  return hasValue(watts) ? `${Math.round(watts)} W` : DASH;
+}
+
+// The video memory row follows the rules of the swap row, and reads like it ("6.2 of 16.0 GiB").
+export function vramShown(total, fresh) {
+  return swapShown(total, fresh);
+}
+
+export function vramText(used, total, t, decimalPoint) {
+  return swapText(used, total, t, decimalPoint);
+}
+
+// The used part of the video memory, 0..1.
+export function vramFraction(used, total) {
+  return positive(total) && hasValue(used) ? used / total : 0;
+}
+
+// A whole number with the thousands separator that goes with the decimal point ("1,240" or "1.240").
+function grouped(n, decimalPoint) {
+  const separator = decimalPoint === "," ? "." : ",";
+  return String(Math.round(n)).replace(/\B(?=(\d{3})+$)/g, separator);
+}
+
+// The line below the graphics card figures, from the parts there are:
+// "Memory clock 1.00 GHz · Hotspot 71 °C · Memory 66 °C · Fan 1,240 RPM". A fan at 0 RPM is a value.
+export function gpuDetails(gpu, t, decimalPoint) {
+  const g = gpu || {};
+  const parts = [];
+  if (hasValue(g.memoryFrequency)) parts.push(t.tr("Memory clock %1 GHz", formatGHz(g.memoryFrequency, decimalPoint)));
+  if (hasValue(g.hotspot)) parts.push(t.tr("Hotspot %1", formatTemp(g.hotspot)));
+  if (hasValue(g.memTemperature))
+    parts.push(t.trc("@label temperature of the graphics memory", "Memory %1", formatTemp(g.memTemperature)));
+  if (hasValue(g.fan)) parts.push(t.tr("Fan %1 RPM", grouped(g.fan, decimalPoint)));
+  return parts.join(SEPARATOR);
+}

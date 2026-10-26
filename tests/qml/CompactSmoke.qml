@@ -2,12 +2,14 @@
 // SPDX-FileCopyrightText: 2026 Flexomatic81
 
 // Smoke scene for CompactRepresentation: two and three rings in a horizontal (44 px high) and a vertical (30 px
-// wide) panel, the sizes against ringLayout, the dash of a ring without a value, and the click signal.
+// wide) panel, the sizes against ringLayout, the dash of a ring without a value, and the click signal. The rings
+// built the way the applet builds them: two with the GPU off or not found, three with the GPU on and found.
 // plasmawindowed does not instantiate the compact view, so this scene is the only runtime check of its bindings.
 
 import QtQuick
 import "../../package/contents/ui/compact"
 import "../../package/contents/code/layout.mjs" as Layout
+import "../../package/contents/code/sensors.mjs" as SensorCode
 
 Item {
     id: scene
@@ -34,6 +36,18 @@ Item {
             percent: 99.6
         }
     ]
+
+    readonly property var snapshot: ({
+            "cpuUsage": 34,
+            "memUsedPercent": 58,
+            "gpu": {
+                "usage": 7
+            }
+        })
+    // The card shown for the three states of the settings (GPU off, on with a card, on without any card).
+    readonly property string idOff: SensorCode.chosenGpu(false, ["gpu0"], "")
+    readonly property string idOn: SensorCode.chosenGpu(true, ["gpu0"], "")
+    readonly property string idNone: SensorCode.chosenGpu(true, [], "")
 
     function finish(ok, message) {
         if (scene.done) {
@@ -69,6 +83,27 @@ Item {
     }
 
     Column {
+        CompactRepresentation {
+            id: gpuOff
+
+            width: 200
+            height: 44
+            rings: SensorCode.ringValues(scene.snapshot, scene.idOff !== "")
+        }
+        CompactRepresentation {
+            id: gpuOn
+
+            width: 200
+            height: 44
+            rings: SensorCode.ringValues(scene.snapshot, scene.idOn !== "")
+        }
+        CompactRepresentation {
+            id: gpuNone
+
+            width: 200
+            height: 44
+            rings: SensorCode.ringValues(scene.snapshot, scene.idNone !== "")
+        }
         CompactRepresentation {
             id: horizontal2
 
@@ -136,6 +171,10 @@ Item {
             scene.checkSize("horizontal 3", horizontal3, false, 44, 3);
             scene.checkSize("vertical 2", vertical2, true, 30, 2);
             scene.checkSize("vertical 3", vertical3, true, 30, 3);
+            scene.expect("gpu off: two rings", gpuOff.ringRepeater.count, 2);
+            scene.expect("gpu on: three rings", gpuOn.ringRepeater.count, 3);
+            scene.expect("gpu on: the third is the gpu", scene.ringAt(gpuOn, 2).text, "7");
+            scene.expect("gpu on without a card: two rings", gpuNone.ringRepeater.count, 2);
             scene.expect("dash", scene.ringAt(horizontal3, 1).text, "–");
             scene.expect("number", scene.ringAt(horizontal3, 0).text, "34");
             scene.expect("rounded", scene.ringAt(vertical3, 2).text, "100");

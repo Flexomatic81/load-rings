@@ -17,11 +17,13 @@ RowLayout {
     property real fraction: 0
     property string text
     property color barColor: Kirigami.Theme.highlightColor
+    // The width reserved for the label; a longer label is cut.
+    property real labelWidth: Kirigami.Units.gridUnit * 4
 
     spacing: Kirigami.Units.largeSpacing
 
     QQC2.Label {
-        Layout.preferredWidth: Kirigami.Units.gridUnit * 4
+        Layout.preferredWidth: root.labelWidth
         text: root.label
         font: Kirigami.Theme.smallFont
         elide: Text.ElideRight

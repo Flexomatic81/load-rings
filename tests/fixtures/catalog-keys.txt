@@ -20,6 +20,10 @@
 	%1 → %2 (%3 : 1)	
 	ZRAM	
 	Waited %1 % of the time	
+	Memory clock %1 GHz	
+	Hotspot %1	
+@label temperature of the graphics memory	Memory %1	
+	Fan %1 RPM	
 	General	
 	CPU	
 	Usage	
@@ -30,6 +34,9 @@
 	What uses the CPU	
 	Open System Monitor	
 	Source: system sensors	
+	GPU	
+	Power	
+	Video memory	
 	Memory	
 	Swap	
 	Pressure	

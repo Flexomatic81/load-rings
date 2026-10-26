@@ -14,6 +14,7 @@ import {
   gpuIdsFromSensorIds,
   gpuSensorIds,
   pickGpu,
+  chosenGpu,
   cleanValue,
   maxFinite,
   blankNumbers,
@@ -153,6 +154,12 @@ test("pick gpu", () => {
   assert.equal(pickGpu(["gpu0"], "gpu3"), "gpu0");
   assert.equal(pickGpu(["gpu0", "gpu1"], ""), "gpu0");
   assert.equal(pickGpu([], ""), null);
+});
+test("chosen gpu: none while off or without cards", () => {
+  assert.equal(chosenGpu(false, ["gpu0"], "gpu0"), "");
+  assert.equal(chosenGpu(true, [], "gpu0"), "");
+  assert.equal(chosenGpu(true, ["gpu0", "gpu1"], "gpu1"), "gpu1");
+  assert.equal(chosenGpu(true, ["gpu0"], ""), "gpu0");
 });
 test("clean values", () => {
   assert.equal(cleanValue(3), 3);

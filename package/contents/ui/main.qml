@@ -45,6 +45,7 @@ PlasmoidItem {
         stats: procStats.stats
         ctxtPerSecond: procStats.ctxtPerSecond
         hardwareInfo: hardware.info
+        gpuId: sensors.gpuId
         appRows: apps.rows
         active: root.expanded
         onOpenSystemMonitor: systemMonitor.launch()

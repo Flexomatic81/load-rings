@@ -6,7 +6,8 @@
 // four steps:
 //   1  no heartbeat yet: not fresh, every ring and the processor figures of the popup (usage, clock, temperature,
 //      core grid) and the memory figures (used, percent, swap) show the dash, `current` is NaN throughout (the lists keep their length, the GPU name stays),
-//      no tick
+//      no tick; the graphics card figures (usage, clock, temperature, power) show the dash too, and a switch to
+//      another card empties the graph and drops the peak at once, although nothing is fresh
 //   2  the heartbeat starts: fresh, the rings show the numbers, `current` has the values, ticks arrive
 //   3  the heartbeat stops: after the heartbeat window not fresh again, same picture as in step 1, and the
 //      ticks stop
@@ -15,6 +16,7 @@
 import QtQuick
 import "../../package/contents/ui/compact"
 import "../../package/contents/ui/full"
+import "../../package/contents/code/history.mjs" as HistoryCode
 import "../../package/contents/code/sensors.mjs" as SensorCode
 
 Item {
@@ -36,6 +38,18 @@ Item {
     property int ticks: 0
     property int ticksAtStale: 0
     property var firstSample: null
+    // The load history the popup shows: one old sample of "gpu0" with a peak, and it follows the card like the
+    // applet's history does.
+    property var history: HistoryCode.pushSample(HistoryCode.createHistory(), {
+        "timestamp": Date.now() - 1000,
+        "intervalMs": 500,
+        "cpu": 1,
+        "ram": 1,
+        "gpu": 5,
+        "gpuId": "gpu0",
+        "cpuTemp": 50,
+        "gpuTemp": 74
+    })
     property bool done: false
 
     function finish(ok, message) {
@@ -88,7 +102,8 @@ Item {
             "gpu.name": now.gpu.name === "Test GPU",
             "dashes": scene.texts() === "–,–,–",
             "popup dashes": scene.popupTexts() === "–|–|–|–,–",
-            "memory dashes": scene.memoryTexts() === "–|–|–"
+            "memory dashes": scene.memoryTexts() === "–|–|–",
+            "gpu dashes": scene.gpuTexts() === "–|–|–|–"
         };
         return scene.failedNames(checks);
     }
@@ -104,6 +119,7 @@ Item {
             "gpu.name": now.gpu.name === "Test GPU",
             "numbers": scene.texts() === "34,58,7",
             "popup numbers": scene.popupTexts() === "34 %|" + (3.6).toFixed(2).replace(".", Qt.locale().decimalPoint) + "|55 °C|5,60",
+            "gpu numbers": scene.gpuTexts() === ["7 %", (1.8).toFixed(2).replace(".", Qt.locale().decimalPoint), "61 °C", "90 W"].join("|"),
             "memory numbers": scene.memoryTexts() === ["16.8 of 29.8 GiB used", "58 %", "954 MiB of 7.5 GiB"].map(text => text.replace(/\./g, Qt.locale().decimalPoint)).join("|")
         };
         return scene.failedNames(checks);
@@ -137,6 +153,37 @@ Item {
         return [ram.usedLabel.text, ram.percentLabel.text, ram.swapRow.text].join("|");
     }
 
+    // "usage|clock|temperature|power" as the graphics card column shows them; all four tiles must be visible.
+    function gpuTexts(): string {
+        const gpu = popup.gpuColumn;
+        if (!gpu.visible || !gpu.clockTile.visible || !gpu.temperatureTile.visible || !gpu.powerTile.visible) {
+            return "hidden";
+        }
+        return [gpu.usageTile.value, gpu.clockTile.value, gpu.temperatureTile.value, gpu.powerTile.value].join("|");
+    }
+
+    // Whether a graph window has no GPU value (a point of another card is kept as a gap).
+    function noGpuValues(window: var): bool {
+        return window.gpu.every(value => value === null);
+    }
+
+    // The history of "gpu0" is shown with its peak; then the card changes while nothing is fresh: the graph of the
+    // new card is empty and has no peak at once. Back on "gpu0" the history stays empty (it was cleared).
+    // "" when all of that holds, else what is wrong.
+    function switchProblem(): string {
+        const gpu = popup.gpuColumn;
+        const before = gpu.graphWindow.gpu.join(",") === "5" && gpu.temperatureTile.detail === "Peak 74 °C";
+        sensors.gpuId = "gpu1";
+        const switched = scene.noGpuValues(gpu.graphWindow) && gpu.temperatureTile.detail === "" && gpu.nameLabel.text === "Test GPU";
+        sensors.gpuId = "gpu0";
+        const back = scene.noGpuValues(gpu.graphWindow) && gpu.temperatureTile.detail === "";
+        return scene.failedNames({
+            "history of the first card": before,
+            "empty at once for the new card": switched,
+            "empty after switching back": back
+        });
+    }
+
     function failedNames(checks): string {
         return Object.keys(checks).filter(name => !checks[name]).join(", ");
     }
@@ -148,7 +195,7 @@ Item {
 
     // Step 1: checked at once, the heartbeat starts afterwards.
     function stepWaiting() {
-        const problem = scene.blankProblem();
+        const problem = scene.blankProblem() + scene.switchProblem();
         if (sensors.fresh || problem !== "" || scene.ticks !== 0) {
             scene.fail("before the first heartbeat: fresh=" + sensors.fresh + " ticks=" + scene.ticks + " wrong: " + problem);
             return;
@@ -265,6 +312,20 @@ Item {
         y: 100
         current: sensors.current
         fresh: sensors.fresh
+        history: scene.history
+        gpuId: sensors.gpuId
+    }
+
+    Connections {
+        target: sensors
+
+        function onGpuIdChanged(): void {
+            scene.history = HistoryCode.selectGpu(scene.history, sensors.gpuId === "" ? null : sensors.gpuId);
+        }
+
+        function onTick(sample: var): void {
+            scene.history = HistoryCode.pushSample(scene.history, sample);
+        }
     }
 
     Timer {

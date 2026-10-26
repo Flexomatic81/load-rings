@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // SPDX-FileCopyrightText: 2026 Flexomatic81
 
-// The popup: one column per device side by side (processor, memory, then the graphics card as it comes),
+// The popup: one column per device side by side (processor, memory, and the graphics card when it is shown),
 // and a footer with the button for the system monitor and the data source. The view reads nothing from Plasmoid,
 // so it also runs in plain qml6 (see tests/qml/PopupSmoke.qml).
 
@@ -45,6 +45,8 @@ Item {
     property var hardwareInfo: null
     // AppsSource.rows.
     property var appRows: []
+    // The graphics card shown ("gpu0"), "" when there is none or it is switched off: no GPU column then.
+    property string gpuId: ""
     // Whether the popup is open; the graphs only follow the history while it is.
     property bool active: true
 
@@ -61,6 +63,11 @@ Item {
     readonly property real shownCtxt: root.active ? root.ctxtPerSecond : internals.frozen.ctxtPerSecond
     readonly property var shownRows: root.active ? root.appRows : internals.frozen.appRows
     readonly property var shownPeak: root.active ? root.history.peakCpuTemp : internals.frozen.peakCpuTemp
+    readonly property string shownGpuId: root.active ? root.gpuId : internals.frozen.gpuId
+    // The history of another card is neither graphed nor given a peak: the graph is empty and there is no peak.
+    readonly property bool gpuHistoryMatches: Popup.gpuHistoryMatches(root.history, root.gpuId)
+    readonly property var livePeakGpu: root.gpuHistoryMatches ? root.history.peakGpuTemp : null
+    readonly property var shownPeakGpu: root.active ? root.livePeakGpu : internals.frozen.peakGpuTemp
 
     // The right end of the graphs: never before the newest sample, so it is always drawn.
     readonly property real graphNow: Popup.graphEnd(root.history.times, internals.clock)
@@ -70,6 +77,7 @@ Item {
     // Parts for the smoke scenes.
     readonly property CpuColumn cpuColumn: cpu
     readonly property RamColumn ramColumn: ram
+    readonly property GpuColumn gpuColumn: gpu
     readonly property Item footer: footerRow
 
     Layout.preferredWidth: content.implicitWidth + 2 * content.anchors.margins
@@ -86,7 +94,9 @@ Item {
                 stats: root.stats,
                 ctxtPerSecond: root.ctxtPerSecond,
                 appRows: root.appRows,
-                peakCpuTemp: root.history.peakCpuTemp
+                peakCpuTemp: root.history.peakCpuTemp,
+                gpuId: root.gpuId,
+                peakGpuTemp: root.livePeakGpu
             };
         }
     }
@@ -102,7 +112,9 @@ Item {
                 stats: null,
                 ctxtPerSecond: NaN,
                 appRows: [],
-                peakCpuTemp: null
+                peakCpuTemp: null,
+                gpuId: "",
+                peakGpuTemp: null
             })
         readonly property var emptyWindow: ({
                 times: [],
@@ -127,7 +139,7 @@ Item {
         anchors.margins: Kirigami.Units.largeSpacing
         spacing: Kirigami.Units.largeSpacing
 
-        // The columns; the graphics card joins here.
+        // The columns; the graphics card joins when it is shown.
         RowLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true
@@ -164,6 +176,21 @@ Item {
                 stats: root.shownStats
                 hardwareInfo: root.hardwareInfo
                 appRows: root.shownRows
+                onGraphMinutesPicked: minutes => root.graphMinutesPicked(minutes)
+            }
+
+            GpuColumn {
+                id: gpu
+
+                Layout.preferredWidth: LayoutLogic.popupColumnWidth(Kirigami.Units.gridUnit)
+                Layout.alignment: Qt.AlignTop
+                visible: root.shownGpuId !== ""
+                current: root.shownCurrent
+                fresh: root.shownFresh
+                graphWindow: root.gpuHistoryMatches ? root.graphWindow : internals.emptyWindow
+                graphMinutes: root.graphMinutes
+                graphNow: root.graphNow
+                peakTemperature: root.shownPeakGpu
                 onGraphMinutesPicked: minutes => root.graphMinutesPicked(minutes)
             }
         }

@@ -113,6 +113,11 @@ export function pickGpu(available, wanted) {
   return available.length > 0 ? available[0] : null;
 }
 
+// The GPU that is shown: "" while the GPU is off or there is none, else the wanted one or the first.
+export function chosenGpu(enabled, available, wanted) {
+  return enabled ? (pickGpu(available, wanted) ?? "") : "";
+}
+
 // A finite number as it is, anything else (not yet read, text, NaN) null.
 export function cleanValue(value) {
   return typeof value === "number" && isFinite(value) ? value : null;

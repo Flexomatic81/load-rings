@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: loadrings\n"
 "Report-Msgid-Bugs-To: https://github.com/Flexomatic81/load-rings/issues\n"
-"POT-Creation-Date: 2026-10-26 22:49+0100\n"
+"POT-Creation-Date: 2026-10-26 22:58+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -110,6 +110,23 @@ msgstr ""
 msgid "Waited %1 % of the time"
 msgstr ""
 
+#: package/contents/code/popup.mjs:238
+msgid "Memory clock %1 GHz"
+msgstr ""
+
+#: package/contents/code/popup.mjs:239
+msgid "Hotspot %1"
+msgstr ""
+
+#: package/contents/code/popup.mjs:241
+msgctxt "@label temperature of the graphics memory"
+msgid "Memory %1"
+msgstr ""
+
+#: package/contents/code/popup.mjs:242
+msgid "Fan %1 RPM"
+msgstr ""
+
 #: package/contents/config/config.qml:29
 msgid "General"
 msgstr ""
@@ -119,14 +136,17 @@ msgid "CPU"
 msgstr ""
 
 #: package/contents/ui/full/CpuColumn.qml:119
+#: package/contents/ui/full/GpuColumn.qml:100
 msgid "Usage"
 msgstr ""
 
 #: package/contents/ui/full/CpuColumn.qml:131
+#: package/contents/ui/full/GpuColumn.qml:112
 msgid "Clock"
 msgstr ""
 
 #: package/contents/ui/full/CpuColumn.qml:143
+#: package/contents/ui/full/GpuColumn.qml:124
 msgid "Temperature"
 msgstr ""
 
@@ -142,12 +162,24 @@ msgstr ""
 msgid "What uses the CPU"
 msgstr ""
 
-#: package/contents/ui/full/FullRepresentation.qml:178
+#: package/contents/ui/full/FullRepresentation.qml:205
 msgid "Open System Monitor"
 msgstr ""
 
-#: package/contents/ui/full/FullRepresentation.qml:186
+#: package/contents/ui/full/FullRepresentation.qml:213
 msgid "Source: system sensors"
+msgstr ""
+
+#: package/contents/ui/full/GpuColumn.qml:75
+msgid "GPU"
+msgstr ""
+
+#: package/contents/ui/full/GpuColumn.qml:136
+msgid "Power"
+msgstr ""
+
+#: package/contents/ui/full/GpuColumn.qml:163
+msgid "Video memory"
 msgstr ""
 
 #: package/contents/ui/full/RamColumn.qml:114
@@ -182,10 +214,10 @@ msgstr ""
 msgid "1 h"
 msgstr ""
 
-#: package/contents/ui/main.qml:92
+#: package/contents/ui/main.qml:93
 msgid "Background services"
 msgstr ""
 
-#: package/contents/ui/main.qml:135
+#: package/contents/ui/main.qml:136
 msgid "Load Rings"
 msgstr ""
