@@ -61,6 +61,15 @@ PlasmoidItem {
         detailed: root.expanded
     }
 
+    // The running kernel statistics; they are only read while the popup is open.
+    ProcStats {
+        id: procStats
+
+        active: root.expanded
+        // Plasmoid.configuration is generated from main.xml at runtime, which qmllint cannot see
+        interval: Plasmoid.configuration.updateInterval * 1000 // qmllint disable missing-property
+    }
+
     // The load history for the graphs (in memory only) and the time window the popup shows. Switching the window
     // in the popup is not stored.
     property var history: HistoryCode.createHistory()

@@ -45,6 +45,11 @@ expected_lines() {
       # owns that process when the scene exits.
       echo '^QProcess: Destroyed while process \("/bin/sh"\) is still running\.$'
       ;;
+    NoRunnerSmoke.qml)
+      # The stand-in for the command runner imports a module that does not
+      # exist, as without plasma5support; each loader reports that.
+      echo '^file://.*/tests/qml/BrokenRunner\.qml:9:1: module "org\.kde\.loadrings\.missingrunner" is not installed$'
+      ;;
     LauncherSmoke.qml)
       # The scene abandons a "sleep" through the time limit; the engine still
       # owns that process when the scene exits.

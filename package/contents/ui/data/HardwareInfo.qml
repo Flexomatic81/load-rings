@@ -14,6 +14,8 @@ Item {
     property var info: null
     // True once load() has started the query; it never runs a second time.
     readonly property bool started: internals.started
+    // File of the command runner. Only a test replaces it.
+    property url runnerSource: "CommandRunner.qml"
 
     // Starts the query. Only the first call has an effect.
     function load() {
@@ -50,7 +52,7 @@ Item {
     Loader {
         id: runnerLoader
 
-        source: "CommandRunner.qml"
+        source: root.runnerSource
 
         onLoaded: {
             const runner = internals.runner();

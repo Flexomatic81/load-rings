@@ -14,6 +14,7 @@ import "../../package/contents/code/format.mjs" as Format
 import "../../package/contents/code/hardware.mjs" as Hardware
 import "../../package/contents/code/history.mjs" as History
 import "../../package/contents/code/layout.mjs" as Layout
+import "../../package/contents/code/procstats.mjs" as ProcStats
 import "../../package/contents/code/sensors.mjs" as Sensors
 import "../../package/contents/code/text.mjs" as Text
 
@@ -28,6 +29,7 @@ Item {
             Hardware.parseHardware("@@cpuinfo\nmodel name\t: X 8-Core Processor\n").cpuModel === "X",
             History.validMinutes(7) === 5,
             Layout.ringLayout({ vertical: false, thickness: 44, count: 2 }).width === 92,
+            ProcStats.parseStats("@@stat\nctxt 7\n").ctxt === 7,
             Sensors.pickGpu(["gpu0"], "") === "gpu0",
             Text.substitute("%1", ["x"]) === "x"
         ];

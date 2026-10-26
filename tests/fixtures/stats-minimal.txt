@@ -1,0 +1,10 @@
+@@loadavg
+0.50 0.40 0.30 1/200 999
+@@stat
+ctxt 5000
+@@psi_cpu
+@@psi_memory
+@@meminfo
+@@zram
+@@governor
+@@epp
