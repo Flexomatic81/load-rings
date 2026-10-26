@@ -259,10 +259,14 @@ test("video memory: row, text and bar", () => {
 
 test("gpu details: the parts there are, joined", () => {
   const gpu = { memoryFrequency: 1000, hotspot: 71, memTemperature: 66, fan: 1240 };
-  assert.equal(gpuDetails(gpu, t, ","), "Memory clock 1,00 GHz · Hotspot 71 °C · Memory 66 °C · Fan 1.240 RPM");
-  assert.equal(gpuDetails(gpu, t, "."), "Memory clock 1.00 GHz · Hotspot 71 °C · Memory 66 °C · Fan 1,240 RPM");
-  assert.equal(gpuDetails({ fan: 0 }, t, "."), "Fan 0 RPM");
-  assert.equal(gpuDetails({ fan: 850 }, t, "."), "Fan 850 RPM");
-  assert.equal(gpuDetails({ memoryFrequency: NaN, hotspot: NaN, memTemperature: NaN, fan: NaN }, t, "."), "");
-  assert.equal(gpuDetails(null, t, "."), "");
+  assert.equal(gpuDetails(gpu, t, ",", "."), "Memory clock 1,00 GHz · Hotspot 71 °C · Memory 66 °C · Fan 1.240 RPM");
+  assert.equal(gpuDetails(gpu, t, ".", ","), "Memory clock 1.00 GHz · Hotspot 71 °C · Memory 66 °C · Fan 1,240 RPM");
+  assert.equal(gpuDetails({ fan: 0 }, t, ".", ","), "Fan 0 RPM");
+  assert.equal(gpuDetails({ fan: 850 }, t, ".", ","), "Fan 850 RPM");
+  assert.equal(gpuDetails({ memoryFrequency: NaN, hotspot: NaN, memTemperature: NaN, fan: NaN }, t, ".", ","), "");
+  assert.equal(gpuDetails(null, t, ".", ","), "");
+  // The separator is the locale's own, not a guess from the decimal point.
+  assert.equal(gpuDetails({ fan: 1240 }, t, ",", ""), "Fan 1240 RPM");
+  assert.equal(gpuDetails({ fan: 1240 }, t, ",", "'"), "Fan 1'240 RPM");
+  assert.equal(gpuDetails({ fan: 1240 }, t, ","), "Fan 1240 RPM");
 });

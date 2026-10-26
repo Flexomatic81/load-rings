@@ -234,21 +234,20 @@ export function vramPercent(used, total) {
   return positive(total) && hasValue(used) ? (used / total) * 100 : NaN;
 }
 
-// A whole number with the thousands separator that goes with the decimal point ("1,240" or "1.240").
-function grouped(n, decimalPoint) {
-  const separator = decimalPoint === "," ? "." : ",";
+// A whole number with the locale's thousands separator ("1,240"); without one the digits stay together.
+function grouped(n, separator) {
   return String(Math.round(n)).replace(/\B(?=(\d{3})+$)/g, separator);
 }
 
 // The line below the graphics card figures, from the parts there are:
 // "Memory clock 1.00 GHz · Hotspot 71 °C · Memory 66 °C · Fan 1,240 RPM". A fan at 0 RPM is a value.
-export function gpuDetails(gpu, t, decimalPoint) {
+export function gpuDetails(gpu, t, decimalPoint, groupSeparator = "") {
   const g = gpu || {};
   const parts = [];
   if (hasValue(g.memoryFrequency)) parts.push(t.tr("Memory clock %1 GHz", formatGHz(g.memoryFrequency, decimalPoint)));
   if (hasValue(g.hotspot)) parts.push(t.tr("Hotspot %1", formatTemp(g.hotspot)));
   if (hasValue(g.memTemperature))
     parts.push(t.trc("@label temperature of the graphics memory", "Memory %1", formatTemp(g.memTemperature)));
-  if (hasValue(g.fan)) parts.push(t.tr("Fan %1 RPM", grouped(g.fan, decimalPoint)));
+  if (hasValue(g.fan)) parts.push(t.tr("Fan %1 RPM", grouped(g.fan, groupSeparator)));
   return parts.join(SEPARATOR);
 }

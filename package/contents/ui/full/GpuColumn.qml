@@ -54,6 +54,7 @@ ColumnLayout {
             trp: root.trp
         })
     readonly property string decimalPoint: Qt.locale().decimalPoint
+    readonly property string groupSeparator: Qt.locale().groupSeparator
     readonly property var gpu: root.current.gpu ?? ({})
 
     // Parts for the smoke scenes.
@@ -172,7 +173,7 @@ ColumnLayout {
 
         Layout.fillWidth: true
         visible: details.text !== ""
-        text: Popup.gpuDetails(root.gpu, root.translator, root.decimalPoint)
+        text: Popup.gpuDetails(root.gpu, root.translator, root.decimalPoint, root.groupSeparator)
         font: Kirigami.Theme.smallFont
         color: Kirigami.Theme.disabledTextColor
         wrapMode: Text.WordWrap
