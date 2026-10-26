@@ -8,6 +8,7 @@
 // checks that).
 
 import QtQuick
+import "../../package/contents/code/color.mjs" as Color
 import "../../package/contents/code/command.mjs" as Command
 import "../../package/contents/code/text.mjs" as Text
 
@@ -16,6 +17,7 @@ Item {
 
     function check() {
         const results = [
+            Color.ringColor(50) === "#fdbc4b",
             Command.shellQuote("a") === "'a'",
             Text.substitute("%1", ["x"]) === "x"
         ];
