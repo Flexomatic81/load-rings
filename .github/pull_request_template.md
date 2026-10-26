@@ -1,4 +1,9 @@
 <!--
+SPDX-License-Identifier: GPL-2.0-or-later
+SPDX-FileCopyrightText: 2026 Flexomatic81
+-->
+
+<!--
 Thanks for your pull request! Please make sure it targets the `dev` branch
 (not `main`) and see CONTRIBUTING.md for the details.
 -->
