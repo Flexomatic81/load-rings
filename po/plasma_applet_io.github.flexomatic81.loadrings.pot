@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: loadrings\n"
 "Report-Msgid-Bugs-To: https://github.com/Flexomatic81/load-rings/issues\n"
-"POT-Creation-Date: 2026-10-26 22:17+0100\n"
+"POT-Creation-Date: 2026-10-26 22:33+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -13,13 +13,100 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
 #: package/contents/code/hardware.mjs:103
 msgid "%1 × %2"
 msgstr ""
 
+#: package/contents/code/popup.mjs:45
+msgid "%1 core"
+msgid_plural "%1 cores"
+msgstr[0] ""
+msgstr[1] ""
+
+#: package/contents/code/popup.mjs:46
+msgid "%1 thread"
+msgid_plural "%1 threads"
+msgstr[0] ""
+msgstr[1] ""
+
+#: package/contents/code/popup.mjs:58
+msgid "GHz · max %1"
+msgstr ""
+
+#: package/contents/code/popup.mjs:63
+msgid "Peak %1"
+msgstr ""
+
+#: package/contents/code/popup.mjs:70
+msgid "Governor %1"
+msgstr ""
+
+#: package/contents/code/popup.mjs:71
+msgid "EPP %1"
+msgstr ""
+
+#: package/contents/code/popup.mjs:72
+msgid "%1 context switches/s"
+msgstr ""
+
+#: package/contents/code/popup.mjs:73
+msgid "Waiting for CPU %1 %"
+msgstr ""
+
+#: package/contents/code/popup.mjs:80
+msgid "Core %1"
+msgstr ""
+
+#: package/contents/code/popup.mjs:88
+msgid "Service"
+msgstr ""
+
+#: package/contents/code/popup.mjs:89
+msgid "%1 process"
+msgid_plural "%1 processes"
+msgstr[0] ""
+msgstr[1] ""
+
 #: package/contents/config/config.qml:29
 msgid "General"
+msgstr ""
+
+#: package/contents/ui/full/CpuColumn.qml:85
+msgid "CPU"
+msgstr ""
+
+#: package/contents/ui/full/CpuColumn.qml:119
+msgid "Usage"
+msgstr ""
+
+#: package/contents/ui/full/CpuColumn.qml:131
+msgid "Clock"
+msgstr ""
+
+#: package/contents/ui/full/CpuColumn.qml:143
+msgid "Temperature"
+msgstr ""
+
+#: package/contents/ui/full/CpuColumn.qml:155
+msgid "Load 1/5/15"
+msgstr ""
+
+#: package/contents/ui/full/CpuColumn.qml:179
+msgid "Cores"
+msgstr ""
+
+#: package/contents/ui/full/CpuColumn.qml:205
+msgid "What uses the CPU"
+msgstr ""
+
+#: package/contents/ui/full/FullRepresentation.qml:131
+msgid "Open System Monitor"
+msgstr ""
+
+#: package/contents/ui/full/FullRepresentation.qml:139
+msgid "Source: system sensors"
 msgstr ""
 
 #: package/contents/ui/full/RangeTabs.qml:40
@@ -38,10 +125,10 @@ msgstr ""
 msgid "1 h"
 msgstr ""
 
-#: package/contents/ui/main.qml:79
+#: package/contents/ui/main.qml:92
 msgid "Background services"
 msgstr ""
 
-#: package/contents/ui/main.qml:102
+#: package/contents/ui/main.qml:135
 msgid "Load Rings"
 msgstr ""

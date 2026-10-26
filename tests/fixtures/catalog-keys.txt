@@ -6,3 +6,23 @@
 	1 h	
 	%1 × %2	
 	Background services	
+	%1 core	%1 cores
+	%1 thread	%1 threads
+	GHz · max %1	
+	Peak %1	
+	Governor %1	
+	EPP %1	
+	%1 context switches/s	
+	Waiting for CPU %1 %	
+	Core %1	
+	Service	
+	%1 process	%1 processes
+	CPU	
+	Usage	
+	Clock	
+	Temperature	
+	Load 1/5/15	
+	Cores	
+	What uses the CPU	
+	Open System Monitor	
+	Source: system sensors	

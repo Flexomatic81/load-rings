@@ -2,24 +2,26 @@
 // SPDX-FileCopyrightText: 2026 Flexomatic81
 
 // Smoke scene for the freshness check of SystemSensors: fixed sensor values and a heartbeat the scene drives
-// (ScriptedHeartbeatSource.qml), with the rings the applet builds from `current`, in four steps:
-//   1  no heartbeat yet: not fresh, every ring shows the dash, `current` is NaN throughout (the lists keep
-//      their length, the GPU name stays), no tick
+// (ScriptedHeartbeatSource.qml), with the rings the applet builds from `current` and the popup fed from it, in
+// four steps:
+//   1  no heartbeat yet: not fresh, every ring and the processor figures of the popup (usage, clock, temperature,
+//      core grid) show the dash, `current` is NaN throughout (the lists keep their length, the GPU name stays),
+//      no tick
 //   2  the heartbeat starts: fresh, the rings show the numbers, `current` has the values, ticks arrive
 //   3  the heartbeat stops: after the heartbeat window not fresh again, same picture as in step 1, and the
 //      ticks stop
 //   4  the heartbeat comes back: fresh again, the numbers are back
-// The popup is not part of this scene yet.
 
 import QtQuick
 import "../../package/contents/ui/compact"
+import "../../package/contents/ui/full"
 import "../../package/contents/code/sensors.mjs" as SensorCode
 
 Item {
     id: scene
 
-    width: 300
-    height: 100
+    width: 600
+    height: 900
 
     readonly property int intervalMs: 500
     readonly property int windowMs: SensorCode.heartbeatWindowMs(scene.intervalMs)
@@ -84,7 +86,8 @@ Item {
             "cores[0].usage": Number.isNaN(now.cores[0].usage),
             "gpu.usage": Number.isNaN(now.gpu.usage),
             "gpu.name": now.gpu.name === "Test GPU",
-            "dashes": scene.texts() === "–,–,–"
+            "dashes": scene.texts() === "–,–,–",
+            "popup dashes": scene.popupTexts() === "–|–|–|–,–"
         };
         return scene.failedNames(checks);
     }
@@ -98,9 +101,29 @@ Item {
             "cores[1].usage": now.cores[1].usage === 60,
             "gpu.usage": now.gpu.usage === 7,
             "gpu.name": now.gpu.name === "Test GPU",
-            "numbers": scene.texts() === "34,58,7"
+            "numbers": scene.texts() === "34,58,7",
+            "popup numbers": scene.popupTexts() === "34 %|" + (3.6).toFixed(2).replace(".", Qt.locale().decimalPoint) + "|55 °C|5,60"
         };
         return scene.failedNames(checks);
+    }
+
+    // Untyped on purpose: the repeater hands out plain items.
+    function coreAt(index): var {
+        return popup.cpuColumn.coreGrid.cellRepeater.itemAt(index);
+    }
+
+    // "usage|clock|temperature|core values" as the popup shows them; the clock and temperature tiles must be
+    // visible.
+    function popupTexts(): string {
+        const cpu = popup.cpuColumn;
+        if (!cpu.clockTile.visible || !cpu.temperatureTile.visible) {
+            return "hidden tile";
+        }
+        const cores = [];
+        for (let i = 0; i < cpu.coreGrid.cellRepeater.count; i++) {
+            cores.push(scene.coreAt(i).valueText);
+        }
+        return [cpu.usageTile.value, cpu.clockTile.value, cpu.temperatureTile.value, cores.join(",")].join("|");
     }
 
     function failedNames(checks): string {
@@ -223,6 +246,14 @@ Item {
         height: 44
         // The same function the applet uses.
         rings: SensorCode.ringValues(sensors.current, sensors.gpuId !== "")
+    }
+
+    FullRepresentation {
+        id: popup
+
+        y: 100
+        current: sensors.current
+        fresh: sensors.fresh
     }
 
     Timer {

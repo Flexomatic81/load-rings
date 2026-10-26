@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: loadrings\n"
 "Report-Msgid-Bugs-To: https://github.com/Flexomatic81/load-rings/issues\n"
-"POT-Creation-Date: 2026-10-26 22:17+0100\n"
+"POT-Creation-Date: 2026-10-26 22:33+0100\n"
 "PO-Revision-Date: 2026-10-26 12:00+0100\n"
 "Last-Translator: Flexomatic81\n"
 "Language-Team: German\n"
@@ -19,9 +19,95 @@ msgstr ""
 msgid "%1 × %2"
 msgstr "%1 × %2"
 
+#: package/contents/code/popup.mjs:45
+msgid "%1 core"
+msgid_plural "%1 cores"
+msgstr[0] "%1 Kern"
+msgstr[1] "%1 Kerne"
+
+#: package/contents/code/popup.mjs:46
+msgid "%1 thread"
+msgid_plural "%1 threads"
+msgstr[0] "%1 Thread"
+msgstr[1] "%1 Threads"
+
+#: package/contents/code/popup.mjs:58
+msgid "GHz · max %1"
+msgstr "GHz · max. %1"
+
+#: package/contents/code/popup.mjs:63
+msgid "Peak %1"
+msgstr "Spitze %1"
+
+#: package/contents/code/popup.mjs:70
+msgid "Governor %1"
+msgstr "Governor %1"
+
+#: package/contents/code/popup.mjs:71
+msgid "EPP %1"
+msgstr "EPP %1"
+
+#: package/contents/code/popup.mjs:72
+msgid "%1 context switches/s"
+msgstr "%1 Kontextwechsel/s"
+
+#: package/contents/code/popup.mjs:73
+msgid "Waiting for CPU %1 %"
+msgstr "Wartezeit auf CPU %1 %"
+
+#: package/contents/code/popup.mjs:80
+msgid "Core %1"
+msgstr "Kern %1"
+
+#: package/contents/code/popup.mjs:88
+msgid "Service"
+msgstr "Dienst"
+
+#: package/contents/code/popup.mjs:89
+msgid "%1 process"
+msgid_plural "%1 processes"
+msgstr[0] "%1 Prozess"
+msgstr[1] "%1 Prozesse"
+
 #: package/contents/config/config.qml:29
 msgid "General"
 msgstr "Allgemein"
+
+#: package/contents/ui/full/CpuColumn.qml:85
+msgid "CPU"
+msgstr "CPU"
+
+#: package/contents/ui/full/CpuColumn.qml:119
+msgid "Usage"
+msgstr "Auslastung"
+
+#: package/contents/ui/full/CpuColumn.qml:131
+msgid "Clock"
+msgstr "Takt"
+
+#: package/contents/ui/full/CpuColumn.qml:143
+msgid "Temperature"
+msgstr "Temperatur"
+
+#: package/contents/ui/full/CpuColumn.qml:155
+msgid "Load 1/5/15"
+msgstr "Last 1/5/15"
+
+#: package/contents/ui/full/CpuColumn.qml:179
+msgid "Cores"
+msgstr "Kerne"
+
+#: package/contents/ui/full/CpuColumn.qml:205
+msgid "What uses the CPU"
+msgstr "Wer belastet die CPU"
+
+#: package/contents/ui/full/FullRepresentation.qml:131
+msgid "Open System Monitor"
+msgstr "Systemmonitor öffnen"
+
+#: package/contents/ui/full/FullRepresentation.qml:139
+msgid "Source: system sensors"
+msgstr "Quelle: Systemsensoren"
 
 #: package/contents/ui/full/RangeTabs.qml:40
 msgid "1 min"
@@ -39,10 +125,10 @@ msgstr "15 Min."
 msgid "1 h"
 msgstr "1 Std."
 
-#: package/contents/ui/main.qml:79
+#: package/contents/ui/main.qml:92
 msgid "Background services"
 msgstr "Hintergrunddienste"
 
-#: package/contents/ui/main.qml:102
+#: package/contents/ui/main.qml:135
 msgid "Load Rings"
 msgstr "Load Rings"

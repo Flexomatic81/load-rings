@@ -16,6 +16,7 @@ import "../../package/contents/code/hardware.mjs" as Hardware
 import "../../package/contents/code/history.mjs" as History
 import "../../package/contents/code/layout.mjs" as Layout
 import "../../package/contents/code/memory.mjs" as Memory
+import "../../package/contents/code/popup.mjs" as Popup
 import "../../package/contents/code/procstats.mjs" as ProcStats
 import "../../package/contents/code/sensors.mjs" as Sensors
 import "../../package/contents/code/text.mjs" as Text
@@ -33,6 +34,7 @@ Item {
             History.validMinutes(7) === 5,
             Layout.ringLayout({ vertical: false, thickness: 44, count: 2 }).width === 92,
             Memory.zramRatio({ orig: 6, compr: 2 }) === 3,
+            Popup.withUnit("34", "%") === "34 %",
             ProcStats.parseStats("@@stat\nctxt 7\n").ctxt === 7,
             Sensors.pickGpu(["gpu0"], "") === "gpu0",
             Text.substitute("%1", ["x"]) === "x"

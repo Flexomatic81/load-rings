@@ -35,7 +35,20 @@ PlasmoidItem {
 
     // Plasma 6 only instantiates compactRepresentation when a
     // fullRepresentation exists.
-    fullRepresentation: FullRepresentation {}
+    fullRepresentation: FullRepresentation {
+        current: sensors.current
+        fresh: sensors.fresh
+        history: root.history
+        graphMinutes: root.graphMinutes
+        // Switching the window in the popup is not stored.
+        onGraphMinutesPicked: minutes => root.graphMinutes = minutes
+        stats: procStats.stats
+        ctxtPerSecond: procStats.ctxtPerSecond
+        hardwareInfo: hardware.info
+        appRows: apps.rows
+        active: root.expanded
+        onOpenSystemMonitor: systemMonitor.launch()
+    }
     compactRepresentation: CompactRepresentation {
         rings: root.rings
         vertical: Plasmoid.formFactor === PlasmaCore.Types.Vertical
@@ -77,6 +90,26 @@ PlasmoidItem {
         active: root.expanded
         coreCount: sensors.current.coreCount
         servicesName: root.tr("Background services")
+    }
+
+    // The processor model and the memory modules, read once when the popup first opens.
+    HardwareInfo {
+        id: hardware
+    }
+
+    onExpandedChanged: {
+        if (root.expanded) {
+            hardware.load();
+        }
+    }
+
+    // Starts the system monitor from the popup.
+    Launcher {
+        id: systemMonitor
+
+        kind: "app"
+        app: "org.kde.plasma-systemmonitor"
+        onFailed: (code, target) => console.warn("loadrings: could not start " + target + " (" + code + ")")
     }
 
     // The load history for the graphs (in memory only) and the time window the popup shows. Switching the window
