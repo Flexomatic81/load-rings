@@ -20,6 +20,7 @@ import "../../package/contents/code/popup.mjs" as Popup
 import "../../package/contents/code/procstats.mjs" as ProcStats
 import "../../package/contents/code/sensors.mjs" as Sensors
 import "../../package/contents/code/text.mjs" as Text
+import "../../package/contents/code/tooltip.mjs" as Tooltip
 
 Item {
     id: scene
@@ -37,7 +38,8 @@ Item {
             Popup.withUnit("34", "%") === "34 %",
             ProcStats.parseStats("@@stat\nctxt 7\n").ctxt === 7,
             Sensors.pickGpu(["gpu0"], "") === "gpu0",
-            Text.substitute("%1", ["x"]) === "x"
+            Text.substitute("%1", ["x"]) === "x",
+            Tooltip.tooltipLines({ fresh: false }, { tr: text => text }, ".")[0] === "No data from the system sensors"
         ];
         const bad = results.indexOf(false);
         if (bad >= 0) {

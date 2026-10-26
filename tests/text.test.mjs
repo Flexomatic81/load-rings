@@ -3,7 +3,7 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { pluralFallback, substitute } from "../package/contents/code/text.mjs";
+import { parseSpinText, pluralFallback, substitute } from "../package/contents/code/text.mjs";
 
 test("a missing argument leaves its placeholder", () => {
   assert.equal(substitute("a %1 %2", ["x"]), "a x %2");
@@ -42,4 +42,30 @@ test("pluralFallback uses the plural for zero and for more than one", () => {
 
 test("pluralFallback passes the count as %1 and shifts the other arguments", () => {
   assert.equal(pluralFallback("%1 file in %2", "%1 files in %2", 3, ["dir"]), "3 files in dir");
+});
+
+const de = { decimalPoint: ",", groupSeparator: "." };
+const en = { decimalPoint: ".", groupSeparator: "," };
+const fr = { decimalPoint: ",", groupSeparator: "\u202f" };
+
+test("parseSpinText ignores the group separator and the unit", () => {
+  assert.equal(parseSpinText("1.024 KiB/s", de, 0, 7), 1024);
+  assert.equal(parseSpinText("1,024 KiB/s", en, 0, 7), 1024);
+  assert.equal(parseSpinText("1\u202f024 s", fr, 0, 7), 1024);
+  assert.equal(parseSpinText("1 024 s", fr, 0, 7), 1024);
+  assert.equal(parseSpinText("  42", en, 0, 7), 42);
+});
+
+test("parseSpinText reads the decimal point only with decimals", () => {
+  assert.equal(parseSpinText("2,5 s", de, 1, 7), 2.5);
+  assert.equal(parseSpinText("2.5 s", en, 1, 7), 2.5);
+  assert.equal(parseSpinText("2,5 s", de, 0, 7), 2);
+});
+
+test("parseSpinText gives the fallback without a leading number", () => {
+  assert.equal(parseSpinText("", en, 0, 7), 7);
+  assert.equal(parseSpinText("KiB/s", en, 0, 7), 7);
+  assert.equal(parseSpinText("-5", en, 0, 7), 7);
+  assert.equal(parseSpinText("abc", en, 0, 7), 7);
+  assert.equal(parseSpinText(",", en, 0, 7), 7);
 });

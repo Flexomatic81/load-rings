@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: loadrings\n"
 "Report-Msgid-Bugs-To: https://github.com/Flexomatic81/load-rings/issues\n"
-"POT-Creation-Date: 2026-10-26 22:58+0100\n"
+"POT-Creation-Date: 2026-10-26 23:13+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -69,66 +69,131 @@ msgid_plural "%1 processes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: package/contents/code/popup.mjs:128
+#: package/contents/code/popup.mjs:129
 msgid "%1 of %2 used"
 msgstr ""
 
-#: package/contents/code/popup.mjs:134
+#: package/contents/code/popup.mjs:135
 msgid "Programs"
 msgstr ""
 
-#: package/contents/code/popup.mjs:136
+#: package/contents/code/popup.mjs:137
 msgid "System"
 msgstr ""
 
-#: package/contents/code/popup.mjs:138
+#: package/contents/code/popup.mjs:139
 msgid "Cache"
 msgstr ""
 
-#: package/contents/code/popup.mjs:140
+#: package/contents/code/popup.mjs:141
 msgid "Free"
 msgstr ""
 
-#: package/contents/code/popup.mjs:142
+#: package/contents/code/popup.mjs:143
 msgid "Available"
 msgstr ""
 
-#: package/contents/code/popup.mjs:163
+#: package/contents/code/popup.mjs:164
 msgctxt "@label amount used of total"
 msgid "%1 of %2"
 msgstr ""
 
-#: package/contents/code/popup.mjs:178
+#: package/contents/code/popup.mjs:179
 msgid "%1 → %2 (%3 : 1)"
 msgstr ""
 
-#: package/contents/code/popup.mjs:187
+#: package/contents/code/popup.mjs:188
 msgid "ZRAM"
 msgstr ""
 
-#: package/contents/code/popup.mjs:197
+#: package/contents/code/popup.mjs:198
 msgid "Waited %1 % of the time"
 msgstr ""
 
-#: package/contents/code/popup.mjs:238
+#: package/contents/code/popup.mjs:248
 msgid "Memory clock %1 GHz"
 msgstr ""
 
-#: package/contents/code/popup.mjs:239
+#: package/contents/code/popup.mjs:249
 msgid "Hotspot %1"
 msgstr ""
 
-#: package/contents/code/popup.mjs:241
+#: package/contents/code/popup.mjs:251
 msgctxt "@label temperature of the graphics memory"
 msgid "Memory %1"
 msgstr ""
 
-#: package/contents/code/popup.mjs:242
+#: package/contents/code/popup.mjs:252
 msgid "Fan %1 RPM"
+msgstr ""
+
+#: package/contents/code/tooltip.mjs:33
+msgid "CPU %1"
+msgstr ""
+
+#: package/contents/code/tooltip.mjs:40
+msgid "%1 of %2"
+msgstr ""
+
+#: package/contents/code/tooltip.mjs:43
+msgid "RAM %1"
+msgstr ""
+
+#: package/contents/code/tooltip.mjs:50
+msgid "GPU %1"
+msgstr ""
+
+#: package/contents/code/tooltip.mjs:56
+msgid "No data from the system sensors"
 msgstr ""
 
 #: package/contents/config/config.qml:29
 msgid "General"
+msgstr ""
+
+#: package/contents/ui/config/ConfigGeneral.qml:58
+msgid "Update interval:"
+msgstr ""
+
+#: package/contents/ui/config/ConfigGeneral.qml:65
+msgctxt "@item:valuesuffix %1 is a number of seconds"
+msgid "%1 s"
+msgstr ""
+
+#: package/contents/ui/config/ConfigGeneral.qml:72
+msgid "Graph shows by default:"
+msgstr ""
+
+#: package/contents/ui/config/ConfigGeneral.qml:75
+msgctxt "@item:inlistbox time span of the graph"
+msgid "1 minute"
+msgstr ""
+
+#: package/contents/ui/config/ConfigGeneral.qml:79
+msgctxt "@item:inlistbox time span of the graph"
+msgid "5 minutes"
+msgstr ""
+
+#: package/contents/ui/config/ConfigGeneral.qml:83
+msgctxt "@item:inlistbox time span of the graph"
+msgid "15 minutes"
+msgstr ""
+
+#: package/contents/ui/config/ConfigGeneral.qml:87
+msgctxt "@item:inlistbox time span of the graph"
+msgid "1 hour"
+msgstr ""
+
+#: package/contents/ui/config/ConfigGeneral.qml:98
+msgid "Show graphics card"
+msgstr ""
+
+#: package/contents/ui/config/ConfigGeneral.qml:106
+msgid "Graphics card:"
+msgstr ""
+
+#: package/contents/ui/config/ConfigGeneral.qml:118
+msgid "No graphics card found"
 msgstr ""
 
 #: package/contents/ui/full/CpuColumn.qml:85
@@ -136,17 +201,17 @@ msgid "CPU"
 msgstr ""
 
 #: package/contents/ui/full/CpuColumn.qml:119
-#: package/contents/ui/full/GpuColumn.qml:100
+#: package/contents/ui/full/GpuColumn.qml:101
 msgid "Usage"
 msgstr ""
 
 #: package/contents/ui/full/CpuColumn.qml:131
-#: package/contents/ui/full/GpuColumn.qml:112
+#: package/contents/ui/full/GpuColumn.qml:113
 msgid "Clock"
 msgstr ""
 
 #: package/contents/ui/full/CpuColumn.qml:143
-#: package/contents/ui/full/GpuColumn.qml:124
+#: package/contents/ui/full/GpuColumn.qml:125
 msgid "Temperature"
 msgstr ""
 
@@ -170,15 +235,15 @@ msgstr ""
 msgid "Source: system sensors"
 msgstr ""
 
-#: package/contents/ui/full/GpuColumn.qml:75
+#: package/contents/ui/full/GpuColumn.qml:76
 msgid "GPU"
 msgstr ""
 
-#: package/contents/ui/full/GpuColumn.qml:136
+#: package/contents/ui/full/GpuColumn.qml:137
 msgid "Power"
 msgstr ""
 
-#: package/contents/ui/full/GpuColumn.qml:163
+#: package/contents/ui/full/GpuColumn.qml:164
 msgid "Video memory"
 msgstr ""
 
@@ -214,10 +279,6 @@ msgstr ""
 msgid "1 h"
 msgstr ""
 
-#: package/contents/ui/main.qml:93
+#: package/contents/ui/main.qml:94
 msgid "Background services"
-msgstr ""
-
-#: package/contents/ui/main.qml:136
-msgid "Load Rings"
 msgstr ""

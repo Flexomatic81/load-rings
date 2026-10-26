@@ -14,6 +14,7 @@ import "full"
 import "../code/history.mjs" as HistoryCode
 import "../code/sensors.mjs" as SensorCode
 import "../code/text.mjs" as TextTools
+import "../code/tooltip.mjs" as TooltipCode
 
 PlasmoidItem {
     id: root
@@ -134,7 +135,14 @@ PlasmoidItem {
 
     readonly property var rings: SensorCode.ringValues(sensors.current, sensors.gpuId !== "")
 
-    toolTipMainText: root.tr("Load Rings")
+    // The tooltip reads the same snapshot as the rings, so stale sensors show up as one line there too.
+    readonly property var translator: ({
+            tr: root.tr,
+            trc: root.trc,
+            trp: root.trp
+        })
+    toolTipMainText: "Load Rings"
+    toolTipSubText: TooltipCode.tooltipLines(TooltipCode.tooltipState(sensors.fresh, sensors.current, sensors.gpuId !== ""), root.translator, Qt.locale().decimalPoint).join("\n")
 
     Component.onCompleted: console.debug("loadrings: loaded")
 }

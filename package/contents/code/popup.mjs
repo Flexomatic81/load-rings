@@ -115,7 +115,8 @@ export function memoryHeader(memory, totalBytes, t, decimalPoint) {
 }
 
 // Two sizes for "x of y": the unit of the first is left out when both share it ("18.6 of 31.3 GiB").
-function sizePair(first, second, decimalPoint) {
+// "18.6" and "31.3 GiB": the unit is said once when both sizes share it.
+export function sizePair(first, second, decimalPoint) {
   const a = formatBytes(first, decimalPoint);
   const b = formatBytes(second, decimalPoint);
   return [a.unit === b.unit ? a.value : `${a.value} ${a.unit}`, `${b.value} ${b.unit}`];

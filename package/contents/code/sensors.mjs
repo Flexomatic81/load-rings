@@ -107,6 +107,15 @@ export function gpuSensorIds(gpuId) {
   return ids;
 }
 
+// The entries of the graphics card list of the settings: { text, value } per card, the name where the sensor
+// gave one (the ID otherwise), with the ID added where two cards share a name. names maps an ID to its name.
+export function gpuOptions(ids, names) {
+  const known = names || {};
+  const label = (id) => (typeof known[id] === "string" && known[id] !== "" ? known[id] : id);
+  const count = (text) => ids.filter((id) => label(id) === text).length;
+  return ids.map((id) => ({ text: count(label(id)) > 1 ? `${label(id)} (${id})` : label(id), value: id }));
+}
+
 // The wanted GPU if it exists, else the first one, else null.
 export function pickGpu(available, wanted) {
   if (available.indexOf(wanted) >= 0) return wanted;

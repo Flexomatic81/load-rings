@@ -12,6 +12,7 @@ import {
   heartbeatAllows,
   coreSensorIds,
   gpuIdsFromSensorIds,
+  gpuOptions,
   gpuSensorIds,
   pickGpu,
   chosenGpu,
@@ -149,6 +150,23 @@ test("gpu sensor ids", () => {
     fan1: "gpu/gpu0/fan1",
   });
 });
+test("gpu options: the name, the ID as a fallback, the ID added for equal names", () => {
+  assert.deepEqual(gpuOptions(["gpu0", "gpu1"], { gpu0: "Radeon", gpu1: "GeForce" }), [
+    { text: "Radeon", value: "gpu0" },
+    { text: "GeForce", value: "gpu1" },
+  ]);
+  assert.deepEqual(gpuOptions(["gpu0", "gpu1"], { gpu0: "Radeon", gpu1: "" }), [
+    { text: "Radeon", value: "gpu0" },
+    { text: "gpu1", value: "gpu1" },
+  ]);
+  assert.deepEqual(gpuOptions(["gpu0", "gpu1"], { gpu0: "Radeon", gpu1: "Radeon" }), [
+    { text: "Radeon (gpu0)", value: "gpu0" },
+    { text: "Radeon (gpu1)", value: "gpu1" },
+  ]);
+  assert.deepEqual(gpuOptions(["gpu0"], undefined), [{ text: "gpu0", value: "gpu0" }]);
+  assert.deepEqual(gpuOptions([], {}), []);
+});
+
 test("pick gpu", () => {
   assert.equal(pickGpu(["gpu0", "gpu1"], "gpu1"), "gpu1");
   assert.equal(pickGpu(["gpu0"], "gpu3"), "gpu0");

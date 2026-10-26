@@ -24,7 +24,22 @@
 	Hotspot %1	
 @label temperature of the graphics memory	Memory %1	
 	Fan %1 RPM	
+	CPU %1	
+	%1 of %2	
+	RAM %1	
+	GPU %1	
+	No data from the system sensors	
 	General	
+	Update interval:	
+@item:valuesuffix %1 is a number of seconds	%1 s	
+	Graph shows by default:	
+@item:inlistbox time span of the graph	1 minute	
+@item:inlistbox time span of the graph	5 minutes	
+@item:inlistbox time span of the graph	15 minutes	
+@item:inlistbox time span of the graph	1 hour	
+	Show graphics card	
+	Graphics card:	
+	No graphics card found	
 	CPU	
 	Usage	
 	Clock	
@@ -46,4 +61,3 @@
 	15 min	
 	1 h	
 	Background services	
-	Load Rings	
