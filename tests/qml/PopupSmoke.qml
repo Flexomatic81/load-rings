@@ -10,7 +10,8 @@
 // through its signal. The graphics card column exists only for a GPU that is switched on and found (two columns
 // otherwise); with all values it shows the figures, the graph, the video memory and the details, with none the
 // optional parts are hidden, and the history of another card gives an empty graph and no peak. Next to a taller
-// processor column the card column keeps its own height instead of stretching its tiles.
+// processor column the card column keeps its own height instead of stretching its tiles. A popup that has just
+// opened keeps its height when the per-core values arrive.
 
 import QtQuick
 import QtQuick.Layouts
@@ -194,6 +195,56 @@ Item {
             })
         appRows: scene.fullRows
         onOpenSystemMonitor: scene.monitorOpened += 1
+    }
+
+    // Just opened: the sensors know the number of cores, but the per-core values and the programs are not there
+    // yet. They arrive later (see fill); the columns must not change their height then.
+    FullRepresentation {
+        id: loading
+
+        y: 4900
+        current: Object.assign({}, scene.fullCurrent, {
+            "cores": []
+        })
+        fresh: true
+        stats: scene.fullStats
+        hardwareInfo: ({
+                "cpuModel": "AMD Ryzen 7 5800X3D",
+                "physicalCores": 8,
+                "memory": null
+            })
+        appRows: []
+    }
+
+    // The heights of the loading view before its values arrived.
+    property var loadingHeights: ({})
+
+    function heightsOf(view: var): var {
+        return {
+            "grid": view.cpuColumn.coreGrid.height,
+            "cpu": view.cpuColumn.height,
+            "ram": view.ramColumn.height
+        };
+    }
+
+    function loadingProblem(): string {
+        const before = scene.loadingHeights;
+        const after = scene.heightsOf(loading);
+        const grid = loading.cpuColumn.coreGrid;
+        return scene.failedNames({
+            "grid filled": grid.cellRepeater.count === 16 && scene.itemOf(grid.cellRepeater, 15).valueText === "90",
+            "grid height": before.grid > 0 && before.grid === after.grid
+        }) + " (before " + JSON.stringify(before) + ", after " + JSON.stringify(after) + ")";
+    }
+
+    // Records the heights of the loading view, then lets its values arrive.
+    Timer {
+        interval: 250
+        running: true
+        onTriggered: {
+            scene.loadingHeights = scene.heightsOf(loading);
+            loading.current = scene.fullCurrent;
+        }
     }
 
     FullRepresentation {
@@ -423,13 +474,15 @@ Item {
             const gpuWrong = scene.gpuProblem();
             const gpuBlankWrong = scene.gpuBlankProblem();
             const gpuOtherWrong = scene.gpuOtherProblem();
+            const loadingWrong = scene.loadingProblem();
+            const loadingOk = loadingWrong.startsWith(" (");
             full.footer.children[0].clicked();
             const picked = scene.monitorOpened === 1;
-            if (fullWrong === "" && emptyWrong === "" && ramWrong === "" && emptyRamWrong === "" && gpuWrong === "" && gpuBlankWrong === "" && gpuOtherWrong === "" && picked) {
+            if (fullWrong === "" && emptyWrong === "" && ramWrong === "" && emptyRamWrong === "" && gpuWrong === "" && gpuBlankWrong === "" && gpuOtherWrong === "" && loadingOk && picked) {
                 console.log("SMOKE OK popup");
                 Qt.exit(0);
             } else {
-                console.log("SMOKE FAIL popup: full wrong: " + fullWrong + "; empty wrong: " + emptyWrong + "; ram wrong: " + ramWrong + "; empty ram wrong: " + emptyRamWrong + "; gpu wrong: " + gpuWrong + "; gpu blank wrong: " + gpuBlankWrong + "; gpu other wrong: " + gpuOtherWrong + "; monitor " + scene.monitorOpened);
+                console.log("SMOKE FAIL popup: full wrong: " + fullWrong + "; empty wrong: " + emptyWrong + "; ram wrong: " + ramWrong + "; empty ram wrong: " + emptyRamWrong + "; gpu wrong: " + gpuWrong + "; gpu blank wrong: " + gpuBlankWrong + "; gpu other wrong: " + gpuOtherWrong + "; loading wrong: " + loadingWrong + "; monitor " + scene.monitorOpened);
                 Qt.exit(1);
             }
         }

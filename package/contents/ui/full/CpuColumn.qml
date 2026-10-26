@@ -184,8 +184,10 @@ ColumnLayout {
         id: grid
 
         Layout.fillWidth: true
-        visible: root.cores.length > 0
+        visible: grid.cellCount > 0
         cores: root.cores
+        // Known before the per-core values, which come only after the popup opened.
+        count: Number.isFinite(root.current.coreCount) ? root.current.coreCount : 0
     }
 
     QQC2.Label {

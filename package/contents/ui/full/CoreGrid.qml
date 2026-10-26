@@ -35,8 +35,13 @@ Item {
 
     // [{ usage, frequency, temperature }], one per logical CPU. May be empty.
     property var cores: []
+    // The number of logical CPUs as far as it is known before their values (0 otherwise). The grid lays out that
+    // many cells at once, so it does not grow when the values arrive; a cell without its value shows the dash.
+    property int count: 0
 
-    readonly property int columns: LayoutLogic.coreGridColumns(root.cores.length)
+    // The cells laid out.
+    readonly property int cellCount: Math.max(root.cores.length, root.count)
+    readonly property int columns: LayoutLogic.coreGridColumns(root.cellCount)
     readonly property real cellSpacing: 2
     // The cells share the width the grid gets.
     readonly property real cellWidth: Math.max(1, (root.width - (root.columns - 1) * root.cellSpacing) / root.columns)
@@ -66,7 +71,7 @@ Item {
             id: repeater
 
             // The count, not the list: new values must not rebuild the cells.
-            model: root.cores.length
+            model: root.cellCount
 
             Column {
                 id: cell
