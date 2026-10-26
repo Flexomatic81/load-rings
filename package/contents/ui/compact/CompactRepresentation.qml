@@ -48,7 +48,8 @@ Item {
         id: grid
 
         anchors.centerIn: parent
-        flow: root.vertical && !root.onDesktop ? Grid.TopToBottom : Grid.LeftToRight
+        // One row or one column; a Grid without a count would wrap after four items and set a vertical one in a row.
+        columns: root.vertical && !root.onDesktop ? 1 : Math.max(1, root.keys.length)
         spacing: root.geometry.spacing
 
         Repeater {

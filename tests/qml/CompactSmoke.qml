@@ -2,9 +2,10 @@
 // SPDX-FileCopyrightText: 2026 Flexomatic81
 
 // Smoke scene for CompactRepresentation: two and three rings in a horizontal (44 px high) and a vertical (30 px
-// wide) panel, the sizes against ringLayout, the dash of a ring without a value, and the click signal. The rings
-// built the way the applet builds them: two with the GPU off or not found, three with the GPU on and found.
-// plasmawindowed does not instantiate the compact view, so this scene is the only runtime check of its bindings.
+// wide) panel, set in one row or stacked in one column, the sizes against ringLayout, the dash of a ring without a
+// value, and the click signal. The rings built the way the applet builds them: two with the GPU off or not found,
+// three with the GPU on and found. plasmawindowed does not instantiate the compact view, so this scene is the only
+// runtime check of its bindings.
 
 import QtQuick
 import "../../package/contents/ui/compact"
@@ -180,6 +181,11 @@ Item {
             scene.expect("rounded", scene.ringAt(vertical3, 2).text, "100");
             scene.expect("no arc without a value", scene.ringAt(vertical3, 1).hasArc, false);
             scene.expect("arc with a value", scene.ringAt(vertical3, 0).hasArc, true);
+            // A vertical panel stacks the rings in one column, a horizontal one puts them in one row.
+            scene.expect("vertical: one column", scene.ringAt(vertical3, 2).x === scene.ringAt(vertical3, 0).x, true);
+            scene.expect("vertical: top to bottom", scene.ringAt(vertical3, 0).y < scene.ringAt(vertical3, 1).y && scene.ringAt(vertical3, 1).y < scene.ringAt(vertical3, 2).y, true);
+            scene.expect("horizontal: one row", scene.ringAt(horizontal3, 2).y === scene.ringAt(horizontal3, 0).y, true);
+            scene.expect("horizontal: left to right", scene.ringAt(horizontal3, 0).x < scene.ringAt(horizontal3, 1).x && scene.ringAt(horizontal3, 1).x < scene.ringAt(horizontal3, 2).x, true);
             // A changed percent updates the ring in place; the ring items are not rebuilt.
             const before = scene.ringAt(horizontal2, 0);
             horizontal2.rings = [
