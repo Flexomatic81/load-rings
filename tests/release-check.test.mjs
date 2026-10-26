@@ -3,7 +3,8 @@
 
 // scripts/release-check.sh against a temporary tree: it passes only when the
 // version, the changelog heading, the screenshots and the release record are
-// all in place, and it names every gate that is not.
+// all in place, and it names every gate that is not. The screenshots it checks are the ones the screenshot tool
+// writes.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
@@ -11,18 +12,11 @@ import { copyFileSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSy
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { SHOTS as SCREENSHOT_FILES } from "../tools/screenshots/demo.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SCRIPT = path.join(ROOT, "scripts", "release-check.sh");
-const SHOTS = [
-  "panel-rows",
-  "panel-single",
-  "panel-vertical",
-  "panel-colors",
-  "panel-sparkline",
-  "popup",
-  "settings-appearance",
-];
+const SHOTS = ["panel", "panel-gpu", "panel-vertical", "panel-colors", "popup", "popup-gpu", "settings"];
 const PNG = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0, 0, 0, 13]);
 
 const METADATA = (version) =>
@@ -79,10 +73,40 @@ function assertFails(change, pattern) {
   assert.match(result.stderr, /is not ready for release/);
 }
 
-test("the script checks the screenshots this test provides", () => {
+test("the script checks exactly the screenshots the screenshot tool writes", () => {
   const line = /^SCREENSHOTS="([^"]*)"$/m.exec(readFileSync(SCRIPT, "utf8"));
   assert.ok(line, "no SCREENSHOTS line in the script");
-  assert.deepEqual(line[1].split(" "), SHOTS);
+  assert.deepEqual(
+    line[1].split(" ").map((name) => `${name}.png`),
+    SCREENSHOT_FILES,
+  );
+  assert.deepEqual(
+    SHOTS.map((name) => `${name}.png`),
+    SCREENSHOT_FILES,
+  );
+});
+
+test("a changelog heading with the version in brackets counts too", () => {
+  const passed = run(
+    makeTree((dir) => writeFileSync(path.join(dir, "CHANGELOG.md"), CHANGELOG("## [2.0.0] – 2026-11-03"))),
+  );
+  assert.equal(passed.status, 0, passed.stderr);
+  assert.equal(
+    run(makeTree((dir) => writeFileSync(path.join(dir, "CHANGELOG.md"), CHANGELOG("## [2.0.0] - 2026-11-03")))).status,
+    0,
+  );
+  assertFails(
+    (dir) => writeFileSync(path.join(dir, "CHANGELOG.md"), CHANGELOG("## [2.0.0] – unreleased")),
+    /still marks 2\.0\.0 as unreleased/,
+  );
+  assertFails(
+    (dir) => writeFileSync(path.join(dir, "CHANGELOG.md"), CHANGELOG("## [2.0.0]")),
+    /heading for 2\.0\.0 has no release date/,
+  );
+  assertFails(
+    (dir) => writeFileSync(path.join(dir, "CHANGELOG.md"), CHANGELOG("## [2.0.0x] – 2026-11-03")),
+    /CHANGELOG\.md has no heading '## 2\.0\.0'/,
+  );
 });
 
 test("a tree that meets every gate passes", () => {
@@ -147,12 +171,12 @@ test("a changelog heading without a date fails", () => {
 test("a missing, empty or non-PNG screenshot fails", () => {
   assertFails((dir) => rmSync(path.join(dir, "docs", "images", "popup.png")), /docs\/images\/popup\.png is missing/);
   assertFails(
-    (dir) => writeFileSync(path.join(dir, "docs", "images", "panel-rows.png"), ""),
-    /docs\/images\/panel-rows\.png is missing or empty/,
+    (dir) => writeFileSync(path.join(dir, "docs", "images", "panel.png"), ""),
+    /docs\/images\/panel\.png is missing or empty/,
   );
   assertFails(
-    (dir) => writeFileSync(path.join(dir, "docs", "images", "panel-sparkline.png"), "<svg/>"),
-    /docs\/images\/panel-sparkline\.png is not a PNG file/,
+    (dir) => writeFileSync(path.join(dir, "docs", "images", "panel-colors.png"), "<svg/>"),
+    /docs\/images\/panel-colors\.png is not a PNG file/,
   );
 });
 

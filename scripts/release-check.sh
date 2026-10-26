@@ -7,9 +7,12 @@
 # Usage: scripts/release-check.sh <version>
 # Checks, all of them, and reports every problem before it fails:
 # - package/metadata.json has the Version <version>;
-# - CHANGELOG.md has a heading "## <version> – <date>" (date as YYYY-MM-DD)
-#   that does not say "unreleased";
-# - the screenshots in docs/images exist and are PNG files;
+# - CHANGELOG.md has a heading "## <version> – <date>" or
+#   "## [<version>] – <date>" (date as YYYY-MM-DD) that does not say
+#   "unreleased";
+# - the screenshots in docs/images exist and are PNG files: the files the
+#   screenshot tool writes (SHOTS in tools/screenshots/demo.mjs, which
+#   tests/release-check.test.mjs keeps in step with the list below);
 # - the table "Release record <version>" in docs/testing.md exists and every
 #   row has a date and a result that is not a failure (a result starting with
 #   "fail" or "no", in any case, counts as not passed).
@@ -25,7 +28,7 @@ if [ "$#" -ne 1 ] || [ -z "$1" ]; then
 fi
 version="$1"
 
-SCREENSHOTS="panel-rows panel-single panel-vertical panel-colors panel-sparkline popup settings-appearance"
+SCREENSHOTS="panel panel-gpu panel-vertical panel-colors popup popup-gpu settings"
 PNG_SIGNATURE="89504e470d0a1a0a"
 problems=0
 
@@ -48,7 +51,7 @@ check_changelog() {
     fail "CHANGELOG.md is missing"
     return
   fi
-  heading="$(awk -v v="$version" '$1 == "##" && $2 == v { print; exit }' CHANGELOG.md)"
+  heading="$(awk -v v="$version" '$1 == "##" && ($2 == v || $2 == "[" v "]") { print; exit }' CHANGELOG.md)"
   if [ -z "$heading" ]; then
     fail "CHANGELOG.md has no heading '## $version'"
   elif printf '%s\n' "$heading" | grep -qi 'unreleased'; then
