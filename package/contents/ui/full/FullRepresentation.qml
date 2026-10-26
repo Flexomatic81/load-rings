@@ -43,8 +43,10 @@ Item {
     property real ctxtPerSecond: NaN
     // HardwareInfo.info, or null.
     property var hardwareInfo: null
-    // AppsSource.rows.
+    // AppsSource.rows, and whether the programs can be read at all (AppsSource.available): while they can, the
+    // program lists keep their room until the first values arrive.
     property var appRows: []
+    property bool appsAvailable: true
     // The graphics card shown ("gpu0"), "" when there is none or it is switched off: no GPU column then.
     property string gpuId: ""
     // Whether the popup is open; the graphs only follow the history while it is.
@@ -162,6 +164,7 @@ Item {
                 ctxtPerSecond: root.shownCtxt
                 hardwareInfo: root.hardwareInfo
                 appRows: root.shownRows
+                appsAvailable: root.appsAvailable
                 onGraphMinutesPicked: minutes => root.graphMinutesPicked(minutes)
             }
 
@@ -180,6 +183,7 @@ Item {
                 stats: root.shownStats
                 hardwareInfo: root.hardwareInfo
                 appRows: root.shownRows
+                appsAvailable: root.appsAvailable
                 onGraphMinutesPicked: minutes => root.graphMinutesPicked(minutes)
             }
 

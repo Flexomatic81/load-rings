@@ -49,8 +49,9 @@ ColumnLayout {
     property var stats: null
     // HardwareInfo.info, or null.
     property var hardwareInfo: null
-    // AppsSource.rows.
+    // AppsSource.rows, and whether the programs can be read at all (AppsSource.available).
     property var appRows: []
+    property bool appsAvailable: false
 
     // The user picked another time window.
     signal graphMinutesPicked(int minutes)
@@ -66,7 +67,7 @@ ColumnLayout {
     // The last total the sensors reported: it stays while they are stale, so the header and the shares keep their
     // basis, and it only changes (and so only recomputes the ranking) when the total itself changes.
     property real memTotal: NaN
-    readonly property var consumerItems: Apps.topConsumers(root.appRows, "memory", root.memTotal)
+    readonly property var consumerItems: Apps.topConsumers(root.appRows, "memory", root.memTotal, consumers.limit)
     readonly property var segments: Memory.memoryBreakdown({
             total: root.current.memTotal,
             used: root.current.memUsed,
@@ -239,8 +240,10 @@ ColumnLayout {
         id: consumers
 
         Layout.fillWidth: true
-        visible: root.consumerItems.length > 0
+        // While the programs can be read the list keeps its room, also before their values arrive.
+        visible: root.consumerItems.length > 0 || root.appsAvailable
         items: root.consumerItems
+        reserved: root.appsAvailable
         unit: "bytes"
     }
 }

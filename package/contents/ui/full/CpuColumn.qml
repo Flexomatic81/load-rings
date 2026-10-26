@@ -49,8 +49,9 @@ ColumnLayout {
     property real ctxtPerSecond: NaN
     // HardwareInfo.info, or null.
     property var hardwareInfo: null
-    // AppsSource.rows.
+    // AppsSource.rows, and whether the programs can be read at all (AppsSource.available).
     property var appRows: []
+    property bool appsAvailable: false
 
     // The user picked another time window.
     signal graphMinutesPicked(int minutes)
@@ -62,7 +63,7 @@ ColumnLayout {
         })
     readonly property string decimalPoint: Qt.locale().decimalPoint
     readonly property var cores: root.current.cores ?? []
-    readonly property var consumerItems: Apps.topConsumers(root.appRows, "cpu", 100)
+    readonly property var consumerItems: Apps.topConsumers(root.appRows, "cpu", 100, consumers.limit)
 
     // Parts for the smoke scenes.
     readonly property QQC2.Label modelLabel: modelText
@@ -212,8 +213,10 @@ ColumnLayout {
         id: consumers
 
         Layout.fillWidth: true
-        visible: root.consumerItems.length > 0
+        // While the programs can be read the list keeps its room, also before their values arrive.
+        visible: root.consumerItems.length > 0 || root.appsAvailable
         items: root.consumerItems
+        reserved: root.appsAvailable
         unit: "percent"
     }
 }

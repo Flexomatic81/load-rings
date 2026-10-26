@@ -35,6 +35,11 @@ ColumnLayout {
     property var items: []
     // How the values read: "percent" or "bytes".
     property string unit: "percent"
+    // The most rows the list shows.
+    property int limit: 5
+    // True while the programs can be read: the list then always lays out `limit` rows, blank until the values
+    // arrive, so it does not grow a few seconds after the popup opens.
+    property bool reserved: false
 
     readonly property var translator: ({
             tr: root.tr,
@@ -52,6 +57,8 @@ ColumnLayout {
         })
     // The rows, for tests.
     readonly property alias rowRepeater: repeater
+    // The rows laid out.
+    readonly property int rowCount: root.reserved ? Math.max(root.limit, root.items.length) : root.items.length
 
     spacing: 0
 
@@ -59,7 +66,7 @@ ColumnLayout {
         id: repeater
 
         // The count, not the list: new values must not rebuild the rows and reload their icons.
-        model: root.items.length
+        model: root.rowCount
 
         RowLayout {
             id: row
@@ -69,6 +76,8 @@ ColumnLayout {
 
             Layout.fillWidth: true
             spacing: Kirigami.Units.smallSpacing
+            // A row without a program keeps its room but shows nothing.
+            opacity: row.index < root.items.length ? 1 : 0
 
             Kirigami.Icon {
                 Layout.preferredWidth: Kirigami.Units.iconSizes.small

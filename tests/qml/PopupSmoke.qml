@@ -2,7 +2,7 @@
 // SPDX-FileCopyrightText: 2026 Flexomatic81
 
 // Smoke scene for the popup: one view with every value set, one with every optional value missing (no
-// temperature, no clock, no kernel statistics, no hardware info, no programs, no cores). The first shows all
+// temperature, no clock, no kernel statistics, no hardware info, no programs to read, no cores). The first shows all
 // figures; in the second the temperature, clock and load tiles, the core grid, the details and the program list
 // are hidden and the header shows only "CPU". In the memory column the first shows the figures, the bar whose
 // segments add up to its width, swap, ZRAM, pressure and the program list; in the second the swap, ZRAM and
@@ -11,7 +11,8 @@
 // otherwise); with all values it shows the figures, the graph, the video memory and the details, with none the
 // optional parts are hidden, and the history of another card gives an empty graph and no peak. Next to a taller
 // processor column the card column keeps its own height instead of stretching its tiles. A popup that has just
-// opened keeps its height when the per-core values arrive.
+// opened keeps its height when the per-core values and the programs arrive: the core grid and the program lists
+// keep their room from the start.
 
 import QtQuick
 import QtQuick.Layouts
@@ -223,7 +224,9 @@ Item {
         return {
             "grid": view.cpuColumn.coreGrid.height,
             "cpu": view.cpuColumn.height,
-            "ram": view.ramColumn.height
+            "ram": view.ramColumn.height,
+            "cpuRows": view.cpuColumn.consumerList.visible ? view.cpuColumn.consumerList.rowRepeater.count : 0,
+            "ramRows": view.ramColumn.consumerList.visible ? view.ramColumn.consumerList.rowRepeater.count : 0
         };
     }
 
@@ -233,7 +236,12 @@ Item {
         const grid = loading.cpuColumn.coreGrid;
         return scene.failedNames({
             "grid filled": grid.cellRepeater.count === 16 && scene.itemOf(grid.cellRepeater, 15).valueText === "90",
-            "grid height": before.grid > 0 && before.grid === after.grid
+            "grid height": before.grid > 0 && before.grid === after.grid,
+            // The program lists keep their room while the programs are read, so the columns keep their height.
+            "lists reserved": before.cpuRows === 5 && before.ramRows === 5,
+            "lists filled": loading.cpuColumn.consumerList.items.length === 2 && loading.ramColumn.consumerList.items.length === 3,
+            "cpu height": before.cpu === after.cpu,
+            "ram height": before.ram === after.ram
         }) + " (before " + JSON.stringify(before) + ", after " + JSON.stringify(after) + ")";
     }
 
@@ -244,6 +252,7 @@ Item {
         onTriggered: {
             scene.loadingHeights = scene.heightsOf(loading);
             loading.current = scene.fullCurrent;
+            loading.appRows = scene.fullRows;
         }
     }
 
@@ -257,6 +266,8 @@ Item {
         ctxtPerSecond: NaN
         hardwareInfo: null
         appRows: []
+        // No session cgroups to read: the program lists are left out.
+        appsAvailable: false
     }
 
     FullRepresentation {
@@ -359,7 +370,8 @@ Item {
             "swap": ram.swapRow.visible && ram.swapRow.text === scene.local("954 MiB of 7.5 GiB"),
             "zram": ram.zramRepeater.count === 1 && scene.itemOf(ram.zramRepeater, 0).text === scene.local("1.9 GiB → 572 MiB (3.3 : 1)"),
             "pressure": ram.pressureRow.visible && ram.pressureRow.text === scene.local("Waited 0.4 % of the time"),
-            "consumers": ram.consumerList.visible && ram.consumerList.rowRepeater.count === 3
+            // Three programs in five rows: the rows without a program keep the room of the list.
+            "consumers": ram.consumerList.visible && ram.consumerList.items.length === 3 && ram.consumerList.rowRepeater.count === 5
         });
     }
 
@@ -441,7 +453,7 @@ Item {
             "load": cpu.loadTile.visible && cpu.loadTile.value === scene.local("2.1 · 1.8 · 1.4"),
             "cores": cpu.coreGrid.visible && cpu.coreGrid.cellRepeater.count === 16 && scene.itemOf(cpu.coreGrid.cellRepeater, 15).valueText === "90",
             "details": cpu.detailsLabel.text === "Governor schedutil · EPP balance_performance · 41 k context switches/s · Waiting for CPU 3 %",
-            "consumers": cpu.consumerList.visible && rows.count === 2,
+            "consumers": cpu.consumerList.visible && cpu.consumerList.items.length === 2 && rows.count === 5,
             "graph": full.graphWindow.times.length === 3 && full.graphNow >= scene.now,
             "width": full.Layout.preferredWidth > 0 && full.Layout.preferredHeight > 0
         });

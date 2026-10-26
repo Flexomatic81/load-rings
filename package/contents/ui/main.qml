@@ -48,6 +48,7 @@ PlasmoidItem {
         hardwareInfo: hardware.info
         gpuId: sensors.gpuId
         appRows: apps.rows
+        appsAvailable: apps.available
         active: root.expanded
         onOpenSystemMonitor: systemMonitor.launch()
     }
