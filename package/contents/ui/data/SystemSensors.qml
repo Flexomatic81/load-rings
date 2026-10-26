@@ -46,7 +46,7 @@ Item {
     readonly property real swapTotal: root.num(swapTotalSensor.value)
     readonly property real swapUsed: root.num(swapUsedSensor.value)
     // The GPUs ksystemstats offers ("gpu0", ...) and the chosen one ("" when none or not shown).
-    property var gpuIds: []
+    property var gpuIds: cards.ids
     // Writable only as a test seam.
     property string gpuId: SensorCode.chosenGpu(root.gpuEnabled, root.gpuIds, root.gpuWanted)
     readonly property var gpu: ({
@@ -113,33 +113,6 @@ Item {
 
         function refreshFresh() {
             root.fresh = SensorCode.heartbeatAllows(internals.gate, Date.now(), root.interval);
-        }
-
-        // Appends the sensor IDs of all rows below `parent` that are at most `depth` levels deep. Leaves carry an
-        // ID, categories and groups do not.
-        function collectSensorIds(parent, depth, ids) {
-            const rows = tree.rowCount(parent);
-            for (let row = 0; row < rows; row++) {
-                const index = tree.index(row, 0, parent);
-                const id = tree.data(index, Sensors.SensorTreeModel.SensorId);
-                if (typeof id === "string" && id !== "") {
-                    ids.push(id);
-                }
-                if (depth > 1) {
-                    internals.collectSensorIds(index, depth - 1, ids);
-                }
-            }
-        }
-
-        // Re-reads the GPU list from the sensor tree. Only sensor IDs are used, never the labels.
-        function rescan() {
-            const ids = [];
-            // An invalid index stands for the root of the tree.
-            internals.collectSensorIds(tree.index(-1, -1), 3, ids);
-            const names = SensorCode.gpuIdsFromSensorIds(ids);
-            if (names.join("\n") !== root.gpuIds.join("\n")) {
-                root.gpuIds = names;
-            }
         }
 
         // objectAt() is typed QObject; the properties of the delegate are only known at runtime.
@@ -338,32 +311,9 @@ Item {
         updateRateLimit: root.interval
     }
 
-    Sensors.SensorTreeModel {
-        id: tree
-    }
-
-    // The tree fills up and changes in many small steps; the timer merges them.
-    Connections {
-        target: tree
-
-        function onRowsInserted() {
-            rescanTimer.restart();
-        }
-
-        function onRowsRemoved() {
-            rescanTimer.restart();
-        }
-
-        function onModelReset() {
-            rescanTimer.restart();
-        }
-    }
-
-    Timer {
-        id: rescanTimer
-
-        interval: 500
-        onTriggered: internals.rescan()
+    // The graphics cards in the sensor tree.
+    GpuChoices {
+        id: cards
     }
 
     // libksysguard does not repeat unchanged values, so a stalled ksystemstats cannot be told from steady
@@ -410,5 +360,4 @@ Item {
         }
     }
 
-    Component.onCompleted: rescanTimer.start()
 }

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: loadrings\n"
 "Report-Msgid-Bugs-To: https://github.com/Flexomatic81/load-rings/issues\n"
-"POT-Creation-Date: 2026-10-26 23:13+0100\n"
+"POT-Creation-Date: 2026-10-26 23:21+0100\n"
 "PO-Revision-Date: 2026-10-26 12:00+0100\n"
 "Last-Translator: Flexomatic81\n"
 "Language-Team: German\n"
@@ -93,7 +93,7 @@ msgstr "Frei"
 msgid "Available"
 msgstr "Verfügbar"
 
-#: package/contents/code/popup.mjs:164
+#: package/contents/code/popup.mjs:164 package/contents/code/tooltip.mjs:40
 msgctxt "@label amount used of total"
 msgid "%1 of %2"
 msgstr "%1 von %2"
@@ -131,10 +131,6 @@ msgstr "Lüfter %1 U/min"
 msgid "CPU %1"
 msgstr "CPU %1"
 
-#: package/contents/code/tooltip.mjs:40
-msgid "%1 of %2"
-msgstr "%1 von %2"
-
 #: package/contents/code/tooltip.mjs:43
 msgid "RAM %1"
 msgstr "RAM %1"
@@ -151,48 +147,48 @@ msgstr "Keine Daten von den Systemsensoren"
 msgid "General"
 msgstr "Allgemein"
 
-#: package/contents/ui/config/ConfigGeneral.qml:58
+#: package/contents/ui/config/ConfigGeneral.qml:69
 msgid "Update interval:"
 msgstr "Aktualisierungsintervall:"
 
-#: package/contents/ui/config/ConfigGeneral.qml:65
+#: package/contents/ui/config/ConfigGeneral.qml:81
 msgctxt "@item:valuesuffix %1 is a number of seconds"
 msgid "%1 s"
 msgstr "%1 s"
 
-#: package/contents/ui/config/ConfigGeneral.qml:72
+#: package/contents/ui/config/ConfigGeneral.qml:88
 msgid "Graph shows by default:"
 msgstr "Verlauf zeigt standardmäßig:"
 
-#: package/contents/ui/config/ConfigGeneral.qml:75
+#: package/contents/ui/config/ConfigGeneral.qml:91
 msgctxt "@item:inlistbox time span of the graph"
 msgid "1 minute"
 msgstr "1 Minute"
 
-#: package/contents/ui/config/ConfigGeneral.qml:79
+#: package/contents/ui/config/ConfigGeneral.qml:95
 msgctxt "@item:inlistbox time span of the graph"
 msgid "5 minutes"
 msgstr "5 Minuten"
 
-#: package/contents/ui/config/ConfigGeneral.qml:83
+#: package/contents/ui/config/ConfigGeneral.qml:99
 msgctxt "@item:inlistbox time span of the graph"
 msgid "15 minutes"
 msgstr "15 Minuten"
 
-#: package/contents/ui/config/ConfigGeneral.qml:87
+#: package/contents/ui/config/ConfigGeneral.qml:103
 msgctxt "@item:inlistbox time span of the graph"
 msgid "1 hour"
 msgstr "1 Stunde"
 
-#: package/contents/ui/config/ConfigGeneral.qml:98
+#: package/contents/ui/config/ConfigGeneral.qml:114
 msgid "Show graphics card"
 msgstr "Grafikkarte anzeigen"
 
-#: package/contents/ui/config/ConfigGeneral.qml:106
+#: package/contents/ui/config/ConfigGeneral.qml:121
 msgid "Graphics card:"
 msgstr "Grafikkarte:"
 
-#: package/contents/ui/config/ConfigGeneral.qml:118
+#: package/contents/ui/config/ConfigGeneral.qml:133
 msgid "No graphics card found"
 msgstr "Keine Grafikkarte gefunden"
 
@@ -282,6 +278,3 @@ msgstr "1 Std."
 #: package/contents/ui/main.qml:94
 msgid "Background services"
 msgstr "Hintergrunddienste"
-
-#~ msgid "Load Rings"
-#~ msgstr "Load Rings"

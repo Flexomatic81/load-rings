@@ -37,7 +37,7 @@ function ramLine(ram, t, decimalPoint) {
   const parts = [];
   if (hasValue(ram.used) && hasValue(ram.total)) {
     const [used, total] = sizePair(ram.used, ram.total, decimalPoint);
-    parts.push(t.tr("%1 of %2", used, total));
+    parts.push(t.trc("@label amount used of total", "%1 of %2", used, total));
   }
   if (hasValue(ram.percent)) parts.push(parts.length > 0 ? `(${percentText(ram.percent)})` : percentText(ram.percent));
   return parts.length > 0 ? t.tr("RAM %1", parts.join(" ")) : "";

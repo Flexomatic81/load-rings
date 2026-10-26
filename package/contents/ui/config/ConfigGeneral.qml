@@ -8,11 +8,12 @@
 import QtQuick
 import QtQuick.Controls as QQC2
 import org.kde.kirigami as Kirigami
+import org.kde.kcmutils as KCM
 import "../data"
 import "../../code/sensors.mjs" as SensorCode
 import "../../code/text.mjs" as TextTools
 
-Kirigami.FormLayout {
+KCM.SimpleKCM {
     id: root
 
     // Translation helpers: the only place that calls Plasma's i18n functions.
@@ -37,7 +38,21 @@ Kirigami.FormLayout {
     property string cfg_gpuId
 
     // The cards the machine has, as { text, value }; the smoke scene replaces them.
+    // The controls show the settings at the start and again when a setting changes from outside (the "Defaults"
+    // button): their own bindings would not survive the first choice of the user.
+    onCfg_updateIntervalChanged: intervalSpin.value = Math.round(root.cfg_updateInterval * 10)
+    onCfg_showGpuChanged: showGpuCheck.checked = root.cfg_showGpu
+    Component.onCompleted: {
+        intervalSpin.value = Math.round(root.cfg_updateInterval * 10);
+        showGpuCheck.checked = root.cfg_showGpu;
+    }
+
     property var gpuOptions: gpus.options
+
+    // Reads the graphics cards from the sensor tree; not a row of the form.
+    readonly property GpuChoices cards: GpuChoices {
+        id: gpus
+    }
 
     // The controls, for the smoke scene.
     readonly property alias intervalBox: intervalSpin
@@ -46,77 +61,78 @@ Kirigami.FormLayout {
     readonly property alias gpuBox: gpuChoice
     readonly property alias noGpuLabel: noGpuHint
 
-    // Reads the graphics cards from the sensor tree.
-    GpuChoices {
-        id: gpus
-    }
+    Kirigami.FormLayout {
+        // In tenths of a second, from 0.5 s to 10 s; the setting is in seconds.
+        QQC2.SpinBox {
+            id: intervalSpin
 
-    // In tenths of a second, from 0.5 s to 10 s; the setting is in seconds.
-    QQC2.SpinBox {
-        id: intervalSpin
-
-        Kirigami.FormData.label: root.tr("Update interval:")
-        from: 5
-        to: 100
-        stepSize: 5
-        value: Math.round(root.cfg_updateInterval * 10)
-        // The box counts tenths of a second; the text shows seconds.
-        valueFromText: (text, locale) => Math.round(TextTools.parseSpinText(text, locale, 1, intervalSpin.value / 10) * 10)
-        textFromValue: (value, locale) => root.trc("@item:valuesuffix %1 is a number of seconds", "%1 s", Number(value / 10).toLocaleString(locale, "f", 1))
-        onValueModified: root.cfg_updateInterval = intervalSpin.value / 10
-    }
-
-    ConfigComboBox {
-        id: minutesChoice
-
-        Kirigami.FormData.label: root.tr("Graph shows by default:")
-        options: [
-            {
-                text: root.trc("@item:inlistbox time span of the graph", "1 minute"),
-                value: 1
-            },
-            {
-                text: root.trc("@item:inlistbox time span of the graph", "5 minutes"),
-                value: 5
-            },
-            {
-                text: root.trc("@item:inlistbox time span of the graph", "15 minutes"),
-                value: 15
-            },
-            {
-                text: root.trc("@item:inlistbox time span of the graph", "1 hour"),
-                value: 60
+            Kirigami.FormData.label: root.tr("Update interval:")
+            from: 5
+            to: 100
+            stepSize: 5
+            // The box counts tenths of a second; the text shows seconds.
+            // Typed seconds snap to steps of half a second.
+            valueFromText: (text, locale) => Math.round(TextTools.parseSpinText(text.replace(/[.,]/, locale.decimalPoint), locale, 1, intervalSpin.value / 10) * 2) * 5
+            // The default validator takes whole numbers only and would turn "1,5" into 15; this one takes seconds with
+            // one decimal in either notation, and the unit.
+            validator: RegularExpressionValidator {
+                regularExpression: /^\s*\d*([.,]\d?)?\s*(s)?\s*$/
             }
-        ]
-        configValue: root.cfg_historyMinutes
-        onPicked: value => root.cfg_historyMinutes = value
-    }
+            textFromValue: (value, locale) => root.trc("@item:valuesuffix %1 is a number of seconds", "%1 s", Number(value / 10).toLocaleString(locale, "f", 1))
+            onValueModified: root.cfg_updateInterval = intervalSpin.value / 10
+        }
 
-    QQC2.CheckBox {
-        id: showGpuCheck
+        ConfigComboBox {
+            id: minutesChoice
 
-        text: root.tr("Show graphics card")
-        checked: root.cfg_showGpu
-        onToggled: root.cfg_showGpu = showGpuCheck.checked
-    }
+            Kirigami.FormData.label: root.tr("Graph shows by default:")
+            options: [
+                {
+                    text: root.trc("@item:inlistbox time span of the graph", "1 minute"),
+                    value: 1
+                },
+                {
+                    text: root.trc("@item:inlistbox time span of the graph", "5 minutes"),
+                    value: 5
+                },
+                {
+                    text: root.trc("@item:inlistbox time span of the graph", "15 minutes"),
+                    value: 15
+                },
+                {
+                    text: root.trc("@item:inlistbox time span of the graph", "1 hour"),
+                    value: 60
+                }
+            ]
+            configValue: root.cfg_historyMinutes
+            onPicked: value => root.cfg_historyMinutes = value
+        }
 
-    ConfigComboBox {
-        id: gpuChoice
+        QQC2.CheckBox {
+            id: showGpuCheck
 
-        Kirigami.FormData.label: root.tr("Graphics card:")
-        options: root.gpuOptions
-        // An empty setting means the first card.
-        configValue: SensorCode.pickGpu(root.gpuOptions.map(option => option.value), root.cfg_gpuId)
-        enabled: root.cfg_showGpu && root.gpuOptions.length > 1
-        onPicked: value => root.cfg_gpuId = value
-    }
+            text: root.tr("Show graphics card")
+            onToggled: root.cfg_showGpu = showGpuCheck.checked
+        }
 
-    QQC2.Label {
-        id: noGpuHint
+        ConfigComboBox {
+            id: gpuChoice
 
-        visible: root.gpuOptions.length === 0
-        text: root.tr("No graphics card found")
-        wrapMode: Text.Wrap
-        opacity: 0.7
+            Kirigami.FormData.label: root.tr("Graphics card:")
+            options: root.gpuOptions
+            // An empty setting means the first card.
+            configValue: SensorCode.pickGpu(root.gpuOptions.map(option => option.value), root.cfg_gpuId)
+            enabled: root.cfg_showGpu && root.gpuOptions.length > 1
+            onPicked: value => root.cfg_gpuId = value
+        }
+
+        QQC2.Label {
+            id: noGpuHint
+
+            visible: root.gpuOptions.length === 0
+            text: root.tr("No graphics card found")
+            wrapMode: Text.Wrap
+            opacity: 0.7
+        }
     }
 }

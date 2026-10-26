@@ -54,23 +54,40 @@ Item {
             page.gpuOptions = [];
             break;
         case 1:
-            scene.expect("interval shown in tenths", page.intervalBox.value, 20);
-            scene.expect("interval range", page.intervalBox.from + "-" + page.intervalBox.to, "5-100");
-            scene.expect("interval step", page.intervalBox.stepSize, 5);
+            scene.expect("interval shown in tenths", scene.intervalBox.value, 20);
+            scene.expect("interval range", scene.intervalBox.from + "-" + scene.intervalBox.to, "5-100");
+            scene.expect("interval step", scene.intervalBox.stepSize, 5);
             scene.expect("window at start", page.minutesBox.currentValue, 5);
             scene.expect("switch at start", page.showGpuBox.checked, false);
             scene.expect("no card: hint shown", page.noGpuLabel.visible, true);
             scene.expect("no card: list off", page.gpuBox.enabled, false);
-            scene.expect("interval text", page.intervalBox.textFromValue(15, Qt.locale("en_US")), "1.5 s");
-            scene.expect("interval text de", page.intervalBox.textFromValue(15, Qt.locale("de_DE")), "1,5 s");
-            scene.expect("read 1,5 de", page.intervalBox.valueFromText("1,5 s", Qt.locale("de_DE")), 15);
-            scene.expect("read 1.5 en", page.intervalBox.valueFromText("1.5", Qt.locale("en_US")), 15);
-            scene.expect("read 10 de", page.intervalBox.valueFromText("10", Qt.locale("de_DE")), 100);
-            scene.expect("read garbage keeps", page.intervalBox.valueFromText("abc", Qt.locale("en_US")), 20);
-            // The user types 1,5 and confirms.
-            page.intervalBox.contentItem.text = "1,5";
-            page.intervalBox.value = page.intervalBox.valueFromText("1,5", Qt.locale("de_DE"));
-            page.intervalBox.valueModified();
+            scene.expect("interval text", scene.intervalBox.textFromValue(15, Qt.locale("en_US")), "1.5 s");
+            scene.expect("interval text de", scene.intervalBox.textFromValue(15, Qt.locale("de_DE")), "1,5 s");
+            scene.expect("read 1,5 de", scene.intervalBox.valueFromText("1,5 s", Qt.locale("de_DE")), 15);
+            scene.expect("read 1.5 en", scene.intervalBox.valueFromText("1.5", Qt.locale("en_US")), 15);
+            scene.expect("read 10 de", scene.intervalBox.valueFromText("10", Qt.locale("de_DE")), 100);
+            scene.expect("read garbage keeps", scene.intervalBox.valueFromText("abc", Qt.locale("en_US")), 20);
+            // The user types 1,5 key by key into the field of the box, which the validator checks.
+            scene.intervalBox.contentItem.forceActiveFocus();
+            scene.intervalBox.contentItem.selectAll();
+            scene.intervalBox.contentItem.remove(0, scene.intervalBox.contentItem.length);
+            for (const key of ["1", ",", "5"]) {
+                scene.intervalBox.contentItem.insert(scene.intervalBox.contentItem.cursorPosition, key);
+            }
+            scene.expect("typed text", scene.intervalBox.contentItem.text, "1,5");
+            scene.expect("typed text is acceptable", scene.intervalBox.contentItem.acceptableInput, true);
+            // The default whole-number validator would not take a decimal; letters and a second decimal fail.
+            for (const bad of ["1,55", "1x", "abc"]) {
+                scene.intervalBox.contentItem.text = bad;
+                scene.expect("rejected: " + bad, scene.intervalBox.contentItem.acceptableInput, false);
+            }
+            scene.intervalBox.contentItem.text = "1,5";
+            // The desktop style of Plasma commits every acceptable edit like this (SpinBox.qml, onTextEdited); plain
+            // qml6 has only the basic style, which does not, so the scene repeats that step.
+            if (scene.intervalBox.contentItem.acceptableInput) {
+                scene.intervalBox.value = scene.intervalBox.valueFromText(scene.intervalBox.contentItem.text, scene.intervalBox.locale);
+                scene.intervalBox.valueModified();
+            }
             page.minutesBox.currentIndex = 3;
             page.minutesBox.activated(3);
             break;
@@ -121,6 +138,9 @@ Item {
         scene.step++;
         stepTimer.restart();
     }
+
+    // The spin box, untyped: its style-specific members are only known at runtime.
+    readonly property var intervalBox: page.intervalBox
 
     ConfigGeneral {
         id: page
