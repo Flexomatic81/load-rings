@@ -1,0 +1,38 @@
+@@cpuinfo
+model name	: 13th Gen Intel(R) Core(TM) i7-1355U
+physical id	: 0
+core id		: 0
+model name	: 13th Gen Intel(R) Core(TM) i7-1355U
+physical id	: 0
+core id		: 0
+model name	: 13th Gen Intel(R) Core(TM) i7-1355U
+physical id	: 0
+core id		: 4
+model name	: 13th Gen Intel(R) Core(TM) i7-1355U
+physical id	: 0
+core id		: 8
+model name	: 13th Gen Intel(R) Core(TM) i7-1355U
+physical id	: 0
+core id		: 12
+model name	: 13th Gen Intel(R) Core(TM) i7-1355U
+physical id	: 0
+core id		: 16
+model name	: 13th Gen Intel(R) Core(TM) i7-1355U
+physical id	: 0
+core id		: 17
+model name	: 13th Gen Intel(R) Core(TM) i7-1355U
+physical id	: 0
+core id		: 18
+model name	: 13th Gen Intel(R) Core(TM) i7-1355U
+physical id	: 0
+core id		: 19
+model name	: 13th Gen Intel(R) Core(TM) i7-1355U
+physical id	: 0
+core id		: 20
+@@dmi
+MEMORY_DEVICE_0_SIZE=17179869184
+MEMORY_DEVICE_0_LOCATOR=Onboard
+MEMORY_DEVICE_0_TYPE=LPDDR5
+MEMORY_DEVICE_0_SPEED_MTS=6400
+MEMORY_DEVICE_0_CONFIGURED_SPEED_MTS=6400
+MEMORY_DEVICE_0_MANUFACTURER=Unknown

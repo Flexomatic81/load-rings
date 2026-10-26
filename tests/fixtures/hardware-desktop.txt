@@ -1,0 +1,79 @@
+@@cpuinfo
+model name	: AMD Ryzen 7 5800X3D 8-Core Processor
+physical id	: 0
+core id		: 0
+model name	: AMD Ryzen 7 5800X3D 8-Core Processor
+physical id	: 0
+core id		: 1
+model name	: AMD Ryzen 7 5800X3D 8-Core Processor
+physical id	: 0
+core id		: 2
+model name	: AMD Ryzen 7 5800X3D 8-Core Processor
+physical id	: 0
+core id		: 3
+model name	: AMD Ryzen 7 5800X3D 8-Core Processor
+physical id	: 0
+core id		: 4
+model name	: AMD Ryzen 7 5800X3D 8-Core Processor
+physical id	: 0
+core id		: 5
+model name	: AMD Ryzen 7 5800X3D 8-Core Processor
+physical id	: 0
+core id		: 6
+model name	: AMD Ryzen 7 5800X3D 8-Core Processor
+physical id	: 0
+core id		: 7
+model name	: AMD Ryzen 7 5800X3D 8-Core Processor
+physical id	: 0
+core id		: 0
+model name	: AMD Ryzen 7 5800X3D 8-Core Processor
+physical id	: 0
+core id		: 1
+model name	: AMD Ryzen 7 5800X3D 8-Core Processor
+physical id	: 0
+core id		: 2
+model name	: AMD Ryzen 7 5800X3D 8-Core Processor
+physical id	: 0
+core id		: 3
+model name	: AMD Ryzen 7 5800X3D 8-Core Processor
+physical id	: 0
+core id		: 4
+model name	: AMD Ryzen 7 5800X3D 8-Core Processor
+physical id	: 0
+core id		: 5
+model name	: AMD Ryzen 7 5800X3D 8-Core Processor
+physical id	: 0
+core id		: 6
+model name	: AMD Ryzen 7 5800X3D 8-Core Processor
+physical id	: 0
+core id		: 7
+@@dmi
+MEMORY_DEVICE_0_SIZE=8589934592
+MEMORY_DEVICE_0_LOCATOR=DIMM_A1
+MEMORY_DEVICE_0_TYPE=DDR4
+MEMORY_DEVICE_0_SPEED_MTS=3200
+MEMORY_DEVICE_0_MANUFACTURER=A-DATA
+MEMORY_DEVICE_0_CONFIGURED_SPEED_MTS=3200
+MEMORY_DEVICE_1_SIZE=8589934592
+MEMORY_DEVICE_1_LOCATOR=DIMM_A2
+MEMORY_DEVICE_1_TYPE=DDR4
+MEMORY_DEVICE_1_SPEED_MTS=3200
+MEMORY_DEVICE_1_MANUFACTURER=A-DATA
+MEMORY_DEVICE_1_CONFIGURED_SPEED_MTS=3200
+MEMORY_DEVICE_2_SIZE=8589934592
+MEMORY_DEVICE_2_LOCATOR=DIMM_B1
+MEMORY_DEVICE_2_TYPE=DDR4
+MEMORY_DEVICE_2_SPEED_MTS=3200
+MEMORY_DEVICE_2_MANUFACTURER=A-DATA
+MEMORY_DEVICE_2_CONFIGURED_SPEED_MTS=3200
+MEMORY_DEVICE_3_SIZE=8589934592
+MEMORY_DEVICE_3_LOCATOR=DIMM_B2
+MEMORY_DEVICE_3_TYPE=DDR4
+MEMORY_DEVICE_3_SPEED_MTS=3200
+MEMORY_DEVICE_3_MANUFACTURER=A-DATA
+MEMORY_DEVICE_3_CONFIGURED_SPEED_MTS=3200
+MEMORY_DEVICE_4_SIZE=0
+MEMORY_DEVICE_4_LOCATOR=DIMM_C1
+MEMORY_DEVICE_4_TYPE=Unknown
+MEMORY_DEVICE_4_SPEED_MTS=Unknown
+MEMORY_DEVICE_4_MANUFACTURER=Not Specified

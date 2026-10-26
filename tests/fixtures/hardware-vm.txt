@@ -1,0 +1,8 @@
+@@cpuinfo
+model name	: QEMU Virtual CPU version 2.5+
+physical id	: 0
+core id		: 0
+model name	: QEMU Virtual CPU version 2.5+
+physical id	: 0
+core id		: 1
+@@dmi
