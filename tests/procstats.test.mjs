@@ -65,3 +65,19 @@ test("the command names every section and hides read errors", () => {
   }
   assert.ok(STATS_COMMAND.includes("2>/dev/null"));
 });
+
+test("lines before the first header and blank lines are ignored", () => {
+  const s = parseStats("stray line\n\n@@loadavg\n\n0.5 0.4 0.3 1/200 999\n\n@@stat\nctxt 5\n");
+  assert.deepEqual(s.loadavg, [0.5, 0.4, 0.3]);
+  assert.equal(s.ctxt, 5);
+});
+
+test("malformed lines give null", () => {
+  const s = parseStats(
+    "@@stat\nintr 5\n@@psi_cpu\nfull avg10=1.00\n@@psi_memory\nsome total=5\n@@meminfo\nMemFree: abc kB\n",
+  );
+  assert.equal(s.ctxt, null);
+  assert.equal(s.psiCpu, null);
+  assert.equal(s.psiMemory, null);
+  assert.equal(s.memFree, null);
+});
