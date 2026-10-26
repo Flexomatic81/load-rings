@@ -102,8 +102,33 @@ export function windowOf(history, minutes, now) {
 
 const round2 = (n) => Math.round(n * 100) / 100;
 
+// A run of [x, y] points with at most one point per pixel column: of the points that share a column the highest
+// value (the smallest y) stays, so peaks are kept. The first and the last point always stay as they are. An hour
+// at 0.5 s is 7200 points, far more than a graph has pixels.
+function thinRun(run) {
+  if (run.length <= 2) return run;
+  const out = [run[0]];
+  let column = null;
+  let best = null;
+  for (let i = 1; i < run.length - 1; i++) {
+    const point = run[i];
+    const x = Math.floor(point[0]);
+    if (x !== column) {
+      if (best !== null) out.push(best);
+      column = x;
+      best = point;
+    } else if (point[1] < best[1]) {
+      best = point;
+    }
+  }
+  out.push(best);
+  out.push(run[run.length - 1]);
+  return out;
+}
+
 // SVG path strings for a graph of `view.width` x `view.height` showing the last `view.minutes` minutes before `view.now` on a fixed
 // 0-100 axis: `line` (one open sub-path per run of values) and `fill` (the same runs closed down to the bottom).
+// Each run is thinned to about one point per pixel of the width (see thinRun).
 export function graphPaths(times, values, view) {
   const { minutes, now, width, height } = view;
   const span = minutes * 60_000;
@@ -131,9 +156,10 @@ export function graphPaths(times, values, view) {
   // A lone point becomes a dot (a zero-length line).
   const dot = (r) => (r.length === 1 ? `${open(r)} L ${r[0][0]} ${r[0][1]}` : open(r));
   const closed = (r) => `${open(r)} L ${r[r.length - 1][0]} ${height} L ${r[0][0]} ${height} Z`;
+  const thinned = runs.map(thinRun);
   return {
-    line: runs.map(dot).join(" "),
-    fill: runs
+    line: thinned.map(dot).join(" "),
+    fill: thinned
       .filter((r) => r.length > 1)
       .map(closed)
       .join(" "),

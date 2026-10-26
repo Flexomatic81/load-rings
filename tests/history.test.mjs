@@ -198,3 +198,62 @@ test("graphPaths: points outside the window are skipped, a lone point is a dot, 
   const clamped = graphPaths([60000], [150], { minutes: 1, now: 60000, width: 100, height: 50 });
   assert.equal(clamped.line, "M 100 0 L 100 0");
 });
+
+// The points of a path as [x, y] pairs, one list per sub-path.
+function pathPoints(path) {
+  return path
+    .split("M")
+    .filter((part) => part.trim() !== "")
+    .map((part) =>
+      part
+        .split("L")
+        .map((pair) => pair.trim().split(" ").map(Number))
+        .filter((pair) => pair.length === 2),
+    );
+}
+
+test("graphPaths: an hour at 0.5 s is thinned to about one point per pixel, keeping the peaks and both ends", () => {
+  const now = 3_600_000;
+  const times = [];
+  const values = [];
+  for (let i = 0; i <= 7200; i++) {
+    times.push(i * 500);
+    // A short spike in the middle, a different value at both ends.
+    values.push(i === 3601 ? 100 : 20 + (i % 7));
+  }
+  values[0] = 3;
+  values[7200] = 61;
+  const view = { minutes: 60, now, width: 300, height: 100 };
+  const [points] = pathPoints(graphPaths(times, values, view).line);
+  assert.ok(points.length <= 300 + 3, `${points.length} points`);
+  assert.ok(points.length >= 300, `${points.length} points`);
+  // The spike survives, and so does the highest value of every other pixel (26 % gives y 74).
+  assert.equal(Math.min(...points.map(([, y]) => y)), 0);
+  assert.equal(points.filter(([, y]) => y === 74).length, points.length - 3);
+  // The oldest and the newest point are exact.
+  assert.deepEqual(points[0], [0, 97]);
+  assert.deepEqual(points[points.length - 1], [300, 39]);
+  // The x positions only grow.
+  assert.ok(points.every(([x], i) => i === 0 || x > points[i - 1][0]));
+});
+
+test("graphPaths: thinning keeps the gaps and the fill follows the thinned line", () => {
+  const times = [];
+  const values = [];
+  for (let i = 0; i <= 7200; i++) {
+    times.push(i * 500);
+    values.push(i >= 3000 && i < 3100 ? null : 50);
+  }
+  const paths = graphPaths(times, values, { minutes: 60, now: 3_600_000, width: 200, height: 10 });
+  const runs = pathPoints(paths.line);
+  assert.equal(runs.length, 2);
+  assert.ok(runs[0].length + runs[1].length <= 200 + 6);
+  assert.equal(paths.fill.split("Z").length - 1, 2);
+  assert.ok(paths.fill.length < 2 * paths.line.length + 200);
+});
+
+test("graphPaths: a short window keeps every point", () => {
+  const times = [0, 1000, 2000, 3000];
+  const p = graphPaths(times, [10, 20, 30, 40], { minutes: 1, now: 60000, width: 600, height: 100 });
+  assert.equal(pathPoints(p.line)[0].length, 4);
+});
