@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // SPDX-FileCopyrightText: 2026 Flexomatic81
 
-// The popup: one column per device side by side (processor, then memory and the graphics card as they come),
+// The popup: one column per device side by side (processor, memory, then the graphics card as it comes),
 // and a footer with the button for the system monitor and the data source. The view reads nothing from Plasmoid,
 // so it also runs in plain qml6 (see tests/qml/PopupSmoke.qml).
 
@@ -69,6 +69,7 @@ Item {
 
     // Parts for the smoke scenes.
     readonly property CpuColumn cpuColumn: cpu
+    readonly property RamColumn ramColumn: ram
     readonly property Item footer: footerRow
 
     Layout.preferredWidth: content.implicitWidth + 2 * content.anchors.margins
@@ -126,7 +127,7 @@ Item {
         anchors.margins: Kirigami.Units.largeSpacing
         spacing: Kirigami.Units.largeSpacing
 
-        // The columns; memory and the graphics card join here.
+        // The columns; the graphics card joins here.
         RowLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true
@@ -145,6 +146,22 @@ Item {
                 peakTemperature: root.shownPeak
                 stats: root.shownStats
                 ctxtPerSecond: root.shownCtxt
+                hardwareInfo: root.hardwareInfo
+                appRows: root.shownRows
+                onGraphMinutesPicked: minutes => root.graphMinutesPicked(minutes)
+            }
+
+            RamColumn {
+                id: ram
+
+                Layout.preferredWidth: LayoutLogic.popupColumnWidth(Kirigami.Units.gridUnit)
+                Layout.alignment: Qt.AlignTop
+                current: root.shownCurrent
+                fresh: root.shownFresh
+                graphWindow: root.graphWindow
+                graphMinutes: root.graphMinutes
+                graphNow: root.graphNow
+                stats: root.shownStats
                 hardwareInfo: root.hardwareInfo
                 appRows: root.shownRows
                 onGraphMinutesPicked: minutes => root.graphMinutesPicked(minutes)

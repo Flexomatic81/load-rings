@@ -1,11 +1,4 @@
-	General	
-	Load Rings	
-	1 min	
-	5 min	
-	15 min	
-	1 h	
 	%1 × %2	
-	Background services	
 	%1 core	%1 cores
 	%1 thread	%1 threads
 	GHz · max %1	
@@ -17,6 +10,17 @@
 	Core %1	
 	Service	
 	%1 process	%1 processes
+	%1 of %2 used	
+	Programs	
+	System	
+	Cache	
+	Free	
+	Available	
+	%1 of %2	
+	%1 → %2 (%3 : 1)	
+	ZRAM	
+	Waited %1 % of the time	
+	General	
 	CPU	
 	Usage	
 	Clock	
@@ -26,3 +30,13 @@
 	What uses the CPU	
 	Open System Monitor	
 	Source: system sensors	
+	Memory	
+	Swap	
+	Pressure	
+	What uses the memory	
+	1 min	
+	5 min	
+	15 min	
+	1 h	
+	Background services	
+	Load Rings	

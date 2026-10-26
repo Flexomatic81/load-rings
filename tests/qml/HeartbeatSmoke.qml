@@ -5,7 +5,7 @@
 // (ScriptedHeartbeatSource.qml), with the rings the applet builds from `current` and the popup fed from it, in
 // four steps:
 //   1  no heartbeat yet: not fresh, every ring and the processor figures of the popup (usage, clock, temperature,
-//      core grid) show the dash, `current` is NaN throughout (the lists keep their length, the GPU name stays),
+//      core grid) and the memory figures (used, percent, swap) show the dash, `current` is NaN throughout (the lists keep their length, the GPU name stays),
 //      no tick
 //   2  the heartbeat starts: fresh, the rings show the numbers, `current` has the values, ticks arrive
 //   3  the heartbeat stops: after the heartbeat window not fresh again, same picture as in step 1, and the
@@ -87,7 +87,8 @@ Item {
             "gpu.usage": Number.isNaN(now.gpu.usage),
             "gpu.name": now.gpu.name === "Test GPU",
             "dashes": scene.texts() === "–,–,–",
-            "popup dashes": scene.popupTexts() === "–|–|–|–,–"
+            "popup dashes": scene.popupTexts() === "–|–|–|–,–",
+            "memory dashes": scene.memoryTexts() === "–|–|–"
         };
         return scene.failedNames(checks);
     }
@@ -102,7 +103,8 @@ Item {
             "gpu.usage": now.gpu.usage === 7,
             "gpu.name": now.gpu.name === "Test GPU",
             "numbers": scene.texts() === "34,58,7",
-            "popup numbers": scene.popupTexts() === "34 %|" + (3.6).toFixed(2).replace(".", Qt.locale().decimalPoint) + "|55 °C|5,60"
+            "popup numbers": scene.popupTexts() === "34 %|" + (3.6).toFixed(2).replace(".", Qt.locale().decimalPoint) + "|55 °C|5,60",
+            "memory numbers": scene.memoryTexts() === ["16.8 of 29.8 GiB used", "58 %", "954 MiB of 7.5 GiB"].map(text => text.replace(/\./g, Qt.locale().decimalPoint)).join("|")
         };
         return scene.failedNames(checks);
     }
@@ -124,6 +126,15 @@ Item {
             cores.push(scene.coreAt(i).valueText);
         }
         return [cpu.usageTile.value, cpu.clockTile.value, cpu.temperatureTile.value, cores.join(",")].join("|");
+    }
+
+    // "used|percent|swap" as the memory column shows them; the used line and the swap row must be visible.
+    function memoryTexts(): string {
+        const ram = popup.ramColumn;
+        if (!ram.usedLabel.visible || !ram.swapRow.visible) {
+            return "hidden";
+        }
+        return [ram.usedLabel.text, ram.percentLabel.text, ram.swapRow.text].join("|");
     }
 
     function failedNames(checks): string {

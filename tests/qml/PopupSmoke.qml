@@ -4,7 +4,10 @@
 // Smoke scene for the popup: one view with every value set, one with every optional value missing (no
 // temperature, no clock, no kernel statistics, no hardware info, no programs, no cores). The first shows all
 // figures; in the second the temperature, clock and load tiles, the core grid, the details and the program list
-// are hidden and the header shows only "CPU". The footer button reports through its signal.
+// are hidden and the header shows only "CPU". In the memory column the first shows the figures, the bar whose
+// segments add up to its width, swap, ZRAM, pressure and the program list; in the second the swap, ZRAM and
+// pressure rows, the figures and the program list are hidden and the header is empty. The footer button reports
+// through its signal.
 
 import QtQuick
 import QtQuick.Layouts
@@ -75,7 +78,14 @@ Item {
             "psiMemory": 0.4,
             "memFree": 5e9,
             "shmem": 1e9,
-            "zram": [],
+            "zram": [
+                {
+                    "name": "zram0",
+                    "orig": 2e9,
+                    "compr": 6e8,
+                    "used": 6.2e8
+                }
+            ],
             "governor": "schedutil",
             "epp": "balance_performance"
         })
@@ -152,6 +162,44 @@ Item {
         return repeater.itemAt(index);
     }
 
+    // The widths of the segments of a memory bar added up.
+    function segmentsWidth(bar: var): real {
+        let sum = 0;
+        for (let i = 0; i < bar.segmentRepeater.count; i++) {
+            sum += scene.itemOf(bar.segmentRepeater, i).width;
+        }
+        return sum;
+    }
+
+    function fullRamProblem(): string {
+        const ram = full.ramColumn;
+        const bar = ram.stackedBar;
+        return scene.failedNames({
+            "head": ram.headLabel.text === scene.local("29.8 GiB"),
+            "used": ram.usedLabel.visible && ram.usedLabel.text === scene.local("16.8 of 29.8 GiB used"),
+            "percent": ram.percentLabel.text === "58 %",
+            "segments": bar.visible && bar.segmentRepeater.count === 4 && bar.barWidth > 0,
+            "segment widths": Math.abs(scene.segmentsWidth(bar) - bar.barWidth) <= 1,
+            "swap": ram.swapRow.visible && ram.swapRow.text === scene.local("954 MiB of 7.5 GiB"),
+            "zram": ram.zramRepeater.count === 1 && scene.itemOf(ram.zramRepeater, 0).text === scene.local("1.9 GiB → 572 MiB (3.3 : 1)"),
+            "pressure": ram.pressureRow.visible && ram.pressureRow.text === scene.local("Waited 0.4 % of the time"),
+            "consumers": ram.consumerList.visible && ram.consumerList.rowRepeater.count === 3
+        });
+    }
+
+    function emptyRamProblem(): string {
+        const ram = empty.ramColumn;
+        return scene.failedNames({
+            "head": ram.headLabel.text === "",
+            "used": !ram.usedLabel.visible && !ram.stackedBar.visible,
+            "segments": ram.stackedBar.segmentRepeater.count === 0,
+            "swap": !ram.swapRow.visible,
+            "zram": ram.zramRepeater.count === 0,
+            "pressure": !ram.pressureRow.visible,
+            "consumers": !ram.consumerList.visible
+        });
+    }
+
     function fullProblem(): string {
         const cpu = full.cpuColumn;
         const rows = cpu.consumerList.rowRepeater;
@@ -192,13 +240,15 @@ Item {
         onTriggered: {
             const fullWrong = scene.fullProblem();
             const emptyWrong = scene.emptyProblem();
+            const ramWrong = scene.fullRamProblem();
+            const emptyRamWrong = scene.emptyRamProblem();
             full.footer.children[0].clicked();
             const picked = scene.monitorOpened === 1;
-            if (fullWrong === "" && emptyWrong === "" && picked) {
+            if (fullWrong === "" && emptyWrong === "" && ramWrong === "" && emptyRamWrong === "" && picked) {
                 console.log("SMOKE OK popup");
                 Qt.exit(0);
             } else {
-                console.log("SMOKE FAIL popup: full wrong: " + fullWrong + "; empty wrong: " + emptyWrong + "; monitor " + scene.monitorOpened);
+                console.log("SMOKE FAIL popup: full wrong: " + fullWrong + "; empty wrong: " + emptyWrong + "; ram wrong: " + ramWrong + "; empty ram wrong: " + emptyRamWrong + "; monitor " + scene.monitorOpened);
                 Qt.exit(1);
             }
         }

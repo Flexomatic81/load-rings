@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: loadrings\n"
 "Report-Msgid-Bugs-To: https://github.com/Flexomatic81/load-rings/issues\n"
-"POT-Creation-Date: 2026-10-26 22:33+0100\n"
+"POT-Creation-Date: 2026-10-26 22:44+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,55 +19,95 @@ msgstr ""
 msgid "%1 × %2"
 msgstr ""
 
-#: package/contents/code/popup.mjs:45
+#: package/contents/code/popup.mjs:47
 msgid "%1 core"
 msgid_plural "%1 cores"
 msgstr[0] ""
 msgstr[1] ""
 
-#: package/contents/code/popup.mjs:46
+#: package/contents/code/popup.mjs:48
 msgid "%1 thread"
 msgid_plural "%1 threads"
 msgstr[0] ""
 msgstr[1] ""
 
-#: package/contents/code/popup.mjs:58
+#: package/contents/code/popup.mjs:60
 msgid "GHz · max %1"
 msgstr ""
 
-#: package/contents/code/popup.mjs:63
+#: package/contents/code/popup.mjs:65
 msgid "Peak %1"
 msgstr ""
 
-#: package/contents/code/popup.mjs:70
+#: package/contents/code/popup.mjs:72
 msgid "Governor %1"
 msgstr ""
 
-#: package/contents/code/popup.mjs:71
+#: package/contents/code/popup.mjs:73
 msgid "EPP %1"
 msgstr ""
 
-#: package/contents/code/popup.mjs:72
+#: package/contents/code/popup.mjs:74
 msgid "%1 context switches/s"
 msgstr ""
 
-#: package/contents/code/popup.mjs:73
+#: package/contents/code/popup.mjs:75
 msgid "Waiting for CPU %1 %"
 msgstr ""
 
-#: package/contents/code/popup.mjs:80
+#: package/contents/code/popup.mjs:82
 msgid "Core %1"
 msgstr ""
 
-#: package/contents/code/popup.mjs:88
+#: package/contents/code/popup.mjs:91
 msgid "Service"
 msgstr ""
 
-#: package/contents/code/popup.mjs:89
+#: package/contents/code/popup.mjs:92
 msgid "%1 process"
 msgid_plural "%1 processes"
 msgstr[0] ""
 msgstr[1] ""
+
+#: package/contents/code/popup.mjs:128
+msgid "%1 of %2 used"
+msgstr ""
+
+#: package/contents/code/popup.mjs:134
+msgid "Programs"
+msgstr ""
+
+#: package/contents/code/popup.mjs:136
+msgid "System"
+msgstr ""
+
+#: package/contents/code/popup.mjs:138
+msgid "Cache"
+msgstr ""
+
+#: package/contents/code/popup.mjs:140
+msgid "Free"
+msgstr ""
+
+#: package/contents/code/popup.mjs:142
+msgid "Available"
+msgstr ""
+
+#: package/contents/code/popup.mjs:163
+msgid "%1 of %2"
+msgstr ""
+
+#: package/contents/code/popup.mjs:178
+msgid "%1 → %2 (%3 : 1)"
+msgstr ""
+
+#: package/contents/code/popup.mjs:187
+msgid "ZRAM"
+msgstr ""
+
+#: package/contents/code/popup.mjs:197
+msgid "Waited %1 % of the time"
+msgstr ""
 
 #: package/contents/config/config.qml:29
 msgid "General"
@@ -101,12 +141,28 @@ msgstr ""
 msgid "What uses the CPU"
 msgstr ""
 
-#: package/contents/ui/full/FullRepresentation.qml:131
+#: package/contents/ui/full/FullRepresentation.qml:178
 msgid "Open System Monitor"
 msgstr ""
 
-#: package/contents/ui/full/FullRepresentation.qml:139
+#: package/contents/ui/full/FullRepresentation.qml:186
 msgid "Source: system sensors"
+msgstr ""
+
+#: package/contents/ui/full/RamColumn.qml:102
+msgid "Memory"
+msgstr ""
+
+#: package/contents/ui/full/RamColumn.qml:182
+msgid "Swap"
+msgstr ""
+
+#: package/contents/ui/full/RamColumn.qml:212
+msgid "Pressure"
+msgstr ""
+
+#: package/contents/ui/full/RamColumn.qml:222
+msgid "What uses the memory"
 msgstr ""
 
 #: package/contents/ui/full/RangeTabs.qml:40

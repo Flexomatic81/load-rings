@@ -5,6 +5,8 @@
 // t.tr(text, ...args), t.trp(singular, plural, n, ...args). A missing value gives the dash or leaves its part out.
 
 import { formatBytes, formatCount, formatGHz, formatPercent, formatTemp } from "./format.mjs";
+import { memorySummary } from "./hardware.mjs";
+import { zramRatio } from "./memory.mjs";
 
 const DASH = "–";
 const SEPARATOR = " · ";
@@ -103,4 +105,94 @@ export function consumerValue(item, unit, decimalPoint) {
 // A share as the filled part of a bar, 0..1; nothing without a share.
 export function barFraction(share) {
   return hasValue(share) ? Math.min(Math.max(share, 0), 1) : 0;
+}
+
+// The head of the memory column: "DDR4-3200 · 4 × 8 GiB · A-DATA", only the total without module data, nothing
+// while the total is unknown too.
+export function memoryHeader(memory, totalBytes, t, decimalPoint) {
+  if (!memory && !hasValue(totalBytes)) return "";
+  return memorySummary(memory, totalBytes, t, decimalPoint).join(SEPARATOR);
+}
+
+// Two sizes for "x of y": the unit of the first is left out when both share it ("18.6 of 31.3 GiB").
+function sizePair(first, second, decimalPoint) {
+  const a = formatBytes(first, decimalPoint);
+  const b = formatBytes(second, decimalPoint);
+  return [a.unit === b.unit ? a.value : `${a.value} ${a.unit}`, `${b.value} ${b.unit}`];
+}
+
+// "18.6 of 31.3 GiB used"; the dash when either size is unknown.
+export function usedLine(used, total, t, decimalPoint) {
+  if (!hasValue(used) || !hasValue(total)) return DASH;
+  const [a, b] = sizePair(used, total, decimalPoint);
+  return t.tr("%1 of %2 used", a, b);
+}
+
+function segmentLabel(key, t) {
+  switch (key) {
+    case "apps":
+      return t.tr("Programs");
+    case "other":
+      return t.tr("System");
+    case "cache":
+      return t.tr("Cache");
+    case "free":
+      return t.tr("Free");
+    case "available":
+      return t.tr("Available");
+    default:
+      return "";
+  }
+}
+
+// The legend entry of a memory bar segment: "Programs 16.4 GiB".
+export function legendText(segment, t, decimalPoint) {
+  const size = formatBytes(segment.bytes, decimalPoint);
+  return [segmentLabel(segment.key, t), `${size.value} ${size.unit}`].filter(filled).join(" ");
+}
+
+// Whether the swap row is shown: unknown while stale, hidden on a machine without swap.
+export function swapShown(swapTotal, fresh) {
+  return !fresh || positive(swapTotal);
+}
+
+// "0.3 of 8.0 GiB"; the dash when either size is unknown.
+export function swapText(used, total, t, decimalPoint) {
+  if (!hasValue(used) || !hasValue(total)) return DASH;
+  const [a, b] = sizePair(used, total, decimalPoint);
+  return t.tr("%1 of %2", a, b);
+}
+
+// The ZRAM devices that hold something; an idle one has nothing to show.
+export function zramDevices(devices) {
+  return (devices || []).filter((device) => zramRatio(device) !== null);
+}
+
+// "1.9 GiB → 0.6 GiB (3.2 : 1)"; empty for an idle device.
+export function zramText(device, t, decimalPoint) {
+  const ratio = zramRatio(device);
+  if (ratio === null) return "";
+  const orig = formatBytes(device.orig, decimalPoint);
+  const compr = formatBytes(device.compr, decimalPoint);
+  return t.tr(
+    "%1 → %2 (%3 : 1)",
+    `${orig.value} ${orig.unit}`,
+    `${compr.value} ${compr.unit}`,
+    String(ratio).replace(".", decimalPoint),
+  );
+}
+
+// "ZRAM" for the usual single device, the device name when there are several.
+export function zramLabel(name, count, t) {
+  return count > 1 ? name : t.tr("ZRAM");
+}
+
+// The part of the memory the device itself takes up, 0..1.
+export function zramFraction(device, memTotal) {
+  return positive(memTotal) && hasValue(device.used) ? device.used / memTotal : 0;
+}
+
+// "Waited 0.4 % of the time"; empty without pressure information.
+export function pressureText(psi, t, decimalPoint) {
+  return hasValue(psi) ? t.tr("Waited %1 % of the time", fineNumber(psi, decimalPoint)) : "";
 }

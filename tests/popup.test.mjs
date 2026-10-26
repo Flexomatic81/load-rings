@@ -13,10 +13,20 @@ import {
   cpuTopology,
   fineNumber,
   graphEnd,
+  legendText,
   loadText,
+  memoryHeader,
   peakDetail,
+  pressureText,
+  swapShown,
+  swapText,
   tileShown,
+  usedLine,
   withUnit,
+  zramDevices,
+  zramFraction,
+  zramLabel,
+  zramText,
 } from "../package/contents/code/popup.mjs";
 
 // The English fallback of the translation helpers, as the QML files pass them.
@@ -125,4 +135,75 @@ test("bar fraction", () => {
   assert.equal(barFraction(-1), 0);
   assert.equal(barFraction(null), 0);
   assert.equal(barFraction(NaN), 0);
+});
+
+test("memory header: the module summary, or just the total, or nothing", () => {
+  const memory = {
+    type: "DDR4",
+    speedMts: 3200,
+    manufacturer: "A-DATA",
+    modules: [{ sizeBytes: 8 * GiB }, { sizeBytes: 8 * GiB }],
+  };
+  assert.equal(memoryHeader(memory, 16 * GiB, t, ","), "DDR4-3200 · 2 × 8 GiB · A-DATA");
+  assert.equal(memoryHeader(null, 31.3 * GiB, t, ","), "31,3 GiB");
+  assert.equal(memoryHeader(undefined, 16 * GiB, t, "."), "16.0 GiB");
+  assert.equal(memoryHeader(null, NaN, t, "."), "");
+  assert.equal(memoryHeader(memory, NaN, t, ".").startsWith("DDR4-3200"), true);
+});
+
+test("used line: the unit is said once when both sides share it", () => {
+  assert.equal(usedLine(18.6 * GiB, 31.3 * GiB, t, ","), "18,6 of 31,3 GiB used");
+  assert.equal(usedLine(512 * 2 ** 20, 2 * GiB, t, "."), "512 MiB of 2.0 GiB used");
+  assert.equal(usedLine(100 * 2 ** 20, 512 * 2 ** 20, t, "."), "100 of 512 MiB used");
+  assert.equal(usedLine(NaN, 31 * GiB, t, "."), "–");
+  assert.equal(usedLine(GiB, NaN, t, "."), "–");
+  assert.equal(usedLine(null, null, t, "."), "–");
+});
+
+test("legend text names the part and gives its size", () => {
+  assert.equal(legendText({ key: "apps", bytes: 16.4 * GiB }, t, ","), "Programs 16,4 GiB");
+  assert.equal(legendText({ key: "other", bytes: 1.9 * GiB }, t, "."), "System 1.9 GiB");
+  assert.equal(legendText({ key: "cache", bytes: 300 * 2 ** 20 }, t, "."), "Cache 300 MiB");
+  assert.equal(legendText({ key: "free", bytes: 5.4 * GiB }, t, "."), "Free 5.4 GiB");
+  assert.equal(legendText({ key: "available", bytes: 5.4 * GiB }, t, "."), "Available 5.4 GiB");
+  assert.equal(legendText({ key: "mystery", bytes: GiB }, t, "."), "1.0 GiB");
+});
+
+test("swap: shown while unknown, hidden without swap, text and dash", () => {
+  assert.equal(swapShown(8 * GiB, true), true);
+  assert.equal(swapShown(0, true), false);
+  assert.equal(swapShown(NaN, true), false);
+  assert.equal(swapShown(NaN, false), true);
+  assert.equal(swapText(0.3 * GiB, 8 * GiB, t, ","), "307 MiB of 8,0 GiB");
+  assert.equal(swapText(1.5 * GiB, 8 * GiB, t, ","), "1,5 of 8,0 GiB");
+  assert.equal(swapText(NaN, 8 * GiB, t, ","), "–");
+  assert.equal(swapText(GiB, undefined, t, ","), "–");
+});
+
+test("zram devices: only those with something compressed", () => {
+  const list = [
+    { name: "zram0", orig: 1.9 * GiB, compr: 0.6 * GiB, used: 0.62 * GiB },
+    { name: "zram1", orig: 0, compr: 0, used: 4096 },
+  ];
+  assert.deepEqual(zramDevices(list), [list[0]]);
+  assert.deepEqual(zramDevices(null), []);
+  assert.deepEqual(zramDevices(undefined), []);
+});
+
+test("zram text, label and bar", () => {
+  const device = { name: "zram0", orig: 1.9 * GiB, compr: 1.2 * GiB, used: 0.6 * GiB };
+  assert.equal(zramText(device, t, ","), "1,9 GiB → 1,2 GiB (1,6 : 1)");
+  assert.equal(zramText({ orig: 0, compr: 0 }, t, "."), "");
+  assert.equal(zramLabel("zram0", 1, t), "ZRAM");
+  assert.equal(zramLabel("zram1", 2, t), "zram1");
+  assert.ok(Math.abs(zramFraction(device, 30 * GiB) - 0.02) < 1e-9);
+  assert.equal(zramFraction(device, NaN), 0);
+  assert.equal(zramFraction(device, 0), 0);
+});
+
+test("pressure text", () => {
+  assert.equal(pressureText(0.4, t, ","), "Waited 0,4 % of the time");
+  assert.equal(pressureText(12, t, "."), "Waited 12 % of the time");
+  assert.equal(pressureText(null, t, "."), "");
+  assert.equal(pressureText(NaN, t, "."), "");
 });
