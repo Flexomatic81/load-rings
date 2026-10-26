@@ -93,14 +93,14 @@ function moduleSize(bytes, decimalPoint) {
 }
 
 // Module sizes grouped by size in order of first appearance: "4 × 8 GiB",
-// "8 GiB + 16 GiB". t is the translator (text, ...args) -> string.
+// "8 GiB + 16 GiB". t is the translator object; only t.tr(text, ...args) -> string is used.
 function sizeSummary(modules, t, decimalPoint) {
   const counts = new Map();
   for (const m of modules) counts.set(m.sizeBytes, (counts.get(m.sizeBytes) ?? 0) + 1);
   return [...counts.entries()]
     .map(([bytes, n]) => {
       const size = moduleSize(bytes, decimalPoint);
-      return n > 1 ? t("%1 × %2", n, size) : size;
+      return n > 1 ? t.tr("%1 × %2", n, size) : size;
     })
     .join(" + ");
 }

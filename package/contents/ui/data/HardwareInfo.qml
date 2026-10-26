@@ -57,6 +57,10 @@ Item {
             runner.command = Hardware.HARDWARE_COMMAND;
             runner.timeoutMs = 10000;
             runner.finished.connect(internals.apply);
+            // load() may have been called before the runner existed.
+            if (internals.started) {
+                runner.run();
+            }
         }
     }
 }

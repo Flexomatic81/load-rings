@@ -9,7 +9,7 @@ import { substitute } from "../package/contents/code/text.mjs";
 
 const GiB = 2 ** 30;
 const read = (name) => fs.readFileSync(new URL(`./fixtures/${name}`, import.meta.url), "utf8");
-const t = (text, ...args) => substitute(text, args);
+const t = { tr: (text, ...args) => substitute(text, args) };
 const dmi = (lines) => `@@dmi\n${lines.join("\n")}\n`;
 const dimm = (i, size, extra = []) => [`MEMORY_DEVICE_${i}_SIZE=${size}`, ...extra];
 
@@ -92,6 +92,14 @@ test("type, speed and manufacturer are kept only when all modules agree", () => 
 
 test("modules without a size are dropped; all empty means no memory data", () => {
   assert.equal(parseHardware(dmi(["MEMORY_DEVICE_0_SIZE=0", "MEMORY_DEVICE_1_LOCATOR=X"])).memory, null);
+});
+
+test("the translated glue reaches the message catalog", () => {
+  const pot = fs.readFileSync(
+    new URL("../po/plasma_applet_io.github.flexomatic81.loadrings.pot", import.meta.url),
+    "utf8",
+  );
+  assert.ok(pot.includes('msgid "%1 × %2"'));
 });
 
 test("the command never asks for serial numbers", () => {
