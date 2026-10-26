@@ -3,7 +3,7 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { RING_STOPS, ringColor } from "../package/contents/code/color.mjs";
+import { RING_STOPS, SYSTEM_MEMORY_COLOR, ringColor } from "../package/contents/code/color.mjs";
 
 test("the stops are exact", () => {
   assert.equal(ringColor(0), "#27ae60");
@@ -32,4 +32,9 @@ test("out of range is clamped", () => {
 
 test("no value gives no color", () => {
   for (const v of [null, undefined, NaN, Infinity, -Infinity]) assert.equal(ringColor(v), null);
+});
+
+test("the system part of the memory has a fixed color outside the load colors", () => {
+  assert.equal(SYSTEM_MEMORY_COLOR, "#9b59b6");
+  for (let percent = 0; percent <= 100; percent++) assert.notEqual(ringColor(percent), SYSTEM_MEMORY_COLOR);
 });

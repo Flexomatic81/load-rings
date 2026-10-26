@@ -79,7 +79,7 @@ ColumnLayout {
     readonly property color usedColor: Color.ringColor(root.current.memUsedPercent) ?? Kirigami.Theme.textColor
     readonly property var segmentColors: ({
             apps: Color.ringColor(root.current.memUsedPercent) ?? Kirigami.Theme.highlightColor,
-            other: Qt.alpha(Kirigami.Theme.neutralTextColor, 0.7),
+            other: Color.SYSTEM_MEMORY_COLOR,
             cache: Qt.alpha(Kirigami.Theme.textColor, 0.35),
             free: Qt.alpha(Kirigami.Theme.textColor, 0.12),
             available: Qt.alpha(Kirigami.Theme.textColor, 0.12)

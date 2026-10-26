@@ -303,6 +303,8 @@ Item {
             "percent": ram.percentLabel.text === "58 %",
             "segments": bar.visible && bar.segmentRepeater.count === 4 && bar.barWidth > 0,
             "segment widths": Math.abs(scene.segmentsWidth(bar) - bar.barWidth) <= 1,
+            // The system part never takes a load color, so it cannot be mistaken for the programs.
+            "system color": Qt.colorEqual(ram.segmentColors.other, "#9b59b6"),
             "swap": ram.swapRow.visible && ram.swapRow.text === scene.local("954 MiB of 7.5 GiB"),
             "zram": ram.zramRepeater.count === 1 && scene.itemOf(ram.zramRepeater, 0).text === scene.local("1.9 GiB → 572 MiB (3.3 : 1)"),
             "pressure": ram.pressureRow.visible && ram.pressureRow.text === scene.local("Waited 0.4 % of the time"),

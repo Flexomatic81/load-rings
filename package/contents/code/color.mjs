@@ -10,6 +10,10 @@ export const RING_STOPS = [
   [100, "#da4453"],
 ];
 
+// The memory the system keeps for itself (kernel, buffers and the like) in the memory bar of the popup: Breeze purple,
+// so it never looks like a load color.
+export const SYSTEM_MEMORY_COLOR = "#9b59b6";
+
 function channels(hex) {
   return [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
 }
