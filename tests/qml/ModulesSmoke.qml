@@ -11,6 +11,7 @@ import QtQuick
 import "../../package/contents/code/color.mjs" as Color
 import "../../package/contents/code/command.mjs" as Command
 import "../../package/contents/code/format.mjs" as Format
+import "../../package/contents/code/history.mjs" as History
 import "../../package/contents/code/layout.mjs" as Layout
 import "../../package/contents/code/sensors.mjs" as Sensors
 import "../../package/contents/code/text.mjs" as Text
@@ -23,6 +24,7 @@ Item {
             Color.ringColor(50) === "#fdbc4b",
             Command.shellQuote("a") === "'a'",
             Format.formatCount(41234, ",") === "41 k",
+            History.validMinutes(7) === 5,
             Layout.ringLayout({ vertical: false, thickness: 44, count: 2 }).width === 92,
             Sensors.pickGpu(["gpu0"], "") === "gpu0",
             Text.substitute("%1", ["x"]) === "x"

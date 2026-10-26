@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: loadrings\n"
 "Report-Msgid-Bugs-To: https://github.com/Flexomatic81/load-rings/issues\n"
-"POT-Creation-Date: 2026-10-26 21:23+0100\n"
+"POT-Creation-Date: 2026-10-26 21:56+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,6 +18,22 @@ msgstr ""
 msgid "General"
 msgstr ""
 
-#: package/contents/ui/main.qml:37
+#: package/contents/ui/full/RangeTabs.qml:40
+msgid "1 min"
+msgstr ""
+
+#: package/contents/ui/full/RangeTabs.qml:44
+msgid "5 min"
+msgstr ""
+
+#: package/contents/ui/full/RangeTabs.qml:48
+msgid "15 min"
+msgstr ""
+
+#: package/contents/ui/full/RangeTabs.qml:52
+msgid "1 h"
+msgstr ""
+
+#: package/contents/ui/main.qml:84
 msgid "Load Rings"
 msgstr ""

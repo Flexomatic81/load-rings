@@ -11,6 +11,7 @@ import org.kde.plasma.plasmoid
 import "compact"
 import "data"
 import "full"
+import "../code/history.mjs" as HistoryCode
 import "../code/sensors.mjs" as SensorCode
 import "../code/text.mjs" as TextTools
 
@@ -58,6 +59,24 @@ PlasmoidItem {
         gpuWanted: Plasmoid.configuration.gpuId // qmllint disable missing-property
         // Per-core values are only needed while the popup is open.
         detailed: root.expanded
+    }
+
+    // The load history for the graphs (in memory only) and the time window the popup shows. Switching the window
+    // in the popup is not stored.
+    property var history: HistoryCode.createHistory()
+    // Plasmoid.configuration is generated from main.xml at runtime, which qmllint cannot see
+    property int graphMinutes: HistoryCode.validMinutes(Plasmoid.configuration.historyMinutes) // qmllint disable missing-property
+
+    // The card whose values the history holds: none while the GPU is off or missing.
+    readonly property string effectiveGpuId: Plasmoid.configuration.showGpu ? sensors.gpuId : "" // qmllint disable missing-property
+    onEffectiveGpuIdChanged: root.history = HistoryCode.selectGpu(root.history, root.effectiveGpuId === "" ? null : root.effectiveGpuId)
+
+    Connections {
+        target: sensors
+
+        function onTick(sample: var): void {
+            root.history = HistoryCode.pushSample(root.history, sample);
+        }
     }
 
     readonly property var rings: SensorCode.ringValues(sensors.current, sensors.gpuId !== "")

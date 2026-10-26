@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: loadrings\n"
 "Report-Msgid-Bugs-To: https://github.com/Flexomatic81/load-rings/issues\n"
-"POT-Creation-Date: 2026-10-26 21:23+0100\n"
+"POT-Creation-Date: 2026-10-26 21:56+0100\n"
 "PO-Revision-Date: 2026-10-26 12:00+0100\n"
 "Last-Translator: Flexomatic81\n"
 "Language-Team: German\n"
@@ -13,13 +13,28 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: package/contents/config/config.qml:29
 msgid "General"
 msgstr "Allgemein"
 
-#: package/contents/ui/main.qml:37
+#: package/contents/ui/full/RangeTabs.qml:40
+msgid "1 min"
+msgstr "1 Min."
+
+#: package/contents/ui/full/RangeTabs.qml:44
+msgid "5 min"
+msgstr "5 Min."
+
+#: package/contents/ui/full/RangeTabs.qml:48
+msgid "15 min"
+msgstr "15 Min."
+
+#: package/contents/ui/full/RangeTabs.qml:52
+msgid "1 h"
+msgstr "1 Std."
+
+#: package/contents/ui/main.qml:84
 msgid "Load Rings"
 msgstr "Load Rings"
