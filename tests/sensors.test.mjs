@@ -15,6 +15,9 @@ import {
   gpuSensorIds,
   pickGpu,
   cleanValue,
+  maxFinite,
+  blankNumbers,
+  tickSample,
 } from "../package/contents/code/sensors.mjs";
 
 test("heartbeat sensor", () => {
@@ -155,4 +158,46 @@ test("clean values", () => {
   assert.equal(cleanValue(0), 0);
   assert.equal(cleanValue(-2.5), -2.5);
   for (const v of [undefined, null, NaN, "", "12", Infinity]) assert.equal(cleanValue(v), null);
+});
+
+test("maxFinite", () => {
+  assert.equal(maxFinite([40, NaN, 55, undefined, 50]), 55);
+  assert.equal(maxFinite([-3, -1]), -1);
+  assert.equal(maxFinite([NaN]), NaN);
+  assert.equal(maxFinite([]), NaN);
+});
+test("blankNumbers keeps shape and text, blanks numbers", () => {
+  const blank = blankNumbers({
+    a: 1,
+    name: "x",
+    flag: true,
+    list: [{ u: 2 }, { u: 3 }],
+    gpu: { n: "g", v: 4 },
+    none: null,
+  });
+  assert.equal(blank.a, NaN);
+  assert.equal(blank.name, "x");
+  assert.equal(blank.flag, true);
+  assert.equal(blank.list.length, 2);
+  assert.equal(blank.list[1].u, NaN);
+  assert.equal(blank.gpu.n, "g");
+  assert.equal(blank.gpu.v, NaN);
+  assert.equal(blank.none, null);
+});
+test("tickSample", () => {
+  const current = { cpuUsage: 12.5, memUsedPercent: 40, cpuTemperature: NaN, gpu: { usage: 7, temperature: 61 } };
+  assert.deepEqual(tickSample(1000, 2000, current, "gpu0"), {
+    timestamp: 1000,
+    intervalMs: 2000,
+    cpu: 12.5,
+    ram: 40,
+    gpu: 7,
+    gpuId: "gpu0",
+    cpuTemp: null,
+    gpuTemp: 61,
+  });
+  const off = tickSample(1, 500, current, null);
+  assert.equal(off.gpu, null);
+  assert.equal(off.gpuTemp, null);
+  assert.equal(off.gpuId, null);
 });

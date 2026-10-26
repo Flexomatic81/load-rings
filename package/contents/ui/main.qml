@@ -9,6 +9,7 @@ import QtQuick
 import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.plasmoid
 import "compact"
+import "data"
 import "full"
 import "../code/text.mjs" as TextTools
 
@@ -46,15 +47,38 @@ PlasmoidItem {
     // The state of the popup at the last press (see CompactRepresentation).
     property bool wasExpanded: false
 
-    // Fixed values until the sensors are wired up.
-    readonly property var rings: [
+    // The sensor values; everything shown reads sensors.current, which is NaN while the sensors look stalled.
+    SystemSensors {
+        id: sensors
+
+        // Plasmoid.configuration is generated from main.xml at runtime, which qmllint cannot see
+        interval: Plasmoid.configuration.updateInterval * 1000 // qmllint disable missing-property
+        gpuEnabled: Plasmoid.configuration.showGpu // qmllint disable missing-property
+        gpuWanted: Plasmoid.configuration.gpuId // qmllint disable missing-property
+    }
+
+    readonly property bool gpuShown: sensors.gpuId !== ""
+    readonly property var rings: root.gpuShown ? [
         {
             key: "cpu",
-            percent: 34
+            percent: sensors.current.cpuUsage
         },
         {
             key: "ram",
-            percent: 58
+            percent: sensors.current.memUsedPercent
+        },
+        {
+            key: "gpu",
+            percent: sensors.current.gpu.usage
+        }
+    ] : [
+        {
+            key: "cpu",
+            percent: sensors.current.cpuUsage
+        },
+        {
+            key: "ram",
+            percent: sensors.current.memUsedPercent
         }
     ]
 

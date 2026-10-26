@@ -19,7 +19,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/.." || exit 1
 
 # Scenes that read real system data (ksystemstats). Each one says so in its header comment
 # ("// Live scene: needs ..."); tests/smoke-live.test.mjs keeps both in step.
-live_scenes=()
+live_scenes=(SensorSmoke.qml)
 
 is_live() {
   local name scene

@@ -117,3 +117,39 @@ export function pickGpu(available, wanted) {
 export function cleanValue(value) {
   return typeof value === "number" && isFinite(value) ? value : null;
 }
+
+// The largest finite number of the list, NaN when there is none.
+export function maxFinite(values) {
+  let best = NaN;
+  for (const value of values) {
+    if (cleanValue(value) !== null && !(value <= best)) best = value;
+  }
+  return best;
+}
+
+// A copy of a snapshot with every number replaced by NaN. Arrays keep their length and objects their
+// fields, so a view reading the copy needs no special case for missing data.
+export function blankNumbers(value) {
+  if (typeof value === "number") return NaN;
+  if (Array.isArray(value)) return value.map(blankNumbers);
+  if (value === null || typeof value !== "object") return value;
+  const copy = {};
+  for (const key of Object.keys(value)) copy[key] = blankNumbers(value[key]);
+  return copy;
+}
+
+// The history sample of one interval from the (freshness-gated) snapshot; unknown values are null.
+// gpuId is null when no GPU is shown.
+export function tickSample(timestamp, intervalMs, current, gpuId) {
+  const hasGpu = gpuId !== null;
+  return {
+    timestamp: timestamp,
+    intervalMs: intervalMs,
+    cpu: cleanValue(current.cpuUsage),
+    ram: cleanValue(current.memUsedPercent),
+    gpu: hasGpu ? cleanValue(current.gpu.usage) : null,
+    gpuId: gpuId,
+    cpuTemp: cleanValue(current.cpuTemperature),
+    gpuTemp: hasGpu ? cleanValue(current.gpu.temperature) : null,
+  };
+}
