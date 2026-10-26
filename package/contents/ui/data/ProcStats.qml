@@ -36,6 +36,8 @@ Item {
 
         // The latest { timestamp, ctxt }, or null.
         property var previous: null
+        // True while a failure streak has already been logged.
+        property bool failureLogged: false
 
         // The CommandRunner behind the query, null while it is not loaded.
         // Its properties are only known at runtime, hence the untyped result.
@@ -52,9 +54,14 @@ Item {
 
         function apply(exitCode, stdout, stderr) {
             if (exitCode !== 0) {
-                console.warn("loadrings: statistics query failed (exit " + exitCode + "): " + stderr);
+                // One line per failure streak, not one per tick.
+                if (!internals.failureLogged) {
+                    internals.failureLogged = true;
+                    console.warn("loadrings: statistics query failed (exit " + exitCode + "): " + stderr);
+                }
                 return;
             }
+            internals.failureLogged = false;
             // A reading that finishes after the popup closed is dropped.
             if (!root.active) {
                 return;
