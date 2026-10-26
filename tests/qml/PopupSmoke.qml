@@ -6,7 +6,7 @@
 // figures; in the second the temperature, clock and load tiles, the core grid, the details and the program list
 // are hidden and the header shows only "CPU". In the memory column the first shows the figures, the bar whose
 // segments add up to its width, swap, ZRAM, pressure and the program list; in the second the swap, ZRAM and
-// pressure rows, the figures and the program list are hidden and the header is empty. The footer button reports
+// pressure rows, the figures and the program list are hidden and the header shows only the total. The footer button reports
 // through its signal.
 
 import QtQuick
@@ -51,7 +51,7 @@ Item {
             "cpuTemperature": NaN,
             "coreCount": NaN,
             "cores": [],
-            "memTotal": NaN,
+            "memTotal": 32e9,
             "memUsed": NaN,
             "memApplication": NaN,
             "memUsedPercent": NaN,
@@ -190,7 +190,7 @@ Item {
     function emptyRamProblem(): string {
         const ram = empty.ramColumn;
         return scene.failedNames({
-            "head": ram.headLabel.text === "",
+            "head": ram.headLabel.text === scene.local("29.8 GiB"),
             "used": !ram.usedLabel.visible && !ram.stackedBar.visible,
             "segments": ram.stackedBar.segmentRepeater.count === 0,
             "swap": !ram.swapRow.visible,

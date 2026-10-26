@@ -160,7 +160,7 @@ export function swapShown(swapTotal, fresh) {
 export function swapText(used, total, t, decimalPoint) {
   if (!hasValue(used) || !hasValue(total)) return DASH;
   const [a, b] = sizePair(used, total, decimalPoint);
-  return t.tr("%1 of %2", a, b);
+  return t.trc("@label amount used of total", "%1 of %2", a, b);
 }
 
 // The ZRAM devices that hold something; an idle one has nothing to show.

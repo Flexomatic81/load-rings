@@ -62,7 +62,10 @@ ColumnLayout {
         })
     readonly property string decimalPoint: Qt.locale().decimalPoint
     // Read once so the ranking is computed again only when the total or the rows change, not on every tick.
-    readonly property real memTotal: root.current.memTotal ?? NaN
+    readonly property real liveTotal: root.current.memTotal ?? NaN
+    // The last total the sensors reported: it stays while they are stale, so the header and the shares keep their
+    // basis, and it only changes (and so only recomputes the ranking) when the total itself changes.
+    property real memTotal: NaN
     readonly property var consumerItems: Apps.topConsumers(root.appRows, "memory", root.memTotal)
     readonly property var segments: Memory.memoryBreakdown({
             total: root.current.memTotal,
@@ -94,6 +97,15 @@ ColumnLayout {
 
     spacing: Kirigami.Units.smallSpacing
 
+    onLiveTotalChanged: root.rememberTotal()
+    Component.onCompleted: root.rememberTotal()
+
+    function rememberTotal() {
+        if (Number.isFinite(root.liveTotal)) {
+            root.memTotal = root.liveTotal;
+        }
+    }
+
     RowLayout {
         Layout.fillWidth: true
         spacing: Kirigami.Units.smallSpacing
@@ -108,7 +120,7 @@ ColumnLayout {
 
             Layout.fillWidth: true
             Layout.minimumWidth: 0
-            text: Popup.memoryHeader(root.hardwareInfo?.memory, root.current.memTotal, root.translator, root.decimalPoint)
+            text: Popup.memoryHeader(root.hardwareInfo?.memory, root.memTotal, root.translator, root.decimalPoint)
             color: Kirigami.Theme.disabledTextColor
             elide: Text.ElideRight
         }

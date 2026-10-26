@@ -7,6 +7,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Controls as QQC2
+import QtQuick.Effects
 import QtQuick.Layouts
 import org.kde.kirigami as Kirigami
 import "../../code/popup.mjs" as Popup
@@ -56,23 +57,46 @@ ColumnLayout {
         radius: 2
         color: Qt.alpha(Kirigami.Theme.textColor, 0.12)
 
-        Row {
-            Repeater {
-                id: segmentItems
+        // The parts are cut to the rounded ends of the track.
+        Item {
+            anchors.fill: parent
+            layer.enabled: true
+            layer.effect: MultiEffect {
+                maskEnabled: true
+                maskSource: mask
+            }
 
-                // The count, not the list: new values must not rebuild the segments.
-                model: root.segments.length
+            Row {
+                Repeater {
+                    id: segmentItems
 
-                Rectangle {
-                    id: part
+                    // The count, not the list: new values must not rebuild the segments.
+                    model: root.segments.length
 
-                    required property int index
-                    readonly property var segment: root.segments[part.index] ?? null
+                    Rectangle {
+                        id: part
 
-                    width: part.segment !== null && root.total > 0 ? track.width * part.segment.bytes / root.total : 0
-                    height: track.height
-                    color: part.segment !== null ? (root.colors[part.segment.key] ?? "transparent") : "transparent"
+                        required property int index
+                        readonly property var segment: root.segments[part.index] ?? null
+
+                        width: part.segment !== null && root.total > 0 ? track.width * part.segment.bytes / root.total : 0
+                        height: track.height
+                        color: part.segment !== null ? (root.colors[part.segment.key] ?? "transparent") : "transparent"
+                    }
                 }
+            }
+        }
+
+        Item {
+            id: mask
+
+            anchors.fill: parent
+            visible: false
+            layer.enabled: true
+
+            Rectangle {
+                anchors.fill: parent
+                radius: track.radius
             }
         }
     }

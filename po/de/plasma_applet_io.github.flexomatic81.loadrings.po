@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: loadrings\n"
 "Report-Msgid-Bugs-To: https://github.com/Flexomatic81/load-rings/issues\n"
-"POT-Creation-Date: 2026-10-26 22:44+0100\n"
+"POT-Creation-Date: 2026-10-26 22:49+0100\n"
 "PO-Revision-Date: 2026-10-26 12:00+0100\n"
 "Last-Translator: Flexomatic81\n"
 "Language-Team: German\n"
@@ -94,6 +94,7 @@ msgid "Available"
 msgstr "Verfügbar"
 
 #: package/contents/code/popup.mjs:163
+msgctxt "@label amount used of total"
 msgid "%1 of %2"
 msgstr "%1 von %2"
 
@@ -149,19 +150,19 @@ msgstr "Systemmonitor öffnen"
 msgid "Source: system sensors"
 msgstr "Quelle: Systemsensoren"
 
-#: package/contents/ui/full/RamColumn.qml:102
+#: package/contents/ui/full/RamColumn.qml:114
 msgid "Memory"
 msgstr "Arbeitsspeicher"
 
-#: package/contents/ui/full/RamColumn.qml:182
+#: package/contents/ui/full/RamColumn.qml:194
 msgid "Swap"
 msgstr "Swap"
 
-#: package/contents/ui/full/RamColumn.qml:212
+#: package/contents/ui/full/RamColumn.qml:224
 msgid "Pressure"
 msgstr "Engpass"
 
-#: package/contents/ui/full/RamColumn.qml:222
+#: package/contents/ui/full/RamColumn.qml:234
 msgid "What uses the memory"
 msgstr "Wer belegt den Speicher"
 
