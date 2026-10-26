@@ -150,6 +150,8 @@ Item {
 
                 Layout.preferredWidth: LayoutLogic.popupColumnWidth(Kirigami.Units.gridUnit)
                 Layout.alignment: Qt.AlignTop
+                // The tiles inside would otherwise make a shorter column grow to the height of the row.
+                Layout.fillHeight: false
                 current: root.shownCurrent
                 fresh: root.shownFresh
                 graphWindow: root.graphWindow
@@ -168,6 +170,8 @@ Item {
 
                 Layout.preferredWidth: LayoutLogic.popupColumnWidth(Kirigami.Units.gridUnit)
                 Layout.alignment: Qt.AlignTop
+                // The tiles inside would otherwise make a shorter column grow to the height of the row.
+                Layout.fillHeight: false
                 current: root.shownCurrent
                 fresh: root.shownFresh
                 graphWindow: root.graphWindow
@@ -184,6 +188,8 @@ Item {
 
                 Layout.preferredWidth: LayoutLogic.popupColumnWidth(Kirigami.Units.gridUnit)
                 Layout.alignment: Qt.AlignTop
+                // The tiles inside would otherwise make a shorter column grow to the height of the row.
+                Layout.fillHeight: false
                 visible: root.shownGpuId !== ""
                 current: root.shownCurrent
                 fresh: root.shownFresh

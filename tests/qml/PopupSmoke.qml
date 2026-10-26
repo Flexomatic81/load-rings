@@ -9,7 +9,8 @@
 // pressure rows, the figures and the program list are hidden and the header shows only the total. The footer button reports
 // through its signal. The graphics card column exists only for a GPU that is switched on and found (two columns
 // otherwise); with all values it shows the figures, the graph, the video memory and the details, with none the
-// optional parts are hidden, and the history of another card gives an empty graph and no peak.
+// optional parts are hidden, and the history of another card gives an empty graph and no peak. Next to a taller
+// processor column the card column keeps its own height instead of stretching its tiles.
 
 import QtQuick
 import QtQuick.Layouts
@@ -237,6 +238,20 @@ Item {
         gpuId: scene.idOn
     }
 
+    // Every processor value with the card: the processor column is the tallest.
+    FullRepresentation {
+        id: gpuTall
+
+        y: 4200
+        current: Object.assign({}, scene.fullCurrent, {
+            "gpu": scene.gpuCurrent.gpu
+        })
+        fresh: true
+        stats: scene.fullStats
+        history: scene.gpuHistory("gpu0")
+        gpuId: scene.idOn
+    }
+
     FullRepresentation {
         id: gpuBlank
 
@@ -308,6 +323,11 @@ Item {
         });
     }
 
+    // How much taller the usage tile of a card column is than the tallest tile needs.
+    function tileStretch(gpu: var): real {
+        return gpu.usageTile.height - Math.max(gpu.usageTile.implicitHeight, gpu.clockTile.implicitHeight, gpu.temperatureTile.implicitHeight, gpu.powerTile.implicitHeight);
+    }
+
     // The columns of a popup that are shown.
     function columnCount(view: var): int {
         return view.cpuColumn.parent.visibleChildren.length;
@@ -321,6 +341,8 @@ Item {
             "no card: two columns": scene.idNone === "" && !gpuNone.gpuColumn.visible && scene.columnCount(gpuNone) === 2,
             "default: two columns": !full.gpuColumn.visible && scene.columnCount(full) === 2,
             "on: three columns": scene.idOn === "gpu0" && gpu.visible && scene.columnCount(gpuOn) === 3,
+            // Next to a taller processor column the card column keeps its own height: its tiles are not stretched.
+            "tiles at their height": scene.tileStretch(gpuTall.gpuColumn) <= 1 && gpuTall.cpuColumn.height > gpuTall.gpuColumn.height,
             "name": gpu.nameLabel.text === "Test GPU",
             "usage": gpu.usageTile.value === "7 %",
             "clock": gpu.clockTile.visible && gpu.clockTile.value === scene.local("1.80") && gpu.clockTile.detail === "GHz",
