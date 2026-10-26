@@ -216,8 +216,12 @@ export function demoApps() {
 }
 
 // The card list of the settings page (the shape of GpuChoices.options).
+// Two cards, so that the card list of the settings page is enabled; the first is the one shown.
 export function demoGpuOptions() {
-  return [{ text: DEMO_GPU, value: DEMO_GPU_ID }];
+  return [
+    { text: DEMO_GPU, value: DEMO_GPU_ID },
+    { text: "AMD Radeon RX 6400", value: "gpu1" },
+  ];
 }
 
 // The rings of the panel (the shape of ringValues()), with or without the graphics card.

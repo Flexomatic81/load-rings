@@ -176,8 +176,8 @@ What it never does:
 
 - It needs **no extra packages** and **no root rights**.
 - It **sends nothing anywhere**: there is no network access at all.
-- It **never reads serial numbers**: the memory query asks only for the fields
-  listed above.
+- It **never reads serial numbers**: the memory query keeps only the fields
+  listed above; serial numbers never reach the widget.
 - It reads **no process list while the popup is closed**.
 - It **keeps nothing on disk**: the history lives in memory only.
 

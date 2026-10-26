@@ -114,14 +114,13 @@ in and none has a result starting with "fail" or "no" (any case), that
 carries the release date as YYYY-MM-DD and no longer says "unreleased" (for
 example `## [0.1.0] – 2026-10-26`), and that the screenshots in `docs/images`
 exist. The tag job of the CI workflow runs it before it builds or publishes
-anything, so a tag pushed too early fails there. A result that starts with
-"Pending" passes that check; such a row must be done before the tag is pushed.
+anything, so a tag pushed too early fails there.
 
 | Gate | Date | Result |
 |---|---|---|
 | (a) Automatic checks green: `node tools/check.mjs` with all smoke scenes and the load check | 2026-10-26 | Done: every step passed on the development machine (Plasma 6.8.1) |
 | (b) Screenshots and store images generated with `scripts/screenshots.sh` and the VectorCraft document, reviewed and committed | 2026-10-26 | Done: Breeze Dark and Breeze Light, seven views each, four store images |
 | (c) Minimum version honest: documented as tested on Plasma 6.8 only (README, [compatibility.md](compatibility.md), store text) | 2026-10-26 | Done: no run on Plasma 6.3 to 6.7, said so in all three |
-| (d) The manual checklist in this file, all tables, in a real panel | 2026-10-26 | Pending: to be worked through by hand before the tag is pushed |
-| (e) A green CI run on the remote for the commit to be tagged, before the tag is pushed | 2026-10-26 | Pending: the repository has no remote yet |
+| (d) The manual checklist in this file, all tables, in a real panel | | |
+| (e) A green CI run on the remote for the commit to be tagged, before the tag is pushed | | |
 | (f) CHANGELOG and the changelog in [store.md](store.md) finalized: release date in the heading as YYYY-MM-DD, no "unreleased" | 2026-10-26 | Done: heading `## [0.1.0] – 2026-10-26` |

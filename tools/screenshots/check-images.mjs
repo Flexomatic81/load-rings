@@ -123,11 +123,6 @@ export function parseArea(text, kind) {
   return { x, y, width, height, sceneWidth, sceneHeight };
 }
 
-/** The graph area the scene reports in its output, or null. */
-export function parseChartLine(text) {
-  return parseArea(text, "chart");
-}
-
 // The area in image pixels: the image may be a multiple of the scene size (a scaled display).
 function pixelRect(png, area) {
   const scale = area.sceneWidth > 0 ? png.width / area.sceneWidth : 1;

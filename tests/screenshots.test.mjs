@@ -34,7 +34,6 @@ import {
   metadataProblems,
   main,
   parseArea,
-  parseChartLine,
   readPng,
 } from "../tools/screenshots/check-images.mjs";
 import { topConsumers } from "../package/contents/code/apps.mjs";
@@ -66,7 +65,11 @@ test("the demo hardware is the fixed sample machine", () => {
   assert.equal(demoCurrent().cores.length, 16);
   assert.deepEqual(memorySummary(hardware.memory, demoCurrent().memTotal, t), ["DDR4-3200", "4 × 8 GiB"]);
   assert.equal(demoCurrent().gpu.name, DEMO_GPU);
-  assert.deepEqual(demoGpuOptions(), [{ text: DEMO_GPU, value: DEMO_GPU_ID }]);
+  // Two cards, so the card list of the settings page is enabled; the first is the one shown.
+  assert.deepEqual(demoGpuOptions(), [
+    { text: DEMO_GPU, value: DEMO_GPU_ID },
+    { text: "AMD Radeon RX 6400", value: "gpu1" },
+  ]);
 });
 
 test("the demo data names no person, path or machine", () => {
@@ -274,7 +277,7 @@ test("a graph area of one color is reported, one with lines is not", () => {
 });
 
 test("the chart line of the scene is parsed", () => {
-  assert.deepEqual(parseChartLine("qml: SCREENSHOT chart popup.png 10 20.5 300 140 of 528 720"), {
+  assert.deepEqual(parseArea("qml: SCREENSHOT chart popup.png 10 20.5 300 140 of 528 720", "chart"), {
     x: 10,
     y: 20.5,
     width: 300,
@@ -282,7 +285,7 @@ test("the chart line of the scene is parsed", () => {
     sceneWidth: 528,
     sceneHeight: 720,
   });
-  assert.equal(parseChartLine("qml: something else"), null);
+  assert.equal(parseArea("qml: something else", "chart"), null);
   assert.deepEqual(parseArea("qml: SCREENSHOT bar popup.png 8 500 380 6 of 396 692", "bar"), {
     x: 8,
     y: 500,
