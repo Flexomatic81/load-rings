@@ -36,6 +36,7 @@ itself.
 
 ## Links
 
+- Store page: https://store.kde.org/p/2380553/
 - Source code: https://github.com/Flexomatic81/load-rings
 - File: `loadrings-<version>.plasmoid` from the GitHub release of that version
 
