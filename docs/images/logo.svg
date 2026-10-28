@@ -3,10 +3,13 @@
 <!-- SPDX-FileCopyrightText: 2026 Flexomatic81 -->
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
   <rect x="16" y="16" width="480" height="480" rx="96" fill="#232629"/>
-  <circle cx="256" cy="256" r="178" fill="none" stroke="#4a4f54" stroke-width="40"/>
-  <circle cx="256" cy="256" r="124" fill="none" stroke="#4a4f54" stroke-width="40"/>
-  <circle cx="256" cy="256" r="70" fill="none" stroke="#4a4f54" stroke-width="40"/>
-  <path d="M 256 78 A 178 178 0 0 1 341.75 411.98" fill="none" stroke="#27ae60" stroke-width="40" stroke-linecap="round"/>
-  <path d="M 256 132 A 124 124 0 1 1 160.46 335.04" fill="none" stroke="#fdbc4b" stroke-width="40" stroke-linecap="round"/>
-  <path d="M 256 186 A 70 70 0 1 1 202.06 211.38" fill="none" stroke="#da4453" stroke-width="40" stroke-linecap="round"/>
+  <circle cx="352" cy="256" r="119" fill="#232629"/>
+  <circle cx="352" cy="256" r="96" fill="none" stroke="#4a4f54" stroke-width="26"/>
+  <path d="M 352 160.00 A 96 96 0 0 1 417.72 325.98" fill="none" stroke="#27ae60" stroke-width="26" stroke-linecap="round"/>
+  <circle cx="286" cy="256" r="141" fill="#232629"/>
+  <circle cx="286" cy="256" r="116" fill="none" stroke="#4a4f54" stroke-width="30"/>
+  <path d="M 286 140.00 A 116 116 0 1 1 271.46 371.09" fill="none" stroke="#fdbc4b" stroke-width="30" stroke-linecap="round"/>
+  <circle cx="194" cy="256" r="168" fill="#232629"/>
+  <circle cx="194" cy="256" r="140" fill="none" stroke="#4a4f54" stroke-width="36"/>
+  <path d="M 194 116.00 A 140 140 0 1 1 60.85 299.26" fill="none" stroke="#f67400" stroke-width="36" stroke-linecap="round"/>
 </svg>
