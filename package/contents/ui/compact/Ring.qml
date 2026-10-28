@@ -78,8 +78,8 @@ Item {
         id: label
 
         anchors.centerIn: parent
-        // "100" must fit inside the line.
-        width: Math.max(0, 2 * (root.radius - root.stroke))
+        // The label keeps 2 px of air on each side inside the line, so "100%" fits.
+        width: Math.max(0, 2 * (root.radius - root.stroke) - 4)
         horizontalAlignment: Text.AlignHCenter
         fontSizeMode: Text.HorizontalFit
         minimumPixelSize: 6
