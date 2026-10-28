@@ -47,37 +47,37 @@ at the top for each run, or copy the tables; empty cells count as not checked.
 Where a check names a text of the interface, the German wording is given too,
 because the checker compares it against the German interface.
 
-- Version:
-- Date:
-- Plasma version:
+- Version: 0.1.0 (dev)
+- Date: 2026-10-28
+- Plasma version: 6.8.1, Wayland, three screens; test panels on a separate screen next to the sibling widget Limit Rings
 
 ## Panel
 
 | Check | Result |
 |---|---|
-| Horizontal panel at the default height: two rings with numbers; the numbers change without the panel jumping | |
-| Vertical panel: the rings are stacked in one column, nothing is cut off | |
-| Panel sizes: horizontal about 24 px, 44 px and 96 px, vertical about 32 px wide: the numbers stay readable | |
-| Desktop: the widget shows the rings side by side | |
-| Light and dark theme (Breeze Light, Breeze Dark): the numbers and the empty part of the rings are easy to see in both | |
-| Load the processor (for example `stress-ng --cpu 0` or a build): the processor ring turns from green through yellow and orange to red and back | |
+| Horizontal panel at the default height: two rings with numbers; the numbers change without the panel jumping | 2026-10-28, Plasma 6.8.1, scripted in a real test panel: OK; the rings match the size of the sibling widget's gauges |
+| Vertical panel: the rings are stacked in one column, nothing is cut off | 2026-10-28, Plasma 6.8.1, scripted in a real 32 px vertical panel: OK, one column, nothing cut off |
+| Panel sizes: horizontal about 24 px, 44 px and 96 px, vertical about 32 px wide: the numbers stay readable | 2026-10-28, Plasma 6.8.1, scripted in real panels: 44 px, 96 px and vertical 32 px OK; 24 px first showed the numbers at about 6 px, fixed: rings too small for a readable percent sign show the bare number; then OK |
+| Desktop: the widget shows the rings side by side | 2026-10-28, Plasma 6.8.1, scripted on the desktop of a real screen: OK |
+| Light and dark theme (Breeze Light, Breeze Dark): the numbers and the empty part of the rings are easy to see in both | 2026-10-28, Plasma 6.8.1, scripted with the screenshot scenes in Breeze Dark and Breeze Light: OK |
+| Load the processor (for example `stress-ng --cpu 0` or a build): the processor ring turns from green through yellow and orange to red and back | 2026-10-28, Plasma 6.8.1, scripted with a busy loop on all 16 threads: the ring went to red at 100 % ("100%" fits) and back to green: OK |
 | Tooltip: the lines "CPU" (German: “CPU”), "RAM" and, with the graphics card shown, "GPU" with their values | |
-| Stop the sensor service (`systemctl --user stop plasma-ksystemstats`): after a few seconds the rings show a dash and the tooltip says "No data from the system sensors" (German: “Keine Daten von den Systemsensoren”); start it again: the values come back without a restart | |
+| Freeze the sensor service (`systemctl --user kill -s SIGSTOP plasma-ksystemstats`; a stopped service is started again at once through D-Bus): after a few seconds the rings show a dash and the tooltip says "No data from the system sensors" (German: “Keine Daten von den Systemsensoren”); let it run again (`-s SIGCONT`): the values come back without a restart | 2026-10-28, Plasma 6.8.1, scripted: stopping the service starts it again at once through D-Bus, so the service was frozen (`systemctl --user kill -s SIGSTOP plasma-ksystemstats`) for 15 s instead: all rings showed the dash; after SIGCONT the values came back without a restart: OK (the tooltip text is covered by the heartbeat smoke scene, not hovered) |
 
 ## Popup
 
 | Check | Result |
 |---|---|
 | A click on the rings opens the popup; another click closes it and does not reopen it right away; a click outside closes it as well | |
-| Processor column: model, cores and threads, usage, clock, temperature with peak, load average; the graph fills over time | |
+| Processor column: model, cores and threads, usage, clock, temperature with peak, load average; the graph fills over time | 2026-10-28, Plasma 6.8.1, scripted with real data in German: OK; found and fixed: the clock tile showed the fastest core as "max" (sensor `cpu/all/maximumFrequency`) instead of the processor's highest clock, now read once from cpufreq; and the peak could show below the current temperature, now never does |
 | Core grid: one cell per logical core; hovering a cell shows its clock and temperature | |
-| The detail line names the governor, the energy preference (where the system has one), the context switches per second and the waiting time | |
-| "What uses the CPU" (German: “Was belastet die CPU”) and "What uses the memory" (German: “Was belegt den Speicher”): the programs match what the System Monitor shows under Applications, a program with several processes is one row, and "Background services" (German: “Hintergrunddienste”) collects the session's services | |
-| Memory column: the header names type, speed and modules where the firmware tells them; the bar parts add up to the whole width; swap, ZRAM and pressure rows show where the system has them | |
+| The detail line names the governor, the energy preference (where the system has one), the context switches per second and the waiting time | 2026-10-28, Plasma 6.8.1, scripted with real data: governor, EPP, context switches and waiting time shown: OK |
+| "What uses the CPU" (German: “Was belastet die CPU”) and "What uses the memory" (German: “Was belegt den Speicher”): the programs match what the System Monitor shows under Applications, a program with several processes is one row, and "Background services" (German: “Hintergrunddienste”) collects the session's services | 2026-10-28, Plasma 6.8.1, scripted with real data: programs grouped with their process count, "Background services" collects the session services; the list comes from the same process model as the System Monitor's Applications page: OK |
+| Memory column: the header names type, speed and modules where the firmware tells them; the bar parts add up to the whole width; swap, ZRAM and pressure rows show where the system has them | 2026-10-28, Plasma 6.8.1, scripted with real data: "DDR4-3200 · 4 × 8 GiB · A-DATA", bar, swap, ZRAM and pressure rows: OK |
 | Switch the time window between 1 min, 5 min, 15 min and 1 h: all graphs follow; the window in the settings stays as it was | |
 | "Open System Monitor" (German: “Systemmonitor öffnen”) starts the System Monitor | |
-| With the popup closed, `ps` shows no shell command of the widget running at each interval, and the System Monitor shows no extra load from plasmashell | |
-| German system language: all texts of the popup are German, numbers use a decimal comma, nothing is cut off | |
+| With the popup closed, `ps` shows no shell command of the widget running at each interval, and the System Monitor shows no extra load from plasmashell | 2026-10-28, Plasma 6.8.1, scripted: no shell child of plasmashell in 10 s with the popup closed: OK |
+| German system language: all texts of the popup are German, numbers use a decimal comma, nothing is cut off | 2026-10-28, Plasma 6.8.1, scripted with real data in German: all texts German, decimal comma, nothing cut off: OK |
 
 ## Graphics card
 
@@ -85,9 +85,9 @@ because the checker compares it against the German interface.
 |---|---|
 | Settings → "Show graphics card" (German: “Grafikkarte anzeigen”): a third ring and a third popup column appear; switching it off removes both | |
 | The column shows the name, usage, clock, temperature with peak, power, video memory and the detail line; values the card does not report are left out | |
-| A machine with two cards: "Graphics card:" (German: “Grafikkarte:”) lists both, and switching the card clears the graph and the peak instead of mixing the values of two cards | |
-| A machine without a supported card: the settings page says "No graphics card found" (German: “Keine Grafikkarte gefunden”), and the switch adds nothing | |
-| On a screen 1366 pixels wide at 125 % scaling the three-column popup is wider than the screen (known, see [compatibility.md](compatibility.md#screen-size)); with two columns it fits | |
+| A machine with two cards: "Graphics card:" (German: “Grafikkarte:”) lists both, and switching the card clears the graph and the peak instead of mixing the values of two cards | n/a: only one graphics card available; the switch clears the graph and the peak in the heartbeat and popup smoke scenes |
+| A machine without a supported card: the settings page says "No graphics card found" (German: “Keine Grafikkarte gefunden”), and the switch adds nothing | n/a: no such machine available; covered by the popup and compact smoke scenes ("GPU on, no card") |
+| On a screen 1366 pixels wide at 125 % scaling the three-column popup is wider than the screen (known, see [compatibility.md](compatibility.md#screen-size)); with two columns it fits | n/a: no such screen available; the width is documented in compatibility.md |
 
 ## Settings
 
@@ -102,8 +102,8 @@ because the checker compares it against the German interface.
 | Check | Result |
 |---|---|
 | Suspend and resume: the graphs show a gap for the pause instead of a line across it, and the values continue | |
-| A virtual machine or a machine without temperature sensors: the temperature tiles are left out, the rest works | |
-| Restart plasmashell several times with the popup open: no warnings from the widget in `journalctl --user -b \| grep -i loadrings` | |
+| A virtual machine or a machine without temperature sensors: the temperature tiles are left out, the rest works | n/a: no such machine available; covered by the popup smoke scene with every optional value missing |
+| Restart plasmashell several times with the popup open: no warnings from the widget in `journalctl --user -b \| grep -i loadrings` | 2026-10-28, Plasma 6.8.1, scripted: six restarts during the test run, no warning from the widget in the journal: OK (with the popup closed; opening it is part of the click checks) |
 
 ## Release record 0.1.0
 
