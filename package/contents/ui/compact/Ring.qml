@@ -74,18 +74,34 @@ Item {
         }
     }
 
+    // The font size is measured on the widest two-digit label. With tabular figures every two-digit number is as wide
+    // as "00%", so one and two digits share one size and the numbers do not change size with the load.
+    TextMetrics {
+        id: twoDigits
+
+        font.family: label.font.family
+        font.pixelSize: root.fontPx
+        font.features: {
+            "tnum": 1
+        }
+        text: "00%"
+    }
+
     PlasmaComponents.Label {
         id: label
 
+        // The label keeps 2 px of air on each side inside the line.
+        readonly property real room: Math.max(0, 2 * (root.radius - root.stroke) - 4)
+
         anchors.centerIn: parent
-        // The label keeps 2 px of air on each side inside the line, so "100%" fits.
-        width: Math.max(0, 2 * (root.radius - root.stroke) - 4)
+        width: label.room
         horizontalAlignment: Text.AlignHCenter
+        // Only the rare "100%" is wider than two digits; it alone shrinks to fit.
         fontSizeMode: Text.HorizontalFit
         minimumPixelSize: 6
         text: root.text
         color: Kirigami.Theme.textColor
-        font.pixelSize: root.fontPx
+        font.pixelSize: Math.max(6, twoDigits.advanceWidth > label.room ? Math.floor(root.fontPx * label.room / twoDigits.advanceWidth) : root.fontPx)
         font.features: {
             "tnum": 1
         }

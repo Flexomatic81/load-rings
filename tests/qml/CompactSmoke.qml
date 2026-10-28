@@ -156,6 +156,27 @@ Item {
             ]
         }
         CompactRepresentation {
+            id: digits
+
+            vertical: true
+            width: 30
+            height: 100
+            rings: [
+                {
+                    key: "cpu",
+                    percent: 1
+                },
+                {
+                    key: "ram",
+                    percent: 15
+                },
+                {
+                    key: "gpu",
+                    percent: 100
+                }
+            ]
+        }
+        CompactRepresentation {
             id: vertical3
 
 
@@ -183,6 +204,13 @@ Item {
             scene.expect("rounded", scene.ringAt(vertical3, 2).text, "100%");
             // "100%" fits inside the line of the smallest ring of the scene.
             scene.expect("100% fits", scene.ringAt(vertical3, 2).label.contentWidth <= scene.ringAt(vertical3, 2).label.width + 0.5, true);
+            // One and two digits share one font size, so the numbers do not change size with the load; only the
+            // rare "100%" may be set smaller to fit.
+            const sizeOf = i => scene.ringAt(digits, i).label.fontInfo.pixelSize;
+            scene.expect("1% and 15% in the same size", sizeOf(0), sizeOf(1));
+            scene.expect("100% not larger", sizeOf(2) <= sizeOf(1), true);
+            scene.expect("100% fits in a narrow panel", scene.ringAt(digits, 2).label.contentWidth <= scene.ringAt(digits, 2).label.width + 0.5, true);
+            scene.expect("15% fits in a narrow panel", scene.ringAt(digits, 1).label.contentWidth <= scene.ringAt(digits, 1).label.width + 0.5, true);
             scene.expect("no arc without a value", scene.ringAt(vertical3, 1).hasArc, false);
             scene.expect("arc with a value", scene.ringAt(vertical3, 0).hasArc, true);
             // A vertical panel stacks the rings in one column, a horizontal one puts them in one row.
