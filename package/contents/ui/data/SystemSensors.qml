@@ -34,7 +34,6 @@ Item {
     // Raw values.
     readonly property real cpuUsage: root.num(cpuUsageSensor.value)
     readonly property real cpuFrequency: root.num(cpuFrequencySensor.value)
-    readonly property real cpuMaxFrequency: root.num(cpuMaxFrequencySensor.value)
     readonly property real cpuTemperature: root.detailed && Number.isNaN(root.num(cpuTemperatureSensor.value)) ? SensorCode.maxFinite(root.cores.map(core => core.temperature)) : root.num(cpuTemperatureSensor.value)
     readonly property real coreCount: root.num(coreCountSensor.value)
     // [{ usage, frequency, temperature }], one per logical CPU.
@@ -71,7 +70,6 @@ Item {
     property var live: ({
         "cpuUsage": root.cpuUsage,
         "cpuFrequency": root.cpuFrequency,
-        "cpuMaxFrequency": root.cpuMaxFrequency,
         "cpuTemperature": root.cpuTemperature,
         "coreCount": root.coreCount,
         "cores": root.cores,
@@ -189,12 +187,6 @@ Item {
         id: cpuFrequencySensor
 
         sensorId: "cpu/all/averageFrequency"
-        updateRateLimit: root.interval
-    }
-    Sensors.Sensor {
-        id: cpuMaxFrequencySensor
-
-        sensorId: "cpu/all/maximumFrequency"
         updateRateLimit: root.interval
     }
     Sensors.Sensor {

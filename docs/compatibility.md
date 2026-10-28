@@ -65,7 +65,7 @@ off there, which leaves two columns of about 830 pixels.
 
 | Contract | Used for |
 | --- | --- |
-| Sensor IDs `cpu/all/usage`, `cpu/all/averageFrequency`, `cpu/all/maximumFrequency`, `cpu/all/averageTemperature`, `cpu/all/coreCount` | The processor ring, tiles and tooltip |
+| Sensor IDs `cpu/all/usage`, `cpu/all/averageFrequency`, `cpu/all/averageTemperature`, `cpu/all/coreCount` | The processor ring, tiles and tooltip |
 | Sensor IDs `cpu/cpu<N>/usage`, `frequency`, `temperature` | The core grid; read only while the popup is open |
 | Sensor IDs `memory/physical/total`, `memory/physical/used`, `memory/physical/application`, `memory/physical/usedPercent`, `memory/swap/total`, `memory/swap/used` | The memory ring, the memory column and the tooltip |
 | Sensor IDs `gpu/gpu<N>/name`, `usage`, `temperature`, `temp2`, `temp3`, `coreFrequency`, `memoryFrequency`, `usedVram`, `totalVram`, `power`, `fan1` | The graphics card ring and column; the cards are found in the sensor tree |

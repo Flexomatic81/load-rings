@@ -29,6 +29,8 @@ core id		: 19
 model name	: 13th Gen Intel(R) Core(TM) i7-1355U
 physical id	: 0
 core id		: 20
+@@cpufreq
+5100000
 @@dmi
 MEMORY_DEVICE_0_SIZE=17179869184
 MEMORY_DEVICE_0_LOCATOR=Onboard

@@ -20,7 +20,6 @@ SystemSensors {
     live: ({
             "cpuUsage": 34,
             "cpuFrequency": 3600,
-            "cpuMaxFrequency": 5000,
             "cpuTemperature": 55,
             "coreCount": 2,
             "cores": [

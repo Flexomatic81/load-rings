@@ -61,8 +61,11 @@ export function clockDetail(maxMHz, t, decimalPoint) {
 }
 
 // The line below the temperature: "Peak 78 °C" since the start, empty without one.
-export function peakDetail(peak, t) {
-  return hasValue(peak) ? t.tr("Peak %1", formatTemp(peak)) : "";
+// The peak since start. It is taken from the history at each interval, so it never shows below the current value of
+// the tile, which may be newer. Without a history there is no peak.
+export function peakDetail(peak, t, current) {
+  if (!hasValue(peak)) return "";
+  return t.tr("Peak %1", formatTemp(hasValue(current) ? Math.max(peak, current) : peak));
 }
 
 // The line below the core grid, from the parts there are.

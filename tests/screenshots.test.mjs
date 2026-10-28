@@ -81,13 +81,13 @@ test("the demo data names no person, path or machine", () => {
 
 test("the snapshot has every value the popup reads, and the numbers agree", () => {
   const current = demoCurrent();
-  for (const key of ["cpuUsage", "cpuFrequency", "cpuMaxFrequency", "cpuTemperature", "memUsed", "memApplication"]) {
+  for (const key of ["cpuUsage", "cpuFrequency", "cpuTemperature", "memUsed", "memApplication"]) {
     assert.ok(Number.isFinite(current[key]), key);
   }
   const mean = current.cores.reduce((sum, core) => sum + core.usage, 0) / current.cores.length;
   assert.equal(mean, current.cpuUsage, "the cores average to the ring");
   assert.ok(Math.abs(current.memUsedPercent - (current.memUsed / current.memTotal) * 100) < 1e-9);
-  assert.ok(current.cpuFrequency <= current.cpuMaxFrequency);
+  assert.ok(current.cpuFrequency <= demoHardware().maxFrequency);
   for (const value of Object.values(current.gpu)) assert.ok(typeof value === "string" || Number.isFinite(value));
   assert.ok(current.gpu.usedVram < current.gpu.totalVram);
   // The memory bar: programs, system, cache and free add up to the total.

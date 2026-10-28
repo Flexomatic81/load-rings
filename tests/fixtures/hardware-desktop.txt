@@ -47,6 +47,8 @@ core id		: 6
 model name	: AMD Ryzen 7 5800X3D 8-Core Processor
 physical id	: 0
 core id		: 7
+@@cpufreq
+4552952
 @@dmi
 MEMORY_DEVICE_0_SIZE=8589934592
 MEMORY_DEVICE_0_LOCATOR=DIMM_A1

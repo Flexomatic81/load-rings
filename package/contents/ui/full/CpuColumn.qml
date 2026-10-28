@@ -131,7 +131,7 @@ ColumnLayout {
             visible: Popup.tileShown(root.current.cpuFrequency, root.fresh)
             label: root.tr("Clock")
             value: Format.formatGHz(root.current.cpuFrequency, root.decimalPoint)
-            detail: Popup.clockDetail(root.current.cpuMaxFrequency, root.translator, root.decimalPoint)
+            detail: Popup.clockDetail(root.hardwareInfo?.maxFrequency ?? NaN, root.translator, root.decimalPoint)
         }
 
         StatTile {
@@ -143,7 +143,7 @@ ColumnLayout {
             visible: Popup.tileShown(root.current.cpuTemperature, root.fresh) || root.peakTemperature !== null
             label: root.tr("Temperature")
             value: Format.formatTemp(root.current.cpuTemperature)
-            detail: Popup.peakDetail(root.peakTemperature, root.translator)
+            detail: Popup.peakDetail(root.peakTemperature, root.translator, root.current.cpuTemperature)
         }
 
         StatTile {

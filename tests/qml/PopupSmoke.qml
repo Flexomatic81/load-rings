@@ -31,7 +31,6 @@ Item {
     readonly property var fullCurrent: ({
             "cpuUsage": 34,
             "cpuFrequency": 4120,
-            "cpuMaxFrequency": 4550,
             "cpuTemperature": 63,
             "coreCount": 16,
             "cores": Array.from({
@@ -53,7 +52,6 @@ Item {
     readonly property var emptyCurrent: ({
             "cpuUsage": NaN,
             "cpuFrequency": NaN,
-            "cpuMaxFrequency": NaN,
             "cpuTemperature": NaN,
             "coreCount": NaN,
             "cores": [],
@@ -192,6 +190,7 @@ Item {
         hardwareInfo: ({
                 "cpuModel": "AMD Ryzen 7 5800X3D",
                 "physicalCores": 8,
+                "maxFrequency": 4550,
                 "memory": null
             })
         appRows: scene.fullRows
@@ -212,6 +211,7 @@ Item {
         hardwareInfo: ({
                 "cpuModel": "AMD Ryzen 7 5800X3D",
                 "physicalCores": 8,
+                "maxFrequency": 4550,
                 "memory": null
             })
         appRows: []

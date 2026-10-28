@@ -124,7 +124,7 @@ ColumnLayout {
             visible: Popup.tileShown(root.gpu.temperature, root.fresh) || root.peakTemperature !== null
             label: root.tr("Temperature")
             value: Format.formatTemp(root.gpu.temperature)
-            detail: Popup.peakDetail(root.peakTemperature, root.translator)
+            detail: Popup.peakDetail(root.peakTemperature, root.translator, root.gpu.temperature)
         }
 
         StatTile {

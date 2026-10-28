@@ -63,7 +63,6 @@ export function demoCurrent() {
   return {
     cpuUsage: CPU_NOW,
     cpuFrequency: 4180,
-    cpuMaxFrequency: 4550,
     cpuTemperature: 67,
     coreCount: CORE_USAGE.length,
     cores: demoCores(),
@@ -174,6 +173,7 @@ export function demoHardware() {
   return {
     cpuModel: DEMO_CPU,
     physicalCores: 8,
+    maxFrequency: 4550,
     memory: { type: "DDR4", speedMts: 3200, manufacturer: null, modules: modules },
   };
 }

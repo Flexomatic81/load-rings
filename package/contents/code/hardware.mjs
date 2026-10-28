@@ -11,6 +11,7 @@ const GIB = 2 ** 30;
 // One line for the shell. Each part may fail without hiding the other.
 export const HARDWARE_COMMAND =
   "echo @@cpuinfo; grep -E '^(model name|physical id|core id)' /proc/cpuinfo 2>/dev/null; " +
+  "echo @@cpufreq; cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq 2>/dev/null; " +
   "echo @@dmi; udevadm info --query=property /sys/devices/virtual/dmi/id 2>/dev/null | " +
   "grep -E '^MEMORY_DEVICE_[0-9]+_(SIZE|TYPE|SPEED_MTS|CONFIGURED_SPEED_MTS|MANUFACTURER|LOCATOR)='; true";
 
@@ -74,14 +75,26 @@ function parseMemory(lines) {
 
 // stdout of HARDWARE_COMMAND -> what could be read; missing parts are null.
 export function parseHardware(stdout) {
-  const sections = { cpuinfo: [], dmi: [] };
+  const sections = { cpuinfo: [], cpufreq: [], dmi: [] };
   let current = null;
   for (const line of String(stdout ?? "").split("\n")) {
     if (line.startsWith("@@")) current = sections[line.slice(2).trim()] ?? null;
     else if (current !== null) current.push(line);
   }
   const cpu = parseCpu(sections.cpuinfo);
-  return { cpuModel: cpu.cpuModel, physicalCores: cpu.physicalCores, memory: parseMemory(sections.dmi) };
+  return {
+    cpuModel: cpu.cpuModel,
+    physicalCores: cpu.physicalCores,
+    maxFrequency: parseMaxFrequency(sections.cpufreq),
+    memory: parseMemory(sections.dmi),
+  };
+}
+
+// The highest clock the processor reaches, from cpufreq in kHz, in MHz; null without cpufreq. (The sensor
+// cpu/all/maximumFrequency is the fastest core at the moment, not this.)
+function parseMaxFrequency(lines) {
+  const khz = Number((lines[0] ?? "").trim());
+  return Number.isFinite(khz) && khz > 0 ? Math.round(khz / 1000) : null;
 }
 
 function moduleSize(bytes, decimalPoint) {

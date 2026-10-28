@@ -107,11 +107,25 @@ test("the command never asks for serial numbers", () => {
 });
 
 test("empty output", () => {
-  assert.deepEqual(parseHardware(""), { cpuModel: null, physicalCores: null, memory: null });
-  assert.deepEqual(parseHardware(undefined), { cpuModel: null, physicalCores: null, memory: null });
+  assert.deepEqual(parseHardware(""), { cpuModel: null, physicalCores: null, maxFrequency: null, memory: null });
+  assert.deepEqual(parseHardware(undefined), { cpuModel: null, physicalCores: null, maxFrequency: null, memory: null });
   assert.deepEqual(parseHardware("noise\n@@other\nx\n@@cpuinfo\nno separator\n"), {
     cpuModel: null,
     physicalCores: null,
+    maxFrequency: null,
     memory: null,
   });
+});
+
+test("the highest clock comes from cpufreq in MHz, and is missing without it", () => {
+  assert.equal(parseHardware(read("hardware-desktop.txt")).maxFrequency, 4553);
+  assert.equal(parseHardware(read("hardware-laptop.txt")).maxFrequency, 5100);
+  assert.equal(parseHardware(read("hardware-vm.txt")).maxFrequency, null);
+  assert.equal(parseHardware("@@cpufreq\nnot a number\n").maxFrequency, null);
+  assert.equal(parseHardware("@@cpufreq\n0\n").maxFrequency, null);
+});
+
+test("the command reads the highest clock of the processor once", () => {
+  assert.ok(HARDWARE_COMMAND.includes("@@cpufreq"));
+  assert.ok(HARDWARE_COMMAND.includes("/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq"));
 });

@@ -99,6 +99,11 @@ test("clock detail", () => {
 test("peak detail", () => {
   assert.equal(peakDetail(78.2, t), "Peak 78 °C");
   assert.equal(peakDetail(null, t), "");
+  // The peak is taken from the history at each interval; the tile may already show a newer, higher value.
+  assert.equal(peakDetail(38, t, 44.2), "Peak 44 °C");
+  assert.equal(peakDetail(78.2, t, 60), "Peak 78 °C");
+  assert.equal(peakDetail(78.2, t, NaN), "Peak 78 °C");
+  assert.equal(peakDetail(null, t, 44), "");
 });
 
 test("cpu details: the parts there are, joined", () => {
