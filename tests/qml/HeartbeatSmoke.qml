@@ -117,7 +117,7 @@ Item {
             "cores[1].usage": now.cores[1].usage === 60,
             "gpu.usage": now.gpu.usage === 7,
             "gpu.name": now.gpu.name === "Test GPU",
-            "numbers": scene.texts() === "34,58,7",
+            "numbers": scene.texts() === "34%,58%,7%",
             "popup numbers": scene.popupTexts() === "34 %|" + (3.6).toFixed(2).replace(".", Qt.locale().decimalPoint) + "|55 °C|5,60",
             "gpu numbers": scene.gpuTexts() === ["7 %", (1.8).toFixed(2).replace(".", Qt.locale().decimalPoint), "61 °C", "90 W"].join("|"),
             "memory numbers": scene.memoryTexts() === ["16.8 of 29.8 GiB used", "58 %", "954 MiB of 7.5 GiB"].map(text => text.replace(/\./g, Qt.locale().decimalPoint)).join("|")

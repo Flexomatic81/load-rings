@@ -72,7 +72,7 @@ because the checker compares it against the German interface.
 | Processor column: model, cores and threads, usage, clock, temperature with peak, load average; the graph fills over time | |
 | Core grid: one cell per logical core; hovering a cell shows its clock and temperature | |
 | The detail line names the governor, the energy preference (where the system has one), the context switches per second and the waiting time | |
-| "What uses the CPU" (German: “Wer belastet die CPU”) and "What uses the memory" (German: “Wer belegt den Speicher”): the programs match what the System Monitor shows under Applications, a program with several processes is one row, and "Background services" (German: “Hintergrunddienste”) collects the session's services | |
+| "What uses the CPU" (German: “Was belastet die CPU”) and "What uses the memory" (German: “Was belegt den Speicher”): the programs match what the System Monitor shows under Applications, a program with several processes is one row, and "Background services" (German: “Hintergrunddienste”) collects the session's services | |
 | Memory column: the header names type, speed and modules where the firmware tells them; the bar parts add up to the whole width; swap, ZRAM and pressure rows show where the system has them | |
 | Switch the time window between 1 min, 5 min, 15 min and 1 h: all graphs follow; the window in the settings stays as it was | |
 | "Open System Monitor" (German: “Systemmonitor öffnen”) starts the System Monitor | |

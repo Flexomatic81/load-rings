@@ -9,6 +9,7 @@ import {
   formatGHz,
   formatPercent,
   formatTemp,
+  ringLabel,
   ringText,
 } from "../package/contents/code/format.mjs";
 
@@ -48,4 +49,12 @@ test("clock, temperature, counts", () => {
   assert.equal(formatCount(41234, ","), "41 k");
   assert.equal(formatCount(1234567, ","), "1,2 M");
   assert.equal(formatCount(null, ","), "–");
+});
+
+test("ring label: the rounded load with the percent sign, the dash alone", () => {
+  assert.equal(ringLabel(34.4), "34%");
+  assert.equal(ringLabel(99.6), "100%");
+  assert.equal(ringLabel(0), "0%");
+  assert.equal(ringLabel(NaN), "–");
+  assert.equal(ringLabel(null), "–");
 });

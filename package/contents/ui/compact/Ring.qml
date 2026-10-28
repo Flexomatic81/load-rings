@@ -2,7 +2,7 @@
 // SPDX-FileCopyrightText: 2026 Flexomatic81
 
 // One load ring: a dim track, an arc from 12 o'clock clockwise in the load color, and the rounded percentage in
-// the middle. A ring without a value (NaN) shows the track and a dash. Drawn like the gauges of the sibling
+// the middle ("34%"). A ring without a value (NaN) shows the track and a dash. Drawn like the gauges of the sibling
 // widgets: the line runs a little inside the edge with flat ends, so 0 % shows no arc.
 
 import QtQuick
@@ -27,7 +27,10 @@ Item {
     // An arc is drawn only for a load above 0 %.
     readonly property bool hasArc: root.sweep > 0
     readonly property real radius: root.diameter / 2 - LayoutLogic.RING_INSET_PX
-    readonly property string text: Format.ringText(root.percent)
+    readonly property string text: Format.ringLabel(root.percent)
+
+    // The label, for tests.
+    readonly property alias label: label
 
     implicitWidth: root.diameter
     implicitHeight: root.diameter
@@ -72,6 +75,8 @@ Item {
     }
 
     PlasmaComponents.Label {
+        id: label
+
         anchors.centerIn: parent
         // "100" must fit inside the line.
         width: Math.max(0, 2 * (root.radius - root.stroke))

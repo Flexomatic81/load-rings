@@ -17,6 +17,12 @@ export function ringText(percent) {
   return String(Math.round(Math.min(100, Math.max(0, percent))));
 }
 
+// The label in the panel ring: the rounded load with the percent sign ("34%"), the dash alone without a value.
+export function ringLabel(percent) {
+  const text = ringText(percent);
+  return text === DASH ? DASH : text + "%";
+}
+
 // Whole percent. The decimal point is unused for whole numbers and kept for symmetry with the other formatters.
 // eslint-disable-next-line no-unused-vars -- API symmetry
 export function formatPercent(value, decimalPoint) {

@@ -176,11 +176,13 @@ Item {
             scene.checkSize("vertical 3", vertical3, true, 30, 3);
             scene.expect("gpu off: two rings", gpuOff.ringRepeater.count, 2);
             scene.expect("gpu on: three rings", gpuOn.ringRepeater.count, 3);
-            scene.expect("gpu on: the third is the gpu", scene.ringAt(gpuOn, 2).text, "7");
+            scene.expect("gpu on: the third is the gpu", scene.ringAt(gpuOn, 2).text, "7%");
             scene.expect("gpu on without a card: two rings", gpuNone.ringRepeater.count, 2);
             scene.expect("dash", scene.ringAt(horizontal3, 1).text, "–");
-            scene.expect("number", scene.ringAt(horizontal3, 0).text, "34");
-            scene.expect("rounded", scene.ringAt(vertical3, 2).text, "100");
+            scene.expect("number", scene.ringAt(horizontal3, 0).text, "34%");
+            scene.expect("rounded", scene.ringAt(vertical3, 2).text, "100%");
+            // "100%" fits inside the line of the smallest ring of the scene.
+            scene.expect("100% fits", scene.ringAt(vertical3, 2).label.contentWidth <= scene.ringAt(vertical3, 2).label.width + 0.5, true);
             scene.expect("no arc without a value", scene.ringAt(vertical3, 1).hasArc, false);
             scene.expect("arc with a value", scene.ringAt(vertical3, 0).hasArc, true);
             // A vertical panel stacks the rings in one column, a horizontal one puts them in one row.
@@ -201,7 +203,7 @@ Item {
                 }
             ];
             scene.expect("same ring item after a percent change", scene.ringAt(horizontal2, 0) === before, true);
-            scene.expect("percent changed in place", before.text, "80");
+            scene.expect("percent changed in place", before.text, "80%");
             scene.expect("percent lost in place", scene.ringAt(horizontal2, 1).text, "–");
             horizontal2.pressed();
             horizontal2.clicked();

@@ -217,7 +217,7 @@ msgstr "Kerne"
 
 #: package/contents/ui/full/CpuColumn.qml:205
 msgid "What uses the CPU"
-msgstr "Wer belastet die CPU"
+msgstr "Was belastet die CPU"
 
 #: package/contents/ui/full/FullRepresentation.qml:211
 msgid "Open System Monitor"
@@ -253,7 +253,7 @@ msgstr "Engpass"
 
 #: package/contents/ui/full/RamColumn.qml:234
 msgid "What uses the memory"
-msgstr "Wer belegt den Speicher"
+msgstr "Was belegt den Speicher"
 
 #: package/contents/ui/full/RangeTabs.qml:40
 msgid "1 min"
