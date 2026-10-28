@@ -156,6 +156,22 @@ Item {
             ]
         }
         CompactRepresentation {
+            id: small
+
+            width: 200
+            height: 24
+            rings: [
+                {
+                    key: "cpu",
+                    percent: 1
+                },
+                {
+                    key: "ram",
+                    percent: 15
+                }
+            ]
+        }
+        CompactRepresentation {
             id: digits
 
             vertical: true
@@ -211,6 +227,12 @@ Item {
             scene.expect("100% not larger", sizeOf(2) <= sizeOf(1), true);
             scene.expect("100% fits in a narrow panel", scene.ringAt(digits, 2).label.contentWidth <= scene.ringAt(digits, 2).label.width + 0.5, true);
             scene.expect("15% fits in a narrow panel", scene.ringAt(digits, 1).label.contentWidth <= scene.ringAt(digits, 1).label.width + 0.5, true);
+            // A 24 px panel is too small for a readable percent sign: the rings show the bare number, readable and in
+            // one size; a 44 px panel keeps the sign.
+            scene.expect("small panel: no percent sign", scene.ringAt(small, 1).text, "15");
+            scene.expect("small panel: readable", scene.ringAt(small, 1).label.font.pixelSize >= 9, true);
+            scene.expect("small panel: one size", scene.ringAt(small, 0).label.fontInfo.pixelSize, scene.ringAt(small, 1).label.fontInfo.pixelSize);
+            scene.expect("44 px panel: percent sign", scene.ringAt(horizontal3, 0).text, "34%");
             scene.expect("no arc without a value", scene.ringAt(vertical3, 1).hasArc, false);
             scene.expect("arc with a value", scene.ringAt(vertical3, 0).hasArc, true);
             // A vertical panel stacks the rings in one column, a horizontal one puts them in one row.

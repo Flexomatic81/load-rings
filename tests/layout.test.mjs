@@ -10,6 +10,9 @@ import {
   RING_INSET_PX,
   RING_STROKE_PX,
   coreGridColumns,
+  labelFit,
+  labelRoom,
+  MIN_READABLE_PX,
   popupColumnWidth,
   ringLayout,
 } from "../package/contents/code/layout.mjs";
@@ -91,4 +94,43 @@ test("the core grid widens for many cores", () => {
 
 test("the popup column width is 22 grid units", () => {
   assert.equal(popupColumnWidth(3), 66);
+});
+
+test("the label room is the inside of the line with a little air", () => {
+  // 44 px: line centre at 20, inner edge at 18.5, two px of air on each side.
+  assert.equal(labelRoom(44, 3), 33);
+  // 24 px: one px of air on each side.
+  assert.equal(labelRoom(24, 3), 15);
+  assert.equal(labelRoom(4, 3), 0);
+});
+
+test("the label keeps its percent sign while that stays readable", () => {
+  // "00%" measures 30 px and "00" 20 px at 18 px; the room is 33 px.
+  assert.deepEqual(labelFit({ room: 33, fontPx: 18, withSign: 30, withoutSign: 20 }), {
+    showSign: true,
+    pixelSize: 18,
+  });
+  // A narrower room shrinks the font with the sign as long as it stays at least MIN_READABLE_PX.
+  assert.deepEqual(labelFit({ room: 20, fontPx: 18, withSign: 30, withoutSign: 20 }), {
+    showSign: true,
+    pixelSize: 12,
+  });
+});
+
+test("a small ring drops the percent sign instead of an unreadable number", () => {
+  // 15 px of room: with the sign 9 px wide would need 7 px of font, without it 11 px.
+  assert.deepEqual(labelFit({ room: 15, fontPx: 10, withSign: 21, withoutSign: 13 }), {
+    showSign: false,
+    pixelSize: 10,
+  });
+  assert.deepEqual(labelFit({ room: 10, fontPx: 10, withSign: 21, withoutSign: 13 }), {
+    showSign: false,
+    pixelSize: 7,
+  });
+});
+
+test("the label never goes below 6 px and survives zero widths", () => {
+  assert.equal(MIN_READABLE_PX, 9);
+  assert.equal(labelFit({ room: 2, fontPx: 10, withSign: 21, withoutSign: 13 }).pixelSize, 6);
+  assert.deepEqual(labelFit({ room: 20, fontPx: 10, withSign: 0, withoutSign: 0 }), { showSign: true, pixelSize: 10 });
 });

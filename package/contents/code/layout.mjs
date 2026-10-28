@@ -30,6 +30,32 @@ export function ringLayout({ vertical, thickness, count, spacing: wantedSpacing 
   return { diameter, stroke, spacing, fontPx, width, height };
 }
 
+// Below this font size the number of a ring is shown without its percent sign, so it stays readable.
+export const MIN_READABLE_PX = 9;
+const MIN_LABEL_PX = 6;
+
+// The width the label may take inside the ring line: the inner edge of the line, less some air on each side (one
+// pixel on small rings, about 5 % of the ring on larger ones).
+export function labelRoom(diameter, stroke) {
+  const inner = diameter - 2 * RING_INSET_PX - stroke;
+  const air = Math.max(1, Math.round(diameter * 0.05));
+  return Math.max(0, inner - 2 * air);
+}
+
+// The font size that makes a text of the given width (measured at fontPx) fit the room.
+function fitted(room, fontPx, width) {
+  return width > room ? Math.floor((fontPx * room) / width) : fontPx;
+}
+
+// How the ring number is set: with its percent sign while that stays readable, otherwise without it and larger.
+// withSign and withoutSign are the widths of the widest two-digit label ("00%" and "00") at fontPx, so every ring of
+// one size gets the same answer whatever its load.
+export function labelFit({ room, fontPx, withSign, withoutSign }) {
+  const sized = fitted(room, fontPx, withSign);
+  if (sized >= MIN_READABLE_PX) return { showSign: true, pixelSize: sized };
+  return { showSign: false, pixelSize: Math.max(MIN_LABEL_PX, fitted(room, fontPx, withoutSign)) };
+}
+
 // The number of columns of the core grid: few cores keep a narrow grid, many cores widen it.
 export function coreGridColumns(count) {
   if (count <= 16) return 8;

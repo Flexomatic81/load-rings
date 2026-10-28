@@ -27,10 +27,11 @@ Item {
     // An arc is drawn only for a load above 0 %.
     readonly property bool hasArc: root.sweep > 0
     readonly property real radius: root.diameter / 2 - LayoutLogic.RING_INSET_PX
-    readonly property string text: Format.ringLabel(root.percent)
+    // The text shown: "34%", or "34" on rings too small for a readable percent sign.
+    readonly property string text: numberLabel.text
 
     // The label, for tests.
-    readonly property alias label: label
+    readonly property alias label: numberLabel
 
     implicitWidth: root.diameter
     implicitHeight: root.diameter
@@ -74,12 +75,13 @@ Item {
         }
     }
 
-    // The font size is measured on the widest two-digit label. With tabular figures every two-digit number is as wide
-    // as "00%", so one and two digits share one size and the numbers do not change size with the load.
+    // The font size is measured on the widest two-digit labels. With tabular figures every two-digit number is as wide
+    // as "00%" (or "00" on rings too small for a readable percent sign), so one and two digits share one size and
+    // the numbers do not change size with the load.
     TextMetrics {
-        id: twoDigits
+        id: withSign
 
-        font.family: label.font.family
+        font.family: numberLabel.font.family
         font.pixelSize: root.fontPx
         font.features: {
             "tnum": 1
@@ -87,21 +89,37 @@ Item {
         text: "00%"
     }
 
-    PlasmaComponents.Label {
-        id: label
+    TextMetrics {
+        id: withoutSign
 
-        // The label keeps 2 px of air on each side inside the line.
-        readonly property real room: Math.max(0, 2 * (root.radius - root.stroke) - 4)
+        font.family: numberLabel.font.family
+        font.pixelSize: root.fontPx
+        font.features: {
+            "tnum": 1
+        }
+        text: "00"
+    }
+
+    PlasmaComponents.Label {
+        id: numberLabel
+
+        readonly property real room: LayoutLogic.labelRoom(root.diameter, root.stroke)
+        readonly property var fit: LayoutLogic.labelFit({
+            room: numberLabel.room,
+            fontPx: root.fontPx,
+            withSign: withSign.advanceWidth,
+            withoutSign: withoutSign.advanceWidth
+        })
 
         anchors.centerIn: parent
-        width: label.room
+        width: numberLabel.room
         horizontalAlignment: Text.AlignHCenter
         // Only the rare "100%" is wider than two digits; it alone shrinks to fit.
         fontSizeMode: Text.HorizontalFit
         minimumPixelSize: 6
-        text: root.text
+        text: numberLabel.fit.showSign ? Format.ringLabel(root.percent) : Format.ringText(root.percent)
         color: Kirigami.Theme.textColor
-        font.pixelSize: Math.max(6, twoDigits.advanceWidth > label.room ? Math.floor(root.fontPx * label.room / twoDigits.advanceWidth) : root.fontPx)
+        font.pixelSize: numberLabel.fit.pixelSize
         font.features: {
             "tnum": 1
         }
