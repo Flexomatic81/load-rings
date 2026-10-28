@@ -4,39 +4,43 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
+  DEFAULT_SPACING_PX,
   MAX_RING_PX,
   MIN_RING_PX,
-  RING_MARGIN_PX,
+  RING_INSET_PX,
+  RING_STROKE_PX,
   coreGridColumns,
   popupColumnWidth,
   ringLayout,
 } from "../package/contents/code/layout.mjs";
 
-test("the margin and the diameter limits are exact", () => {
-  assert.equal(RING_MARGIN_PX, 2);
+test("the stroke, the inset and the diameter limits are exact", () => {
+  assert.equal(RING_STROKE_PX, 3);
+  assert.equal(RING_INSET_PX, 2);
+  assert.equal(DEFAULT_SPACING_PX, 4);
   assert.equal(MIN_RING_PX, 16);
   assert.equal(MAX_RING_PX, 96);
 });
 
-test("a 44 px horizontal panel with two rings", () => {
-  assert.deepEqual(ringLayout({ vertical: false, thickness: 44, count: 2 }), {
-    diameter: 40,
-    stroke: 4,
-    spacing: 8,
-    fontPx: 13,
+test("a 44 px horizontal panel with two rings fills the panel height", () => {
+  assert.deepEqual(ringLayout({ vertical: false, thickness: 44, count: 2, spacing: 4 }), {
+    diameter: 44,
+    stroke: 3,
+    spacing: 4,
+    fontPx: 18,
     width: 92,
     height: 44,
   });
 });
 
 test("a 30 px vertical panel with three rings stacks them", () => {
-  assert.deepEqual(ringLayout({ vertical: true, thickness: 30, count: 3 }), {
-    diameter: 26,
+  assert.deepEqual(ringLayout({ vertical: true, thickness: 30, count: 3, spacing: 4 }), {
+    diameter: 30,
     stroke: 3,
-    spacing: 5,
-    fontPx: 8,
+    spacing: 4,
+    fontPx: 12,
     width: 30,
-    height: 92,
+    height: 98,
   });
 });
 
@@ -52,23 +56,28 @@ test("a count below one is laid out as one ring", () => {
   );
 });
 
-test("the stroke, spacing and font have their minimum values", () => {
+test("without a spacing the default is used", () => {
+  assert.equal(ringLayout({ vertical: false, thickness: 44, count: 2 }).spacing, DEFAULT_SPACING_PX);
+  assert.equal(ringLayout({ vertical: false, thickness: 44, count: 2, spacing: NaN }).spacing, DEFAULT_SPACING_PX);
+});
+
+test("the font has its minimum size", () => {
   assert.deepEqual(ringLayout({ vertical: false, thickness: 10, count: 1 }), {
     diameter: 16,
-    stroke: 2,
-    spacing: 3,
+    stroke: 3,
+    spacing: 4,
     fontPx: 6,
-    width: 20,
+    width: 16,
     height: 10,
   });
 });
 
 test("fractional sizes come out as whole pixels", () => {
-  assert.deepEqual(ringLayout({ vertical: false, thickness: 44.4, count: 1 }), {
-    diameter: 40,
-    stroke: 4,
-    spacing: 8,
-    fontPx: 13,
+  assert.deepEqual(ringLayout({ vertical: false, thickness: 44.4, count: 1, spacing: 4.4 }), {
+    diameter: 44,
+    stroke: 3,
+    spacing: 4,
+    fontPx: 18,
     width: 44,
     height: 44,
   });

@@ -8,6 +8,7 @@
 // runtime check of its bindings.
 
 import QtQuick
+import org.kde.kirigami as Kirigami
 import "../../package/contents/ui/compact"
 import "../../package/contents/code/layout.mjs" as Layout
 import "../../package/contents/code/sensors.mjs" as SensorCode
@@ -74,7 +75,8 @@ Item {
         const wanted = Layout.ringLayout({
             vertical: vertical,
             thickness: thickness,
-            count: count
+            count: count,
+            spacing: Kirigami.Units.smallSpacing
         });
         scene.expect(name + " width", view.implicitWidth, wanted.width);
         scene.expect(name + " height", view.implicitHeight, wanted.height);

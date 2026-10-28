@@ -55,6 +55,7 @@ off there, which leaves two columns of about 830 pixels.
 | `org.kde.kcmutils` | `SimpleKCM` as the root of the settings page |
 | `org.kde.plasma.plasmoid` | `PlasmoidItem` with `compactRepresentation`, `fullRepresentation`, `preferredRepresentation`, `expanded`, `toolTipMainText`, `toolTipSubText`; `Plasmoid.configuration`, `formFactor` |
 | `org.kde.plasma.core` | `Types.Vertical`, `Types.Planar` |
+| `org.kde.plasma.components` | `Label` for the number in the panel rings (the Plasma font, as in the sibling widgets) |
 | `org.kde.plasma.configuration` | `ConfigModel`, `ConfigCategory` in `config/config.qml` |
 | `org.kde.plasma.plasma5support` | `DataSource` with `engine: "executable"` (only in `CommandRunner.qml`, loaded with a fallback) |
 | `org.kde.ksysguard.sensors` | `Sensor` (`sensorId`, `value`, `status`, `updateRateLimit`), `SensorTreeModel` (role `SensorId`) for the list of graphics cards |

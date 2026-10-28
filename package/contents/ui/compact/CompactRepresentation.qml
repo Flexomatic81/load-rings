@@ -7,6 +7,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
+import org.kde.kirigami as Kirigami
 import "../../code/layout.mjs" as LayoutLogic
 
 Item {
@@ -36,7 +37,8 @@ Item {
     readonly property var geometry: LayoutLogic.ringLayout({
         vertical: root.vertical && !root.onDesktop,
         thickness: Number.isFinite(root.thickness) ? root.thickness : 0,
-        count: root.keys.length
+        count: root.keys.length,
+        spacing: Kirigami.Units.smallSpacing
     })
 
     implicitWidth: root.geometry.width
