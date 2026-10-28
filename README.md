@@ -57,7 +57,7 @@ other widget.
 | | |
 |---|---|
 | ![The popup with its three columns labeled](docs/store/store-2-popup.png) | ![The panel views side by side](docs/store/store-3-panel-views.png) |
-| ![The settings page in the settings dialog](docs/store/store-4-settings.png) | |
+| ![The settings page in the settings dialog](docs/store/store-4-settings.png) | ![The popup and the rings in Breeze Light, with what the widget does to stay light on the system](docs/store/store-5-light.png) |
 
 These are the images of the KDE Store page, in [`docs/store/`](docs/store/);
 how they are put together is described in [`docs/store.md`](docs/store.md#images).

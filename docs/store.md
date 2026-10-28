@@ -118,7 +118,8 @@ Quellcode, Fehlermeldungen und Übersetzungen: https://github.com/Flexomatic81/l
 ## Images
 
 The store takes at most five images. Upload in this order; the files are in
-[`store/`](store/), 1920 × 1080 each, in the stock Breeze Dark color scheme.
+[`store/`](store/), 1920 × 1080 each, in the stock Breeze Dark color scheme
+(the fifth in Breeze Light).
 
 1. `store-1-overview.png`: logo, name, the three main points, the rings in
    the panel and the open popup on a desktop
@@ -129,6 +130,8 @@ The store takes at most five images. Upload in this order; the files are in
    vertical panel
 4. `store-4-settings.png`: the settings page in the settings dialog, with the
    options listed beside it
+5. `store-5-light.png`: the popup and the rings in Breeze Light, with what
+   the widget does to stay light on the system
 
 ### How the images are made
 
@@ -136,7 +139,9 @@ The widget in the images is real: `scripts/screenshots.sh --store` renders
 every view from the fixed demo data at three times the size into
 [`store/shots/`](store/shots/): `panel.png`, `panel-gpu.png`,
 `panel-vertical.png`, `panel-colors.png`, `popup.png`, `popup-gpu.png` and
-`settings.png`. The README shows the same views at their real size from
+`settings.png`; `scripts/screenshots.sh --store --light` renders the same
+views in Breeze Light into [`store/shots/light/`](store/shots/light/) for the
+fifth image. The README shows the same views at their real size from
 [`images/`](images/).
 
 Background, frames, labels and the dialog frame are drawn in
@@ -144,7 +149,8 @@ Background, frames, labels and the dialog frame are drawn in
 [`store/loadrings-store.vectorcraft`](store/loadrings-store.vectorcraft), one
 artboard per image (layers "Wallpaper", "Desktop" and "Text"), with the views
 embedded. After new shots, replace the embedded images (Links → Relink to the
-file of the same name in `store/shots/`, keeping their bounds, then Embed) and
+file of the same name in `store/shots/`, or in `store/shots/light/` for the
+images named "light", keeping their bounds, then Embed) and
 export each artboard as PNG at scale 1, in the app or with its command line
 tool:
 
@@ -153,7 +159,8 @@ vectorcraft-cli convert docs/store/loadrings-store.vectorcraft docs/store/store-
 ```
 
 (`--artboard` counts from 0; 1 is the popup, 2 the panel views, 3 the
-settings.) Strip the text chunks before committing (title and creation time).
+settings, 4 the light theme.) Strip the text chunks before committing (title
+and creation time).
 
 The project logo for the store page is `logo.png` (512 × 512) in
 [`images/`](images/), rendered from `logo.svg` with
