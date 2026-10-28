@@ -119,7 +119,7 @@ Quellcode, Fehlermeldungen und Übersetzungen: https://github.com/Flexomatic81/l
 
 The store takes at most five images. Upload in this order; the files are in
 [`store/`](store/), 1920 × 1080 each, in the stock Breeze Dark color scheme
-(the fifth in Breeze Light).
+(the fifth in Breeze Light, on a light background).
 
 1. `store-1-overview.png`: logo, name, the three main points, the rings in
    the panel and the open popup on a desktop
