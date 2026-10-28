@@ -5,3 +5,4 @@ node_modules/
 build/
 dist/
 package/contents/locale/
+*.kate-swp
