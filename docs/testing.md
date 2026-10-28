@@ -122,5 +122,5 @@ anything, so a tag pushed too early fails there.
 | (b) Screenshots and store images generated with `scripts/screenshots.sh` and the VectorCraft document, reviewed and committed | 2026-10-26 | Done: Breeze Dark and Breeze Light, seven views each, four store images |
 | (c) Minimum version honest: documented as tested on Plasma 6.8 only (README, [compatibility.md](compatibility.md), store text) | 2026-10-26 | Done: no run on Plasma 6.3 to 6.7, said so in all three |
 | (d) The manual checklist in this file, all tables, in a real panel | 2026-10-28 | Done: every table worked through on Plasma 6.8.1 in a real panel, scripted and by hand; the rows that need hardware not available here are marked n/a with the reason |
-| (e) A green CI run on the remote for the commit to be tagged, before the tag is pushed | | |
+| (e) A green CI run on the remote for the commit to be tagged, before the tag is pushed | 2026-10-28 | Done: CI green on the remote (lint, test on Node 22.13 and 24, qml) for the commit before this record; the record commit itself is checked again before the tag |
 | (f) CHANGELOG and the changelog in [store.md](store.md) finalized: release date in the heading as YYYY-MM-DD, no "unreleased" | 2026-10-26 | Done: heading `## [0.1.0] – 2026-10-26` |
