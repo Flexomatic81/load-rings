@@ -124,11 +124,13 @@ jobs:
             gh release upload "$GITHUB_REF_NAME" "${files[@]}" --clobber \
               --repo "$GITHUB_REPOSITORY"
           else
-            flags=(--verify-tag)
-            # Versions below 1.0 are pre-releases.
-            if [[ "$version" == 0.* ]]; then
-              flags+=(--prerelease)
-            fi
-            gh release create "$GITHUB_REF_NAME" "${files[@]}" "${flags[@]}" \
+            # The notes are the version's section of the changelog, without its
+            # heading; release-check has made sure that the section exists.
+            awk -v version="$version" '
+              /^## / { if (found) exit; found = index($0, "[" version "]") || index($0, "## " version " ") }
+              found && !/^## / { print }
+            ' CHANGELOG.md > release-notes.md
+            gh release create "$GITHUB_REF_NAME" "${files[@]}" --verify-tag --latest \
+              --title "Load Rings $version" --notes-file release-notes.md \
               --repo "$GITHUB_REPOSITORY"
           fi

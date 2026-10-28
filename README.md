@@ -15,7 +15,7 @@ SPDX-FileCopyrightText: 2026 Flexomatic81
 
 <p align="center">
   <a href="https://github.com/Flexomatic81/load-rings/actions/workflows/ci.yml"><img src="https://github.com/Flexomatic81/load-rings/actions/workflows/ci.yml/badge.svg?branch=main" alt="Tests"></a>
-  <a href="https://github.com/Flexomatic81/load-rings/releases/latest"><img src="https://img.shields.io/github/v/release/Flexomatic81/load-rings?include_prereleases" alt="Latest release"></a>
+  <a href="https://github.com/Flexomatic81/load-rings/releases/latest"><img src="https://img.shields.io/github/v/release/Flexomatic81/load-rings" alt="Latest release"></a>
   <img src="https://img.shields.io/badge/Plasma-6.3%2B-1d99f3" alt="Plasma 6.3 or newer">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL--2.0--or--later-blue" alt="GPL-2.0-or-later license"></a>
 </p>
